@@ -3,82 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বিডি মার্কেটিং | স্মার্ট প্যানেল</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
+    <title>Saddam Bhai's Business Panel - BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* ডিজাইন সেকশন - এখানে আপনার সাইটের সব সাজসজ্জা থাকবে */
-        :root { --p: #1e3a8a; --s: #10b981; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-        #authUI { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .card { width: 90%; max-width: 350px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; color: white; }
-        #appUI { display: none; }
-        header { background: var(--p); color: white; padding: 15px; text-align: center; font-weight: bold; }
-        .wallet { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; margin: 15px; padding: 25px; border-radius: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; transition: 0.3s; }
+        .payment-card { border: 2px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(to right, #f59e0b, #ec4899) border-box; }
+        .animate-blink { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen pb-10">
 
-    <div id="authUI">
-        <div class="card">
-            <h2>স্বাগতম জনাব!</h2>
-            <input type="email" id="uEmail" placeholder="আপনার জিমেইল">
-            <input type="password" id="uPass" placeholder="পাসওয়ার্ড">
-            <button class="btn" style="background: var(--p);" onclick="doLogin()">লগইন করুন</button>
-            <button class="btn" style="background: #64748b;" onclick="doGuest()">গেস্ট মোড</button>
+    <nav class="bg-blue-700 text-white p-4 shadow-xl sticky top-0 z-50 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold uppercase tracking-wider" id="brand">BD Marketing</h1>
+            <p class="text-[10px] text-blue-200">সাদ্দাম ভাই স্পেশাল এডিশন</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="toggleLang()" class="bg-white/20 hover:bg-white/40 px-3 py-1 rounded text-sm font-semibold transition" id="langBtn">English</button>
+            <button onclick="window.location.reload()" class="bg-white/20 p-1 px-2 rounded"><i class="fas fa-sync-alt"></i></button>
+        </div>
+    </nav>
+
+    <div class="max-w-md mx-auto mt-4 px-4">
+        <div class="payment-card rounded-2xl shadow-2xl p-5 bg-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-1 rounded-bl-lg animate-blink uppercase" id="urgentText">জরুরি নোটিশ</div>
+            <h2 class="text-center font-bold text-gray-800 mb-4 border-b pb-2" id="payTitle">পেমেন্ট মেথড (সেন্ড মানি করুন)</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center gap-4 bg-pink-50 p-4 rounded-xl border border-pink-100 shadow-sm">
+                    <img src="https://img.icons8.com/color/48/000000/bank-card-back-side.png" class="w-10">
+                    <div>
+                        <p class="text-xs text-pink-600 font-bold uppercase">bKash Personal</p>
+                        <p class="text-xl font-bold text-gray-800 select-all tracking-widest">01725780575</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 bg-orange-50 p-4 rounded-xl border border-orange-100 shadow-sm">
+                    <img src="https://img.icons8.com/color/48/000000/mobile-payment.png" class="w-10">
+                    <div>
+                        <p class="text-xs text-orange-600 font-bold uppercase">Nagad Personal</p>
+                        <p class="text-xl font-bold text-gray-800 select-all tracking-widest">01763584939</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex flex-col items-center">
+                <div id="qrcode" class="p-2 border-4 border-blue-100 rounded-lg shadow-inner"></div>
+                <p class="text-[11px] mt-2 text-gray-500 font-medium italic" id="qrHint">সরাসরি ওয়েবসাইট ভিজিট করতে স্ক্যান করুন</p>
+            </div>
         </div>
     </div>
 
-    <div id="appUI">
-        <header>বিডি মার্কেটিং ড্যাশবোর্ড</header>
-        <div class="wallet">
-            <p>সম্মানিত জনাব,</p>
-            <h1 id="uName">User</h1>
-            <h2>ব্যালেন্স: ৳ <span id="uBal">0.00</span></h2>
-        </div>
+    <div class="max-w-md mx-auto mt-6 px-4">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="bg-blue-600 p-6 text-center text-white">
+                <i class="fas fa-user-circle text-5xl mb-2"></i>
+                <h3 class="text-2xl font-bold" id="formTitle">আপনার অ্যাকাউন্টে লগইন করুন</h3>
+            </div>
+            
+            <div class="p-8 space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1" id="labelGmail">জিমেইল এড্রেস</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-4 text-gray-400"></i>
+                        <input type="email" id="email" class="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition" placeholder="name@gmail.com">
+                    </div>
+                </div>
 
-        <div id="paymentBox" style="background: white; margin: 15px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--s);">
-            <h4>💳 পেমেন্ট তথ্য:</h4>
-            <p>বিকাশ: ০১৭২৫৭৮০৫৭৫ (Personal)</p>
-            <p>নগদ: ০১৭XXXXXX৩৯ (Personal)</p>
-        </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1" id="labelPass">গোপন পাসওয়ার্ড (নিজের তৈরি)</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-4 text-gray-400"></i>
+                        <input type="password" id="pass" class="w-full pl-10 pr-12 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition" placeholder="******">
+                        <button onclick="togglePass()" class="absolute right-3 top-3 text-gray-400 hover:text-blue-500 transition">
+                            <i class="fas fa-eye text-lg" id="eye"></i>
+                        </button>
+                    </div>
+                </div>
 
-        <div id="extraFeatures"></div>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transform active:scale-95 transition-all duration-200" id="loginBtn">প্রবেশ করুন (Login)</button>
+                
+                <div class="text-center">
+                    <p class="text-gray-400 text-sm font-medium" id="orText">অথবা আপনার অ্যাকাউন্ট না থাকলে</p>
+                </div>
+
+                <button class="w-full border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white font-bold py-3 rounded-xl transition-all" id="regBtn">নতুন অ্যাকাউন্ট খুলুন (Register)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-md mx-auto mt-8 px-4 grid grid-cols-2 gap-4">
+        <div class="bg-white p-4 rounded-2xl shadow-md text-center border-b-4 border-blue-500">
+            <i class="fas fa-wallet text-blue-500 text-2xl mb-2"></i>
+            <p class="text-xs font-bold text-gray-600 uppercase" id="f1">টাকা যোগ করুন</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-md text-center border-b-4 border-green-500">
+            <i class="fas fa-history text-green-500 text-2xl mb-2"></i>
+            <p class="text-xs font-bold text-gray-600 uppercase" id="f2">ট্রানজেকশন</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-md text-center border-b-4 border-red-500">
+            <i class="fas fa-headset text-red-500 text-2xl mb-2"></i>
+            <p class="text-xs font-bold text-gray-600 uppercase" id="f3">সরাসরি সাপোর্ট</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-md text-center border-b-4 border-purple-500">
+            <i class="fas fa-shield-alt text-purple-500 text-2xl mb-2"></i>
+            <p class="text-xs font-bold text-gray-600 uppercase" id="f4">নিরাপত্তা</p>
+        </div>
     </div>
 
     <script>
-        // ডাটাবেস কনফিগ
-        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // লগইন লজিক
-        function doLogin() {
-            let email = document.getElementById('uEmail').value.replace(/\./g, ',');
-            let pass = document.getElementById('uPass').value;
-            db.ref('users/' + email).once('value', (s) => {
-                if(s.exists() && s.val().pass === pass) {
-                    document.getElementById('authUI').style.display = 'none';
-                    document.getElementById('appUI').style.display = 'block';
-                    document.getElementById('uName').innerText = "জনাব " + s.val().name;
-                    document.getElementById('uBal').innerText = s.val().balance;
-                } else { alert("ভুল তথ্য জনাব! সঠিক জিমেইল ও পাসওয়ার্ড দিন।"); }
-            });
+        // ১. পাসওয়ার্ড দেখা বা লুকানো
+        function togglePass() {
+            let p = document.getElementById('pass');
+            let e = document.getElementById('eye');
+            if(p.type === "password") {
+                p.type = "text";
+                e.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                p.type = "password";
+                e.classList.replace('fa-eye-slash', 'fa-eye');
+            }
         }
 
-        function doGuest() {
-            document.getElementById('authUI').style.display = 'none';
-            document.getElementById('appUI').style.display = 'block';
+        // ২. ভাষা পরিবর্তনের লজিক
+        let isEng = false;
+        function toggleLang() {
+            isEng = !isEng;
+            document.getElementById('langBtn').innerText = isEng ? "বাংলা" : "English";
+            document.getElementById('brand').innerText = isEng ? "BD MARKETING PRO" : "বিডি মার্কেটিং প্রো";
+            document.getElementById('payTitle').innerText = isEng ? "Payment Methods (Send Money)" : "পেমেন্ট মেথড (সেন্ড মানি করুন)";
+            document.getElementById('urgentText').innerText = isEng ? "Urgent Notice" : "জরুরি নোটিশ";
+            document.getElementById('qrHint').innerText = isEng ? "Scan to visit official site" : "সরাসরি ওয়েবসাইট ভিজিট করতে স্ক্যান করুন";
+            document.getElementById('formTitle').innerText = isEng ? "Login to Your Account" : "আপনার অ্যাকাউন্টে লগইন করুন";
+            document.getElementById('labelGmail').innerText = isEng ? "Gmail Address" : "জিমেইল এড্রেস";
+            document.getElementById('labelPass').innerText = isEng ? "Secret Password (Custom)" : "গোপন পাসওয়ার্ড (নিজের তৈরি)";
+            document.getElementById('loginBtn').innerText = isEng ? "Login Now" : "প্রবেশ করুন (Login)";
+            document.getElementById('regBtn').innerText = isEng ? "Create New Account" : "নতুন অ্যাকাউন্ট খুলুন (Register)";
+            document.getElementById('orText').innerText = isEng ? "OR IF YOU HAVE NO ACCOUNT" : "অথবা আপনার অ্যাকাউন্ট না থাকলে";
+            document.getElementById('f1').innerText = isEng ? "Add Money" : "টাকা যোগ করুন";
+            document.getElementById('f2').innerText = isEng ? "History" : "ট্রানজেকশন";
+            document.getElementById('f3').innerText = isEng ? "Live Support" : "সরাসরি সাপোর্ট";
+            document.getElementById('f4').innerText = isEng ? "Security" : "নিরাপত্তা";
         }
 
-        // ==========================================
-        // সাদ্দাম ভাই, ছোট ছোট সমস্যার সমাধান (Patch Code) 
-        // আমি আপনাকে যখনই কোনো ছোট কোড দেব, আপনি এই লাইনের নিচে পেস্ট করবেন।
-        // ==========================================
-
+        // ৩. অটোমেটিক QR কোড জেনারেশন (আপনার লিঙ্কের জন্য)
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 120,
+            height: 120,
+            colorDark : "#1e3a8a",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
     </script>
 </body>
 </html>
