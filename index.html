@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিডি মার্কেটিং | স্মার্ট প্যানেল</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <style>
+        /* ডিজাইন সেকশন - এখানে আপনার সাইটের সব সাজসজ্জা থাকবে */
+        :root { --p: #1e3a8a; --s: #10b981; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        #authUI { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .card { width: 90%; max-width: 350px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; color: white; }
+        #appUI { display: none; }
+        header { background: var(--p); color: white; padding: 15px; text-align: center; font-weight: bold; }
+        .wallet { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; margin: 15px; padding: 25px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="authUI">
+        <div class="card">
+            <h2>স্বাগতম জনাব!</h2>
+            <input type="email" id="uEmail" placeholder="আপনার জিমেইল">
+            <input type="password" id="uPass" placeholder="পাসওয়ার্ড">
+            <button class="btn" style="background: var(--p);" onclick="doLogin()">লগইন করুন</button>
+            <button class="btn" style="background: #64748b;" onclick="doGuest()">গেস্ট মোড</button>
+        </div>
+    </div>
+
+    <div id="appUI">
+        <header>বিডি মার্কেটিং ড্যাশবোর্ড</header>
+        <div class="wallet">
+            <p>সম্মানিত জনাব,</p>
+            <h1 id="uName">User</h1>
+            <h2>ব্যালেন্স: ৳ <span id="uBal">0.00</span></h2>
+        </div>
+
+        <div id="paymentBox" style="background: white; margin: 15px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--s);">
+            <h4>💳 পেমেন্ট তথ্য:</h4>
+            <p>বিকাশ: ০১৭২৫৭৮০৫৭৫ (Personal)</p>
+            <p>নগদ: ০১৭XXXXXX৩৯ (Personal)</p>
+        </div>
+
+        <div id="extraFeatures"></div>
+    </div>
+
+    <script>
+        // ডাটাবেস কনফিগ
+        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // লগইন লজিক
+        function doLogin() {
+            let email = document.getElementById('uEmail').value.replace(/\./g, ',');
+            let pass = document.getElementById('uPass').value;
+            db.ref('users/' + email).once('value', (s) => {
+                if(s.exists() && s.val().pass === pass) {
+                    document.getElementById('authUI').style.display = 'none';
+                    document.getElementById('appUI').style.display = 'block';
+                    document.getElementById('uName').innerText = "জনাব " + s.val().name;
+                    document.getElementById('uBal').innerText = s.val().balance;
+                } else { alert("ভুল তথ্য জনাব! সঠিক জিমেইল ও পাসওয়ার্ড দিন।"); }
+            });
+        }
+
+        function doGuest() {
+            document.getElementById('authUI').style.display = 'none';
+            document.getElementById('appUI').style.display = 'block';
+        }
+
+        // ==========================================
+        // সাদ্দাম ভাই, ছোট ছোট সমস্যার সমাধান (Patch Code) 
+        // আমি আপনাকে যখনই কোনো ছোট কোড দেব, আপনি এই লাইনের নিচে পেস্ট করবেন।
+        // ==========================================
+
+    </script>
+</body>
+</html>
