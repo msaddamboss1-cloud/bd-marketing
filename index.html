@@ -80,5 +80,67 @@
         </div>
     </div>
 
+<div class="card" id="seller-section" style="margin-top: 30px; text-align: left;">
+    <h3 style="color: var(--primary); text-align: center; margin-bottom: 20px;" id="s-form-title">বিক্রেতা হিসেবে যোগ দিন</h3>
+    
+    <div class="input-group">
+        <label id="lbl-name">আপনার পূর্ণ নাম</label>
+        <input type="text" id="sellerName" placeholder="উদাঃ সাদ্দাম হোসেন">
+    </div>
+    
+    <div class="input-group">
+        <label id="lbl-shop">দোকান বা ব্যবসার নাম</label>
+        <input type="text" id="shopName" placeholder="উদাঃ বিডি মার্কেটিং স্টোর">
+    </div>
+    
+    <div class="input-group">
+        <label id="lbl-phone">ফোন নম্বর</label>
+        <input type="tel" id="sellerPhone" placeholder="017xxxxxxxx">
+    </div>
+    
+    <div class="input-group">
+        <label id="lbl-category">পণ্যের ক্যাটাগরি</label>
+        <select id="category" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+            <option value="digital">ডিজিটাল মার্কেটিং</option>
+            <option value="physical">ভৌত পণ্য (Physical Goods)</option>
+            <option value="service">অন্যান্য সেবা</option>
+        </select>
+    </div>
 
+    <button class="btn-action" style="background: var(--secondary);" onclick="submitSellerForm()">আবেদন জমা দিন</button>
+</div>
+
+<script>
+    // বিক্রেতা ফর্ম সাবমিট করার ফাংশন
+    function submitSellerForm() {
+        const name = document.getElementById('sellerName').value;
+        const shop = document.getElementById('shopName').value;
+        const phone = document.getElementById('sellerPhone').value;
+        const cat = document.getElementById('category').value;
+
+        if(name && shop && phone) {
+            // ফায়ারবেস ডাটাবেজে তথ্য সেভ করা
+            const sellerRef = firebase.database().ref('pending_sellers');
+            sellerRef.push({
+                fullName: name,
+                businessName: shop,
+                contactNumber: phone,
+                category: cat,
+                status: "pending",
+                timestamp: Date.now()
+            }).then(() => {
+                alert("সাদ্দাম ভাই, বিক্রেতার আবেদনটি সফলভাবে জমা হয়েছে!");
+                // ফর্ম খালি করে দেওয়া
+                document.getElementById('sellerName').value = "";
+                document.getElementById('shopName').value = "";
+                document.getElementById('sellerPhone').value = "";
+            }).catch((error) => {
+                alert("দুঃখিত, কোনো সমস্যা হয়েছে: " + error.message);
+            });
+        } else {
+            alert("দয়া করে সবগুলো ঘর পূরণ করুন।");
+        }
+    }
+           </script>
+    
     
