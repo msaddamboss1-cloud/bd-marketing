@@ -2,8 +2,8 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Admin saddam | BD Marketing Ultra Master</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BD Marketing | Saddam Admin</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,189 +14,177 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@600;800&display=swap');
 
         :root {
-            --primary: #3b82f6; --accent: #f59e0b; --success: #10b981;
-            --bg-dark: #020617; --glass-bg: rgba(15, 23, 42, 0.85);
+            --bg: #ffffff; --text: #1a1a1a; --glass: rgba(255, 255, 255, 0.8);
+            --primary: #2563eb; --border: rgba(0,0,0,0.1);
         }
 
-        body {
-            background: var(--bg-dark); color: #e2e8f0;
-            font-family: 'Hind Siliguri', sans-serif;
-            margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
+        .dark-mode {
+            --bg: #020617; --text: #f3f4f6; --glass: rgba(15, 23, 42, 0.9);
+            --primary: #3b82f6; --border: rgba(255,255,255,0.1);
         }
 
-        /* প্রফেশনাল প্রি-লোডার */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
+        body { background: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.4s; overflow-x: hidden; }
+        
+        /* মাখন গ্লাস ইফেক্ট */
+        .master-glass {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* প্রি-লোডার */
+        #os-loader {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .shimmer { font-family: 'Orbitron'; font-size: 20px; color: var(--primary); animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* গ্লাস মরফিজম প্যানেল */
-        .ultra-glass {
-            background: var(--glass-bg); backdrop-filter: blur(30px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        /* প্রিমিয়াম ইনপুট ফিল্ড */
-        .master-input {
-            width: 100%; padding: 20px; background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.05); border-radius: 24px;
-            color: #fff; font-size: 14px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .master-input:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); outline: none; }
-
-        /* সাইডবার ডিজাইন */
+        /* সাইড মেনু */
         .sidebar {
-            position: fixed; left: -320px; top: 0; height: 100%; width: 300px;
-            background: #0f172a; z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1);
-            border-right: 1px solid rgba(255,255,255,0.05);
+            position: fixed; left: -300px; top: 0; height: 100%; width: 280px;
+            background: var(--bg); z-index: 5000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 2px solid var(--primary);
         }
         .sidebar.active { left: 0; }
 
-        /* বাটন এনিমেশন */
         .btn-master {
-            transition: 0.3s; position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white; border-radius: 20px; transition: 0.3s;
         }
-        .btn-master:active { transform: scale(0.96); }
+        .btn-master:active { transform: scale(0.95); }
 
         .hidden { display: none; }
+        .page-entry { animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="pb-24">
+<body class="dark-mode pb-10">
 
-    <div id="loader">
-        <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <div class="shimmer uppercase tracking-[5px]">BD Marketing</div>
+    <div id="os-loader">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <h1 class="mt-6 font-[Orbitron] text-blue-500 tracking-[8px] text-[10px] animate-pulse">SADDAM OS 5.0</h1>
     </div>
 
-    <div class="fixed inset-0 -z-10">
-        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-900/20 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-orange-900/20 rounded-full blur-[120px]"></div>
-    </div>
-
-    <header class="m-5 p-5 ultra-glass flex justify-between items-center sticky top-5 z-50">
+    <header class="m-4 p-5 master-glass sticky top-4 z-[4000] flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <button onclick="toggleNav()" class="w-12 h-12 ultra-glass flex items-center justify-center text-blue-500">
-                <i class="fas fa-bars-staggered"></i>
-            </button>
-            <div class="flex flex-col">
-                <span id="header-brand" class="font-bold text-lg leading-none">বিডি মার্কেটিং</span>
-                <span class="text-[8px] uppercase tracking-[3px] text-gray-500 font-bold mt-1">Admin: Saddam</span>
+            <button onclick="nav()" class="text-blue-500 text-xl"><i class="fas fa-bars-staggered"></i></button>
+            <div>
+                <h1 id="txt-brand" class="text-xs font-bold uppercase tracking-widest">বিডি মার্কেটিং</h1>
+                <p class="text-[7px] text-gray-500 font-black uppercase tracking-[2px]">Admin: Saddam</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <button onclick="langToggle()" id="lang-indicator" class="px-4 py-2 ultra-glass text-[10px] font-bold text-blue-400">BN/EN</button>
-            <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+            <button onclick="toggleTheme()" class="w-8 h-8 rounded-full border border-gray-700 flex items-center justify-center text-xs"><i class="fas fa-moon"></i></button>
+            <button onclick="toggleLang()" id="btn-lang" class="px-3 py-1 border border-blue-500/30 rounded-full text-[9px] font-bold text-blue-400">BN</button>
+            <div class="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e]"></div>
         </div>
     </header>
 
-    <nav id="sidebar" class="sidebar p-10">
-        <div class="flex justify-between items-center mb-12">
-            <h2 id="menu-title" class="text-xs font-bold uppercase tracking-widest text-gray-500">মাস্টার মেনু</h2>
-            <button onclick="toggleNav()" class="text-red-500 text-xl"><i class="fas fa-times"></i></button>
+    <aside id="menu-side" class="sidebar p-8">
+        <div class="flex justify-between items-center mb-10 pb-4 border-b border-gray-800">
+            <span id="txt-menu-label" class="text-[10px] font-bold text-blue-500 uppercase">মাস্টার ড্যাশবোর্ড</span>
+            <button onclick="nav()" class="text-red-500"><i class="fas fa-times"></i></button>
         </div>
-        <div class="space-y-6">
-            <button onclick="showPage('home')" class="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-white/5 transition"><i class="fas fa-home text-blue-400"></i> <span id="n-home">হোম ড্যাশবোর্ড</span></button>
-            <button onclick="showPage('market')" class="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-white/5 transition"><i class="fas fa-briefcase text-orange-400"></i> <span id="n-market">মার্কেট প্যানেল</span></button>
-            <button onclick="showPage('wallet')" class="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-white/5 transition"><i class="fas fa-wallet text-green-400"></i> <span id="n-wallet">ওয়ালেট পেমেন্ট</span></button>
-            <button onclick="showPage('profile')" class="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-white/5 transition"><i class="fas fa-user-shield text-purple-400"></i> <span id="n-profile">প্রোফাইল</span></button>
-        </div>
-        <div class="absolute bottom-10 left-10 text-[8px] text-gray-700 font-bold uppercase tracking-[4px]">Saddam OS v4.5 Enterprise</div>
-    </nav>
+        <nav class="space-y-6">
+            <button onclick="page('h')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-house"></i> <span id="txt-m1">হোম</span></button>
+            <button onclick="page('m')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-store"></i> <span id="txt-m2">মার্কেট</span></button>
+            <button onclick="page('w')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-wallet"></i> <span id="txt-m3">ওয়ালেট</span></button>
+            <button onclick="page('p')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-user-circle"></i> <span id="txt-m4">প্রোফাইল</span></button>
+            <button onclick="page('l')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-headset text-orange-400"></i> <span id="txt-m5">হেল্প সাপোর্ট</span></button>
+        </nav>
+    </aside>
 
-    <main id="app-content" class="px-6 space-y-8">
+    <main class="px-5 space-y-6">
 
-        <section id="page-home" class="page-transition">
-            <div class="grid grid-cols-2 gap-5 mb-8">
-                <div class="p-8 ultra-glass border-b-4 border-green-500">
-                    <p id="lbl-balance" class="text-[9px] text-gray-500 font-bold uppercase mb-2">ব্যালেন্স</p>
-                    <p id="val-balance" class="text-2xl font-bold font-[Orbitron]">৳ ০.০০</p>
+        <section id="p-h" class="page-entry">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-6 master-glass border-b-4 border-blue-600">
+                    <p id="txt-bal-label" class="text-[8px] text-gray-500 font-bold uppercase mb-2">মূল ব্যালেন্স</p>
+                    <p id="val-bal" class="text-xl font-bold font-[Orbitron]">৳ ০.০০</p>
                 </div>
-                <div class="p-8 ultra-glass border-b-4 border-orange-500">
-                    <p id="lbl-pending" class="text-[9px] text-gray-500 font-bold uppercase mb-2">পেন্ডিং</p>
-                    <p id="val-pending" class="text-2xl font-bold font-[Orbitron]">৳ ০.০০</p>
+                <div class="p-6 master-glass border-b-4 border-yellow-500">
+                    <p id="txt-pend-label" class="text-[8px] text-gray-500 font-bold uppercase mb-2">পেন্ডিং কাজ</p>
+                    <p id="val-pend" class="text-xl font-bold font-[Orbitron]">০</p>
                 </div>
             </div>
-            <div class="p-12 ultra-glass text-center relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
-                <h2 id="welcome-msg" class="text-2xl font-bold mb-4">স্বাগতম, জনাব!</h2>
-                <p id="welcome-sub" class="text-xs text-gray-400 leading-relaxed">আপনার অ্যাকাউন্টটি মাইক্রো-লেভেল সিকিউরিটি দ্বারা সুরক্ষিত। কাজ শুরু করতে মার্কেট প্যানেল ভিজিট করুন।</p>
+            <div class="mt-6 p-10 master-glass text-center">
+                <h2 id="txt-greet" class="text-xl font-bold">স্বাগতম, জনাব!</h2>
+                <p id="txt-sub" class="text-[10px] text-gray-500 mt-2">আপনার সুরক্ষিত প্যানেলটি এখন লাইভ আছে।</p>
+                <button onclick="page('m')" id="txt-start-btn" class="mt-8 px-10 py-4 btn-master text-[10px] font-bold uppercase shadow-xl">কাজ শুরু করুন</button>
             </div>
         </section>
 
-        <section id="page-market" class="hidden page-transition">
-            <div class="flex gap-4 mb-8 bg-black/40 p-2 rounded-3xl">
-                <button onclick="setMarketMode('buyer')" id="m-buyer" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg">ক্রেতা</button>
-                <button onclick="setMarketMode('seller')" id="m-seller" class="flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase">বিক্রেতা</button>
+        <section id="p-m" class="hidden page-entry">
+            <div class="flex gap-4 p-2 bg-black/20 rounded-3xl mb-8">
+                <button onclick="marketMode('b')" id="btn-buy" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase text-white">Buyer</button>
+                <button onclick="marketMode('s')" id="btn-sell" class="flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase">Seller</button>
             </div>
-            <div id="buyer-list" class="space-y-4">
-                <div class="p-10 text-center ultra-glass text-gray-500 italic text-sm">কোনো কাজ এই মুহূর্তে নেই।</div>
-            </div>
-            <div id="seller-form" class="hidden space-y-6 ultra-glass p-8">
-                <h3 id="lbl-post" class="text-center font-bold text-orange-500 uppercase tracking-widest mb-4">নতুন কাজ পাবলিশ</h3>
-                <input type="file" id="job-img" accept="image/*" class="master-input text-[10px]">
-                <p class="text-[8px] text-gray-500 -mt-4 ml-2">* লোগো ২ এমবি এর নিচে হতে হবে।</p>
-                <input type="text" id="job-title" placeholder="কাজের শিরোনাম" class="master-input">
-                <input type="url" id="job-link" placeholder="কাজের লিংক (URL)" class="master-input">
-                <input type="number" id="job-pay" placeholder="পেমেন্ট (৳)" class="master-input">
-                <textarea id="job-rules" placeholder="কাজের নিয়মাবলী..." class="master-input h-32"></textarea>
-                <textarea id="job-proof" placeholder="প্রমাণ হিসেবে কি কি প্রয়োজন?" class="master-input h-24"></textarea>
-                <button onclick="submitJob()" class="w-full py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-3xl font-bold text-xs uppercase shadow-2xl">লাইভ পাবলিশ করুন</button>
+            <div id="zone-b" class="p-12 master-glass text-center text-gray-600 text-sm italic" id="txt-no-job">বর্তমানে কোনো কাজ নেই।</div>
+            <div id="zone-s" class="hidden master-glass p-8 space-y-4">
+                <input type="file" id="f-img" class="w-full p-4 bg-black/20 rounded-2xl text-[10px]">
+                <input type="text" id="f-title" placeholder="কাজের নাম" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                <input type="number" id="f-pay" placeholder="পেমেন্ট (৳)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                <textarea id="f-desc" placeholder="বিস্তারিত নিয়ম..." class="w-full p-4 bg-black/20 rounded-2xl text-xs h-24"></textarea>
+                <button onclick="postJob()" id="txt-post-btn" class="w-full py-4 btn-master text-[10px] font-bold uppercase">পাবলিশ করুন</button>
             </div>
         </section>
 
-        <section id="page-wallet" class="hidden page-transition">
-            <div id="wall-guard" class="hidden p-20 ultra-glass text-center">
-                <i class="fas fa-lock text-5xl text-red-500 mb-6"></i>
-                <p id="lbl-locked" class="font-bold text-sm">জনাব, আপনার ওয়ালেট লক করা!</p>
+        <section id="p-w" class="hidden page-entry">
+            <div id="gate-lock" class="p-16 master-glass text-center">
+                <i class="fas fa-user-shield text-4xl text-red-500/50 mb-4"></i>
+                <p id="txt-lock-msg" class="text-xs font-bold">জনাব, লেনদেন করতে আইডি খুলুন!</p>
             </div>
-            <div id="wall-main" class="space-y-8">
+            <div id="gate-open" class="hidden space-y-6">
                 <div class="flex gap-4">
-                    <button onclick="setWallTab('dep')" id="w-dep" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase">ডিপোজিট</button>
-                    <button onclick="setWallTab('wd')" id="w-wd" class="flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase bg-black/40">উত্তোলন</button>
+                    <button onclick="wall('d')" id="bw-d" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] text-white">ডিপোজিট</button>
+                    <button onclick="wall('w')" id="bw-w" class="flex-1 py-4 bg-black/20 rounded-2xl font-bold text-[10px]">উত্তোলন</button>
                 </div>
-                <div id="form-dep" class="ultra-glass p-8 space-y-6">
-                    <p class="text-center text-[10px] text-gray-500 font-bold uppercase">সর্বোচ্চ ডিপোজিট: ৳৫০০০</p>
-                    <input type="number" id="d-amt" placeholder="টাকার পরিমাণ (৳)" class="master-input">
-                    <input type="text" id="d-trx" placeholder="Transaction ID" class="master-input">
-                    <button onclick="processDep()" class="w-full py-5 bg-blue-600 rounded-3xl font-bold text-xs uppercase shadow-xl">রিপোর্ট পাঠান</button>
+                <div id="box-d" class="master-glass p-8 space-y-4">
+                    <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-500/20 text-center">
+                        <p id="txt-pay-n" class="text-[8px] font-bold text-blue-400 mb-2 uppercase tracking-widest">টাকা পাঠানোর নম্বর</p>
+                        <p class="font-bold text-xs">বিকাশ: 01725780575</p>
+                        <p class="font-bold text-xs">নগদ: 01763584939</p>
+                    </div>
+                    <input type="number" id="d-val" placeholder="টাকা (৳৫০ - ৳৫০০০)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                    <input type="text" id="d-trx" placeholder="TrxID" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                    <button onclick="doDep()" id="txt-dep-btn" class="w-full py-4 btn-master text-[10px] font-bold">রিপোর্ট পাঠান</button>
                 </div>
-                <div id="form-wd" class="hidden ultra-glass p-8 space-y-6">
-                    <p class="text-center text-[10px] text-red-400 font-bold uppercase">সর্বনিম্ন উত্তোলন: ৳১০০</p>
-                    <input type="number" id="w-amt" placeholder="টাকার পরিমাণ (৳)" class="master-input">
-                    <input type="text" id="w-num" placeholder="বিকাশ/নগদ নম্বর" class="master-input">
-                    <button onclick="processWd()" class="w-full py-5 bg-orange-600 rounded-3xl font-bold text-xs uppercase shadow-xl">টাকা তুলুন</button>
+                <div id="box-w" class="hidden master-glass p-8 space-y-4">
+                    <input type="number" id="w-val" placeholder="টাকা (৳১০০ সর্বনিম্ন)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                    <input type="text" id="w-num" placeholder="বিকাশ/নগদ নম্বর" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
+                    <button onclick="doWd()" id="txt-wd-btn" class="w-full py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-bold">টাকা তুলুন</button>
                 </div>
             </div>
         </section>
 
-        <section id="page-profile" class="hidden page-transition">
-            <div id="prof-locked" class="hidden p-20 ultra-glass text-center">
-                <i class="fas fa-user-shield text-5xl text-gray-600 mb-6"></i>
-                <p class="font-bold text-sm">প্রোফাইল দেখতে লগইন প্রয়োজন।</p>
+        <section id="p-l" class="hidden page-entry">
+            <div class="p-10 master-glass text-center border-b-4 border-blue-600">
+                <h3 id="txt-email-h" class="font-bold">সরাসরি ইমেইল করুন</h3>
+                <p class="text-xs font-bold text-blue-500 mt-2">msaddamsarker65@gmail.com</p>
             </div>
-            <div id="prof-main" class="ultra-glass p-12 text-center">
-                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl font-bold shadow-2xl border-4 border-white/5">S</div>
-                <h2 id="prof-name" class="text-2xl font-bold">জনাব</h2>
-                <p id="prof-status" class="text-[10px] text-gray-500 uppercase tracking-[4px] mt-2">Verified Admin</p>
-                <div class="grid grid-cols-2 gap-4 mt-12">
-                    <div class="p-6 ultra-glass"><p class="text-[8px] text-gray-500 uppercase mb-2">সম্পন্ন কাজ</p><p class="text-xl font-bold">০</p></div>
-                    <div class="p-6 ultra-glass"><p class="text-[8px] text-gray-500 uppercase mb-2">ব্যালেন্স</p><p class="text-xl font-bold text-green-500">৳০</p></div>
+            <div class="mt-6 p-6 master-glass flex items-center gap-4">
+                <i class="fab fa-whatsapp text-3xl text-green-500"></i>
+                <div>
+                    <p class="text-[8px] uppercase text-gray-500 font-bold">Support Center</p>
+                    <p class="font-bold text-xs">01725780575</p>
                 </div>
+            </div>
+        </section>
+
+        <section id="p-p" class="hidden page-entry">
+            <div class="master-glass p-12 text-center">
+                <div class="w-20 h-20 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-2xl font-bold mb-4 text-white">জ</div>
+                <h2 id="txt-user-n" class="text-xl font-bold">জনাব</h2>
+                <p id="txt-user-s" class="text-[8px] text-gray-500 uppercase tracking-widest mt-2">ভেরিফাইড ইউজার</p>
             </div>
         </section>
 
     </main>
 
     <script>
-        // --- Firebase Master Config ---
-        const fbConfig = {
+        const config = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_Tf9O0KzGqM",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
             databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
@@ -205,103 +193,76 @@
             messagingSenderId: "678696512628",
             appId: "1:678696512628:web:edfc22a62f55dad41df521"
         };
-        firebase.initializeApp(fbConfig);
+        firebase.initializeApp(config);
         const db = firebase.database();
 
-        // --- State Management ---
-        let currentMode = "guest"; 
-        let currentLang = "BN";
-        const LIMITS = { wd: 100, dep: 5000, img: 2 * 1024 * 1024 };
+        let state = { lang: 'BN', theme: 'dark', user: 'guest', bal: 0 };
 
-        // --- UI Initialization ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
-            }, 2000);
-        });
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('os-loader').style.display = 'none'; }, 2000);
+            updateUI();
+        };
 
-        function toggleNav() { document.getElementById('sidebar').classList.toggle('active'); }
+        function nav() { document.getElementById('menu-side').classList.toggle('active'); }
 
-        function showPage(id) {
-            ['home', 'market', 'wallet', 'profile'].forEach(p => document.getElementById(`page-${p}`).classList.add('hidden'));
-            document.getElementById(`page-${id}`).classList.remove('hidden');
-            
-            // আল্ট্রা লেভেল গেস্ট প্রোটেকশন
-            if (currentMode === "guest") {
-                document.getElementById('welcome-msg').innerText = (currentLang === "BN") ? "স্বাগতম, জনাব!" : "Welcome, Janab!";
-                document.getElementById('val-balance').innerText = "৳ ০.০০";
-                document.getElementById('val-pending').innerText = "৳ ০.০০";
-                
-                if (id === 'wallet' || id === 'profile') {
-                    document.getElementById(id.substring(0,4) + '-locked').classList.remove('hidden');
-                    document.getElementById(id.substring(0,4) + '-main').classList.add('hidden');
-                }
-            } else {
-                document.getElementById('welcome-msg').innerText = (currentLang === "BN") ? "স্বাগতম জনাব সাদ্দাম!" : "Welcome Janab Saddam!";
-            }
-            
-            if(document.getElementById('sidebar').classList.contains('active')) toggleNav();
-            anime({ targets: `#page-${id}`, opacity: [0, 1], translateY: [30, 0], duration: 800, easing: 'easeOutExpo' });
+        function page(id) {
+            ['h', 'm', 'w', 'p', 'l'].forEach(x => document.getElementById('p-'+x).classList.add('hidden'));
+            document.getElementById('p-'+id).classList.remove('hidden');
+            if(document.getElementById('menu-side').classList.contains('active')) nav();
+            window.scrollTo(0,0);
         }
 
-        function setMarketMode(m) {
-            document.getElementById('buyer-list').classList.toggle('hidden', m !== 'buyer');
-            document.getElementById('seller-form').classList.toggle('hidden', m !== 'seller');
-            document.getElementById('m-buyer').className = m === 'buyer' ? 'flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg' : 'flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase';
-            document.getElementById('m-seller').className = m === 'seller' ? 'flex-1 py-4 bg-orange-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg' : 'flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase';
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            state.theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
         }
 
-        function setWallTab(t) {
-            document.getElementById('form-dep').classList.toggle('hidden', t !== 'dep');
-            document.getElementById('form-wd').classList.toggle('hidden', t !== 'wd');
-            document.getElementById('w-dep').classList.toggle('bg-blue-600', t === 'dep');
-            document.getElementById('w-wd').classList.toggle('bg-orange-600', t === 'wd');
+        function toggleLang() {
+            state.lang = (state.lang === 'BN') ? 'EN' : 'BN';
+            updateUI();
         }
 
-        // --- মাইক্রো-লেভেল ভ্যালিডেশন ---
-        function submitJob() {
-            const file = document.getElementById('job-img').files[0];
-            const title = document.getElementById('job-title').value;
-            const pay = document.getElementById('job-pay').value;
-
-            if (file && file.size > LIMITS.img) return Swal.fire('Error', 'জনাব, ইমেজ ২ এমবি এর বেশি হতে পারবে না!', 'error');
-            if (!title || !pay) return Swal.fire('সতর্কতা', 'কাজের শিরোনাম এবং পেমেন্ট দিন জনাব!', 'warning');
-
-            db.ref('ultra_jobs/').push({
-                title, pay, rules: document.getElementById('job-rules').value,
-                proof: document.getElementById('job-proof').value,
-                time: Date.now()
-            }).then(() => {
-                Swal.fire('অভিনন্দন', 'আপনার প্রজেক্টটি লাইভ হয়েছে!', 'success');
-                document.querySelectorAll('#seller-form input, #seller-form textarea').forEach(i => i.value = '');
-            });
+        function updateUI() {
+            const isBN = state.lang === 'BN';
+            document.getElementById('btn-lang').innerText = state.lang;
+            document.getElementById('txt-brand').innerText = isBN ? "বিডি মার্কেটিং" : "BD Marketing";
+            document.getElementById('txt-menu-label').innerText = isBN ? "মাস্টার ড্যাশবোর্ড" : "MASTER PANEL";
+            document.getElementById('txt-greet').innerText = isBN ? "স্বাগতম, জনাব!" : "Welcome, Janab!";
+            document.getElementById('txt-sub').innerText = isBN ? "আপনার সুরক্ষিত প্যানেলটি এখন লাইভ আছে।" : "Your secure panel is now live.";
+            document.getElementById('txt-m1').innerText = isBN ? "হোম" : "Home";
+            document.getElementById('txt-m2').innerText = isBN ? "মার্কেট" : "Market";
+            document.getElementById('txt-m3').innerText = isBN ? "ওয়ালেট" : "Wallet";
+            document.getElementById('txt-m4').innerText = isBN ? "প্রোফাইল" : "Profile";
+            document.getElementById('txt-m5').innerText = isBN ? "হেল্প সাপোর্ট" : "Help Support";
+            document.getElementById('txt-start-btn').innerText = isBN ? "কাজ শুরু করুন" : "Start Working";
+            document.getElementById('txt-bal-label').innerText = isBN ? "মূল ব্যালেন্স" : "Main Balance";
+            document.getElementById('txt-lock-msg').innerText = isBN ? "জনাব, লেনদেন করতে আইডি খুলুন!" : "Janab, Please Login to Trade!";
+            document.getElementById('txt-wd-btn').innerText = isBN ? "টাকা তুলুন" : "Withdraw Cash";
+            document.getElementById('txt-dep-btn').innerText = isBN ? "রিপোর্ট পাঠান" : "Send Report";
         }
 
-        function processDep() {
-            const amt = document.getElementById('d-amt').value;
-            if (amt > LIMITS.dep) return Swal.fire('লিমিট ক্রস', `একবারে সর্বোচ্চ ৳${LIMITS.dep} ডিপোজিট সম্ভব।`, 'error');
-            db.ref('transactions/deposits').push({ amount: amt, trx: document.getElementById('d-trx').value, status: 'pending' });
-            Swal.fire('সফল', 'রিপোর্ট সাবমিট হয়েছে।', 'success');
+        function doDep() {
+            const v = parseFloat(document.getElementById('d-val').value);
+            if (v < 50 || v > 5000) return Swal.fire('Error', state.lang==='BN' ? '৳৫০ - ৳৫০০০ এর মধ্যে দিন' : 'Amount must be ৳50 - ৳5000', 'error');
+            db.ref('reports/deposits').push({ val: v, trx: document.getElementById('d-trx').value, time: Date.now() });
+            Swal.fire('Success', state.lang==='BN' ? 'রিপোর্ট পাঠানো হয়েছে' : 'Report Sent Successfully', 'success');
         }
 
-        function processWd() {
-            const amt = document.getElementById('w-amt').value;
-            if (amt < LIMITS.wd) return Swal.fire('দুঃখিত', `সর্বনিম্ন ৳${LIMITS.wd} না হলে উইথড্র হবে না।`, 'warning');
-            db.ref('transactions/withdraws').push({ amount: amt, num: document.getElementById('w-num').value, status: 'pending' });
-            Swal.fire('রিকোয়েস্ট সফল', 'অ্যাডমিন পেমেন্ট পাঠিয়ে দিবে।', 'success');
+        function doWd() {
+            const v = parseFloat(document.getElementById('w-val').value);
+            if (v < 100) return Swal.fire('Error', state.lang==='BN' ? 'সর্বনিম্ন ১০০ টাকা' : 'Min ৳100 Required', 'error');
+            if (v > state.bal) return Swal.fire('Error', state.lang==='BN' ? 'পর্যাপ্ত ব্যালেন্স নেই' : 'Insufficient Balance', 'error');
+            db.ref('reports/withdraws').push({ val: v, num: document.getElementById('w-num').value, status: 'pending' });
+            Swal.fire('Sent', 'Success', 'success');
         }
 
-        function langToggle() {
-            currentLang = currentLang === "BN" ? "EN" : "BN";
-            document.getElementById('lang-indicator').innerText = currentLang === "BN" ? "BN/EN" : "EN/BN";
-            document.getElementById('header-brand').innerText = currentLang === "BN" ? "বিডি মার্কেটিং" : "BD Marketing";
-            document.getElementById('menu-title').innerText = currentLang === "BN" ? "মাস্টার মেনু" : "MASTER MENU";
-            
-            Swal.fire({ title: currentLang === "BN" ? "ভাষা পরিবর্তিত!" : "Language Switched!", timer: 800, showConfirmButton: false, icon: 'success' });
-            showPage(document.querySelector('main section:not(.hidden)').id.split('-')[1]);
+        function marketMode(m) {
+            document.getElementById('zone-b').classList.toggle('hidden', m !== 'b');
+            document.getElementById('zone-s').classList.toggle('hidden', m !== 's');
+            document.getElementById('btn-buy').classList.toggle('bg-blue-600', m === 'b');
+            document.getElementById('btn-sell').classList.toggle('bg-blue-600', m === 's');
         }
     </script>
 </body>
-                                                                                                                                                                    </html>
+    </html>
     
