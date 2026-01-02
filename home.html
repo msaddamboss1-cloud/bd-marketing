@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saddam Master Dashboard | BD Marketing</title>
+    <title>Saddam Admin | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        :root { --bg: #0b1120; --card: rgba(30, 41, 59, 0.7); --text: #ffffff; --accent: #3b82f6; }
-        .light-mode { --bg: #f1f5f9; --card: rgba(255, 255, 255, 0.9); --text: #1e293b; --accent: #2563eb; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.5s; margin: 0; }
-        .glass-ui { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
+        :root { --bg: #0b1120; --card: rgba(30, 41, 59, 0.7); --text: #ffffff; }
+        .light-mode { --bg: #f3f4f6; --card: rgba(255, 255, 255, 0.9); --text: #1e293b; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.5s; margin: 0; overflow-x: hidden; }
+        .glass-ui { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
         .sidebar { position: fixed; left: -280px; top: 0; height: 100%; width: 280px; background: #0f172a; z-index: 1000; transition: 0.4s; }
         .sidebar.active { left: 0; }
         .hidden { display: none; }
-        .job-card { border-left: 5px solid var(--accent); transition: 0.3s; }
-        .job-card:hover { transform: scale(1.02); }
-        .btn-gradient { background: linear-gradient(90deg, #3b82f6, #8b5cf6); transition: 0.3s; }
-        .btn-gradient:hover { opacity: 0.9; transform: translateY(-2px); }
     </style>
 </head>
 <body class="pb-10">
@@ -27,139 +27,151 @@
         <div class="flex items-center gap-3">
             <button onclick="toggleSidebar()" class="text-2xl text-blue-500"><i class="fas fa-bars"></i></button>
             <div class="flex flex-col">
-                <span class="text-sm font-bold lang-bn">বিডি মার্কেটিং</span>
-                <span class="text-sm font-bold lang-en hidden">BD Marketing</span>
-                <span class="text-[8px] text-gray-500 uppercase tracking-widest font-bold">Admin: Saddam</span>
+                <span class="text-sm font-bold">বিডি মার্কেটিং</span>
+                <span class="text-[7px] text-gray-500 uppercase tracking-[2px] font-bold">Admin: Saddam</span>
             </div>
         </div>
-        <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" class="w-9 h-9 glass-ui flex items-center justify-center text-yellow-400"><i class="fas fa-moon" id="theme-icon"></i></button>
-            <button onclick="toggleLang()" class="text-[10px] font-bold border px-2 py-1 rounded-lg border-blue-500 text-blue-500">EN/BN</button>
-            <button onclick="showSection('home')" class="w-9 h-9 glass-ui flex items-center justify-center text-blue-400"><i class="fas fa-home"></i></button>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleLang()" class="text-[10px] font-bold border px-2 py-1 rounded-lg border-blue-500 text-blue-500">BN/EN</button>
+            <button onclick="toggleTheme()" class="w-8 h-8 glass-ui flex items-center justify-center text-yellow-400"><i class="fas fa-moon" id="theme-icon"></i></button>
+            <button onclick="showSection('home')" class="w-8 h-8 glass-ui flex items-center justify-center text-blue-400"><i class="fas fa-home"></i></button>
         </div>
     </header>
 
     <div id="sidebar" class="sidebar p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-10 border-b border-gray-800 pb-5">
-            <span class="font-bold text-sm lang-bn">মেনু লিস্ট</span>
+            <span class="font-bold text-sm">মেনু লিস্ট</span>
             <button onclick="toggleSidebar()" class="text-xl text-red-500"><i class="fas fa-times"></i></button>
         </div>
         <nav class="space-y-4">
             <button onclick="showSection('profile')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-xl transition text-sm"><i class="fas fa-user-circle"></i> প্রোফাইল</button>
             <button onclick="showSection('wallet')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-xl transition text-sm"><i class="fas fa-wallet text-green-500"></i> ওয়ালেট</button>
-            <button onclick="showSection('seller')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-xl transition text-sm"><i class="fas fa-briefcase text-yellow-500"></i> বিক্রেতা মোড (কাজ)</button>
-            <a href="mailto:msaddamboss1@gmail.com" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-xl transition text-sm"><i class="fas fa-headset text-purple-500"></i> হেল্প সেন্টার</a>
-            <div class="pt-10"><a href="index.html" class="flex items-center gap-4 text-red-500 p-3 border border-red-500/20 rounded-xl text-sm"><i class="fas fa-power-off"></i> লগ আউট</a></div>
+            <button onclick="showSection('mode')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-xl transition text-sm"><i class="fas fa-sync text-yellow-500"></i> মোড সুইচ</button>
+            <div class="pt-10"><a href="index.html" class="flex items-center gap-4 text-red-500 p-3 border border-red-500/20 rounded-xl text-sm"><i class="fas fa-power-off"></i> লগআউট</a></div>
         </nav>
     </div>
 
     <main id="home-section" class="px-4">
         <div class="grid grid-cols-2 gap-4 mb-6 text-center">
-            <div class="p-5 glass-ui border-b-4 border-green-500">
+            <div class="p-5 glass-ui border-b-4 border-green-500 shadow-lg">
                 <p class="text-[10px] text-gray-500 uppercase font-bold">ব্যালেন্স</p>
-                <p class="text-2xl font-bold text-green-500">৳ ০.০০</p>
+                <p class="text-2xl font-bold text-green-500">৳ <span id="display-balance">০.০০</span></p>
             </div>
-            <div class="p-5 glass-ui border-b-4 border-yellow-500">
+            <div class="p-5 glass-ui border-b-4 border-yellow-500 shadow-lg">
                 <p class="text-[10px] text-gray-500 uppercase font-bold">পেন্ডিং</p>
                 <p class="text-2xl font-bold text-yellow-400">৳ ০.০০</p>
             </div>
         </div>
-        <div class="p-8 glass-ui text-center border border-white/5 shadow-inner">
-            <div class="w-16 h-16 bg-blue-600/20 rounded-full mx-auto flex items-center justify-center text-blue-500 text-2xl mb-4"><i class="fas fa-user-tie"></i></div>
-            <h2 class="text-lg font-bold">জনাব</h2>
-            <p class="text-xs text-gray-400 mt-2">আপনার অ্যাকাউন্টটি এখন প্রিমিয়াম লেভেলে আছে।</p>
+        <div class="p-8 glass-ui text-center shadow-inner">
+            <div class="w-16 h-16 bg-blue-600/20 rounded-full mx-auto flex items-center justify-center text-blue-500 text-2xl mb-4"><i class="fas fa-user-shield"></i></div>
+            <h2 class="text-lg font-bold">স্বাগতম, জনাব!</h2>
+            <p class="text-[10px] text-gray-400 mt-2 italic">সিস্টেম এখন ফায়ারবেসের সাথে সরাসরি যুক্ত।</p>
         </div>
     </main>
 
-    <div id="seller-section" class="px-4 hidden">
-        <div class="mb-6 p-5 glass-ui">
-            <h3 class="font-bold text-blue-400 mb-6 flex items-center gap-2"><i class="fas fa-tasks"></i> উপলভ্য কাজসমূহ</h3>
-            
-            <div class="p-5 bg-gray-900/40 rounded-3xl border border-gray-800 job-card mb-4">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="bg-blue-600 text-[8px] px-2 py-1 rounded-full font-bold uppercase">YouTube Task</span>
-                    <span class="text-green-400 font-bold text-sm">৳ ২.০০</span>
-                </div>
-                <h4 class="font-bold text-sm mb-2">চ্যানেল সাবস্ক্রাইব ও লাইক করুন</h4>
-                <p class="text-[10px] text-gray-400 mb-4">১ মিনিটে কাজটি সম্পন্ন করে পেমেন্ট নিন।</p>
-                <button onclick="openJobDetail('YouTube Subscribe', '২.০০')" class="w-full p-3 btn-gradient rounded-xl text-xs font-bold text-white uppercase tracking-wider">কাজটি দেখুন</button>
+    <div id="mode-section" class="px-4 hidden">
+        <div class="p-6 glass-ui text-center">
+            <h3 class="font-bold mb-6 text-sm">মোড পরিবর্তন</h3>
+            <div class="flex gap-4">
+                <button onclick="switchMode('buyer')" id="btn-buyer" class="flex-1 p-4 bg-blue-600 rounded-2xl font-bold text-[10px]">ক্রেতা মোড</button>
+                <button onclick="switchMode('seller')" id="btn-seller" class="flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px]">বিক্রেতা মোড</button>
             </div>
         </div>
-
-        <div id="job-detail-area" class="hidden animate-fade">
-            <div class="p-6 glass-ui border-t-4 border-blue-500 shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 id="detail-title" class="font-bold text-blue-400 text-lg">কাজের নাম</h3>
-                    <button onclick="this.parentElement.parentElement.parentElement.classList.add('hidden')" class="text-red-500"><i class="fas fa-times-circle text-xl"></i></button>
-                </div>
-                
-                <div class="space-y-6 mb-8">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-500 font-bold text-xs">১</div>
-                        <div>
-                            <p class="text-xs font-bold">লিঙ্ক ওপেন করুন</p>
-                            <p class="text-[10px] text-gray-400">নিচের বাটনে ক্লিক করে ইউটিউব ভিডিওটি ওপেন করুন।</p>
-                            <a href="#" class="inline-block mt-2 text-blue-400 underline text-[10px]">ভিডিও লিঙ্ক এখানে</a>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-500 font-bold text-xs">২</div>
-                        <div>
-                            <p class="text-xs font-bold">সাবস্ক্রাইব ও স্ক্রিনশট</p>
-                            <p class="text-[10px] text-gray-400">চ্যানেলটি সাবস্ক্রাইব করুন এবং একটি স্ক্রিনশট নিন।</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 text-green-500">
-                        <div class="w-8 h-8 bg-green-600/20 rounded-full flex items-center justify-center font-bold text-xs"><i class="fas fa-check"></i></div>
-                        <div>
-                            <p class="text-xs font-bold">পেমেন্ট নিশ্চিত</p>
-                            <p class="text-[10px]">সঠিকভাবে জমা দিলে সাথে সাথে ব্যালেন্সে <span id="detail-pay"></span> টাকা যোগ হবে।</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-black/20 p-5 rounded-3xl border border-white/5">
-                    <h4 class="text-xs font-bold mb-4 text-center text-gray-300 uppercase tracking-widest">প্রমাণ জমা দিন (Proof)</h4>
-                    <div class="space-y-4">
-                        <input type="text" placeholder="আপনার ইউটিউব নাম (Username)" class="w-full p-4 bg-gray-900 rounded-2xl text-xs border border-gray-800 outline-none focus:border-blue-500 transition">
-                        <input type="text" placeholder="স্ক্রিনশট লিঙ্ক (যদি থাকে)" class="w-full p-4 bg-gray-900 rounded-2xl text-xs border border-gray-800 outline-none focus:border-blue-500 transition">
-                        <button onclick="submitWork()" class="w-full p-4 bg-green-600 rounded-2xl font-bold text-xs text-white shadow-lg shadow-green-600/20 uppercase tracking-tighter">কাজের রিপোর্ট জমা দিন</button>
-                    </div>
-                </div>
+        <div id="buyer-content" class="mt-6 text-center text-[10px] text-gray-500">বর্তমানে কোনো কাজ নেই।</div>
+        <div id="seller-content" class="mt-6 hidden p-6 glass-ui border-t-2 border-yellow-500">
+            <h4 class="font-bold text-xs mb-4 text-center">নতুন কাজ পোস্ট করুন</h4>
+            <div class="space-y-4">
+                <input type="text" id="job-title" placeholder="কাজের নাম" class="w-full p-4 bg-gray-900 rounded-2xl text-xs outline-none border border-white/5">
+                <input type="number" id="job-pay" placeholder="পেমেন্ট (৳)" class="w-full p-4 bg-gray-900 rounded-2xl text-xs outline-none border border-white/5">
+                <button onclick="publishJob()" class="w-full p-4 bg-yellow-600 rounded-2xl font-bold text-xs uppercase shadow-lg">পাবলিশ করুন</button>
             </div>
         </div>
     </div>
 
-    <div id="wallet-section" class="px-4 hidden text-center p-10 glass-ui">ওয়ালেট সেকশন লোড হচ্ছে...</div>
-    <div id="profile-section" class="px-4 hidden text-center p-10 glass-ui">প্রোফাইল সেকশন লোড হচ্ছে...</div>
+    <div id="wallet-section" class="px-4 hidden">
+        <div class="p-6 glass-ui text-center">
+            <h3 class="font-bold text-green-500 mb-6 uppercase text-xs tracking-widest">ডিপোজিট</h3>
+            <div class="space-y-2 mb-6 text-[10px]">
+                <div class="p-3 bg-pink-600/10 rounded-xl flex justify-between"><span>Bkash (P)</span><span class="font-bold">01725780575</span></div>
+                <div class="p-3 bg-orange-600/10 rounded-xl flex justify-between"><span>Nagad (P)</span><span class="font-bold">01763584939</span></div>
+            </div>
+            <input type="text" id="trx-id" placeholder="Transaction ID (TrxID)" class="w-full p-4 bg-gray-800 rounded-2xl text-xs outline-none border border-white/5 mb-4">
+            <button onclick="submitDeposit()" class="w-full p-4 bg-blue-600 rounded-2xl font-bold text-xs uppercase shadow-lg">সাবমিট রিপোর্ট</button>
+        </div>
+    </div>
+
+    <div id="profile-section" class="px-4 hidden text-center">
+        <div class="p-8 glass-ui">
+            <div class="w-20 h-20 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-3xl font-bold border-4 border-white/10 shadow-xl">J</div>
+            <h2 class="text-xl font-bold mt-4">জনাব</h2>
+            <p class="text-[10px] text-gray-500 mb-6 uppercase tracking-wider">Verified Profile</p>
+            <div class="grid grid-cols-2 gap-3 text-[10px] font-bold">
+                <div class="p-4 bg-gray-900/50 rounded-2xl border border-white/5">গৃহীত কাজ: ০</div>
+                <div class="p-4 bg-gray-900/50 rounded-2xl border border-white/5">সম্পন্ন কাজ: ০</div>
+            </div>
+        </div>
+    </div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_Tf9O0KzGqM",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.appspot.com",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521",
+            measurementId: "G-3CP5DC4H44"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('theme-icon');
-            icon.classList.toggle('fa-moon');
-            icon.classList.toggle('fa-sun');
-        }
-        function toggleLang() {
-            document.querySelectorAll('.lang-bn, .lang-en').forEach(el => el.classList.toggle('hidden'));
-        }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        function toggleLang() { alert('ভাষা পরিবর্তন সফল!'); }
+
         function showSection(id) {
-            ['home-section', 'seller-section', 'wallet-section', 'profile-section'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['home-section', 'mode-section', 'wallet-section', 'profile-section'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id + '-section').classList.remove('hidden');
             if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
         }
-        function openJobDetail(title, pay) {
-            document.getElementById('job-detail-area').classList.remove('hidden');
-            document.getElementById('detail-title').innerText = title;
-            document.getElementById('detail-pay').innerText = pay;
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+        function switchMode(mode) {
+            document.getElementById('buyer-content').classList.toggle('hidden', mode !== 'buyer');
+            document.getElementById('seller-content').classList.toggle('hidden', mode !== 'seller');
+            document.getElementById('btn-buyer').className = mode === 'buyer' ? 'flex-1 p-4 bg-blue-600 rounded-2xl font-bold text-[10px]' : 'flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px]';
+            document.getElementById('btn-seller').className = mode === 'seller' ? 'flex-1 p-4 bg-yellow-600 rounded-2xl font-bold text-[10px]' : 'flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px]';
         }
-        function submitWork() {
-            alert('জনাব, আপনার কাজের রিপোর্ট সফলভাবে পাঠানো হয়েছে! এডমিন খুব দ্রুত চেক করে পেমেন্ট দিয়ে দেবে।');
-            document.getElementById('job-detail-area').classList.add('hidden');
+
+        function submitDeposit() {
+            const trxId = document.getElementById('trx-id').value;
+            if(!trxId) return alert('TrxID লিখুন!');
+            database.ref('deposits/').push({
+                transactionId: trxId,
+                status: 'pending',
+                timestamp: Date.now()
+            }).then(() => {
+                alert('জনাব, আপনার ট্রানজেকশন আইডি সফলভাবে ডাটাবেসে পাঠানো হয়েছে!');
+                document.getElementById('trx-id').value = '';
+            });
+        }
+
+        function publishJob() {
+            const title = document.getElementById('job-title').value;
+            const pay = document.getElementById('job-pay').value;
+            if(!title || !pay) return alert('সব তথ্য পূরণ করুন!');
+            database.ref('jobs/').push({
+                title: title,
+                payment: pay,
+                timestamp: Date.now()
+            }).then(() => {
+                alert('অভিনন্দন জনাব, আপনার কাজটি লাইভ করা হয়েছে!');
+                document.getElementById('job-title').value = '';
+                document.getElementById('job-pay').value = '';
+            });
         }
     </script>
 </body>
-                                                                                       </html>
-                                                                                       
+                                                                                   </html>
+    
