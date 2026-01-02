@@ -3,135 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD Marketing | Admin Saddam</title>
+    <title>Master Admin | Saddam Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        body { background-color: #0b1120; color: white; font-family: 'Hind Siliguri', sans-serif; overflow-x: hidden; }
-        .glass-ui { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(15px); border: 1px solid #334155; border-radius: 24px; }
-        .master-logo {
-            width: 100px; height: 100px; border-radius: 50%;
-            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
-            border: 3px solid #d4af37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin: 0 auto 20px auto;
-        }
-        .input-group { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; background: #0f172a; border: 1px solid #334155; color: white; outline: none; transition: 0.3s; }
-        .btn-primary { width: 100%; padding: 14px; border-radius: 12px; font-weight: bold; background: #2563eb; transition: 0.3s; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .hidden { display: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { background: #0f172a; color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); border-radius: 35px; }
+        .m-input { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: white; }
+        .btn-master { background: linear-gradient(135deg, #2563eb, #1e40af); transition: 0.3s; }
+        .lang-btn { position: absolute; top: 20px; right: 20px; z-index: 100; border: 1px solid #3b82f6; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body class="min-h-screen flex flex-col items-center p-4">
 
-    <div class="w-full max-w-md glass-ui p-8 shadow-2xl relative text-center">
-        <div class="absolute top-4 right-4">
-            <button onclick="toggleLang()" class="text-[10px] border border-gray-600 px-2 py-1 rounded">EN/বাংলা</button>
+    <button onclick="toggleLang()" id="btn-lang" class="lang-btn px-4 py-1.5 rounded-full text-[10px] font-bold text-blue-400 bg-blue-900/20">EN/বাংলা</button>
+
+    <div id="auth-page" class="w-full max-w-md glass-card p-8 mt-10 space-y-6 shadow-2xl relative">
+        
+        <div class="text-center">
+            <div class="w-20 h-20 border-2 border-yellow-500 rounded-full mx-auto flex items-center justify-center bg-black/40">
+                <div class="text-center">
+                    <h2 class="text-xl font-black text-white">BD</h2>
+                    <p class="text-[6px] text-gray-400 uppercase tracking-widest">Marketing</p>
+                </div>
+            </div>
+            <h1 id="txt-brand" class="text-2xl font-bold text-blue-400 mt-2">বিডি মার্কেটিং</h1>
+            <p class="text-[7px] font-black text-gray-500 uppercase tracking-[4px]">Admin: Saddam</p>
         </div>
 
-        <div class="master-logo">
-            <span class="text-3xl font-bold">BD</span>
-            <span class="text-[8px] uppercase tracking-widest text-gray-400">Marketing</span>
+        <div class="flex justify-center gap-2 py-3 px-4 bg-blue-600/10 rounded-2xl border border-blue-500/20">
+            <div class="text-center px-3 border-r border-white/10">
+                <p class="text-[7px] font-bold text-pink-500 uppercase">Bkash</p>
+                <p class="text-[10px] font-bold text-white">01725780575</p>
+            </div>
+            <div class="text-center px-3">
+                <p class="text-[7px] font-bold text-orange-500 uppercase">Nagad</p>
+                <p class="text-[10px] font-bold text-white">01763584939</p>
+            </div>
         </div>
 
-        <h2 id="site-title" class="text-2xl font-bold text-blue-400 mb-1">বিডি মার্কেটিং</h2>
-        <p id="admin-info" class="text-[10px] text-gray-500 mb-8 uppercase tracking-widest">Admin: Saddam</p>
-
-        <div class="flex bg-gray-900/80 p-1 rounded-xl mb-6">
-            <button id="seller-tab" onclick="switchMode('seller')" class="flex-1 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white">বিক্রেতা</button>
-            <button id="buyer-tab" onclick="switchMode('buyer')" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-400">ক্রেতা</button>
-        </div>
-
-        <div id="auth-section">
-            <input type="text" id="reg-name" placeholder="আপনার পূর্ণ নাম" class="input-group">
-            <input type="text" id="reg-user" placeholder="ইউজার নেম" class="input-group">
-            <input type="number" id="reg-age" placeholder="আপনার বয়স" class="input-group">
-            <input type="email" id="reg-email" placeholder="জিমেইল আইডি" class="input-group">
-            <input type="password" id="reg-pass" placeholder="শক্তিশালী পাসওয়ার্ড" class="input-group">
+        <div class="space-y-4">
+            <input type="text" id="r-name" placeholder="আপনার নাম" class="w-full p-4 m-input text-xs outline-none">
+            <input type="email" id="r-email" placeholder="জিমেইল আইডি" class="w-full p-4 m-input text-xs outline-none">
+            <input type="password" id="r-pass" placeholder="পাসওয়ার্ড" class="w-full p-4 m-input text-xs outline-none">
             
-            <button onclick="handleRegistration()" class="btn-primary">রেজিস্ট্রেশন করুন</button>
-            <button onclick="window.location.href='home.html?mode=guest'" class="w-full bg-gray-700 p-4 rounded-xl font-bold mt-4 text-xs">গেস্ট হিসেবে দেখুন (Guest Mode)</button>
-        </div>
-
-        <div id="otp-modal" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-50">
-            <div class="glass-ui w-full max-w-xs p-8 text-center border-blue-500">
-                <h3 class="font-bold mb-2">জিমেইল যাচাই</h3>
-                <p class="text-[10px] text-gray-400 mb-6">আপনার জিমেইলে পাঠানো ৬ ডিজিটের কোড দিন</p>
-                <input type="number" id="otp-input" placeholder="000000" class="input-group text-center text-2xl tracking-[10px]">
-                <button onclick="verifyAndRedirect()" class="btn-primary">ভেরিফাই সম্পন্ন করুন</button>
-            </div>
-        </div>
-
-        <div class="mt-10 border-t border-gray-700 pt-6">
-            <div class="flex justify-between text-[10px] mb-4">
-                <span class="text-pink-500">Bkash: <b id="bkash-num">01725780575</b></span>
-                <span class="text-orange-500">Nagad: <b id="nagad-num">01763584939</b></span>
-            </div>
-            <div class="flex justify-center gap-6 opacity-60 text-xs">
-                <a id="yt-link" href="#" target="_blank">YouTube</a>
-                <a id="fb-link" href="#" target="_blank">Facebook</a>
-            </div>
+            <button onclick="handleAuth()" id="txt-reg-btn" class="w-full py-4 btn-master rounded-2xl font-bold text-xs uppercase tracking-widest">রেজিস্ট্রেশন করুন</button>
+            <button onclick="showHome()" id="txt-guest-btn" class="w-full py-4 bg-gray-800/40 rounded-2xl font-bold text-[9px] text-gray-400 uppercase">গেস্ট মোড</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <div id="home-page" class="hidden w-full max-w-md space-y-6">
+        <div class="glass-card p-6 text-center border-b-4 border-blue-600">
+            <h2 id="txt-home-bal" class="text-xs text-gray-500 font-bold uppercase">ব্যালেন্স</h2>
+            <p class="text-2xl font-bold text-white">৳ ০.০০</p>
+        </div>
 
-        const firebaseConfig = {
-            authDomain: "bd-marketing-7257b.firebaseapp.com",
-            databaseURL: "https://bd-marketing-7257b-default-rtdb.firebaseio.com",
-            projectId: "bd-marketing-7257b",
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // অ্যাডমিন প্যানেল থেকে ডাটা সিঙ্ক
-        const settingsRef = ref(db, 'admin_settings');
-        onValue(settingsRef, (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                document.getElementById('bkash-num').innerText = data.bkash;
-                document.getElementById('nagad-num').innerText = data.nagad;
-                document.getElementById('yt-link').href = data.youtube;
-                document.getElementById('fb-link').href = data.facebook;
-                document.getElementById('admin-info').innerText = "Admin: " + (data.admin_name || "Saddam");
-            }
-        });
-    </script>
+        <div class="glass-card p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <i class="fas fa-wallet text-blue-500"></i>
+                <p id="txt-pay-head" class="text-[10px] font-bold uppercase tracking-widest text-blue-400">ডিপোজিট মাধ্যম</p>
+            </div>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center p-4 bg-black/20 rounded-2xl border border-white/5">
+                    <span class="text-xs font-bold text-pink-500">বিকাশ (Personal)</span>
+                    <span class="text-xs font-mono select-all">01725780575</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-black/20 rounded-2xl border border-white/5">
+                    <span class="text-xs font-bold text-orange-500">নগদ (Personal)</span>
+                    <span class="text-xs font-mono select-all">01763584939</span>
+                </div>
+            </div>
+            <p id="txt-pay-info" class="text-[8px] text-gray-500 mt-4 text-center italic">*নম্বরে টাকা পাঠিয়ে TrxID দিয়ে রিপোর্ট করুন।</p>
+        </div>
+    </div>
 
     <script>
-        function switchMode(mode) {
-            const seller = document.getElementById('seller-tab');
-            const buyer = document.getElementById('buyer-tab');
-            if(mode === 'seller') {
-                seller.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white";
-                buyer.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-400";
-            } else {
-                buyer.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white";
-                seller.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-400";
-            }
+        let isBN = true;
+
+        function toggleLang() {
+            isBN = !isBN;
+            document.getElementById('btn-lang').innerText = isBN ? "EN/বাংলা" : "বাংলা/EN";
+            updateText();
         }
 
-        function handleRegistration() {
-            const email = document.getElementById('reg-email').value;
-            if(!email) return alert("জিমেইল আইডি দিন!");
-            document.getElementById('otp-modal').classList.remove('hidden');
+        function updateText() {
+            document.getElementById('txt-brand').innerText = isBN ? "বিডি মার্কেটিং" : "BD Marketing";
+            document.getElementById('txt-reg-btn').innerText = isBN ? "রেজিস্ট্রেশন করুন" : "REGISTER NOW";
+            document.getElementById('txt-guest-btn').innerText = isBN ? "গেস্ট মোড" : "GUEST MODE";
+            document.getElementById('txt-home-bal').innerText = isBN ? "ব্যালেন্স" : "BALANCE";
+            document.getElementById('txt-pay-head').innerText = isBN ? "ডিপোজিট মাধ্যম" : "PAYMENT GATEWAY";
         }
 
-        function verifyAndRedirect() {
-            const otp = document.getElementById('otp-input').value;
-            if(otp === "123456") {
-                alert("সফল! জনাব, আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে।");
-                window.location.href = "home.html";
-            } else { alert("ভুল ওটিপি!"); }
+        function showHome() {
+            document.getElementById('auth-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+            Swal.fire('স্বাগতম', 'জনাব, আপনি গেস্ট হিসেবে প্রবেশ করেছেন।', 'success');
         }
-        
-        function toggleLang() { alert("ভাষা পরিবর্তনের অপশনটি পরবর্তী আপডেটে লোড হবে।"); }
+
+        function handleAuth() {
+            const email = document.getElementById('r-email').value;
+            if(!email.includes('@')) return Swal.fire('Error', 'সঠিক জিমেইল দিন', 'error');
+            Swal.fire('সফল', 'আপনার জিমেইল ভেরিফাই করুন।', 'success');
+        }
     </script>
 </body>
-                    </html>
-                        
- 
-
+    </html>
+    
