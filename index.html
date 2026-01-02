@@ -1,35 +1,60 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BD Marketing | Mobile</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; }
+        .card { background: #1e293b; border-radius: 15px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .logo-circle { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #10b981; margin: 0 auto 20px; display: block; background: #0f172a; overflow: hidden; }
+        h2 { text-align: center; color: #10b981; font-size: 20px; margin-bottom: 25px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; }
+        .btn { width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-bottom: 10px; }
+        .btn-blue { background: #3b82f6; }
+        .btn-gray { background: #64748b; }
+        .toggle-text { text-align: center; margin-top: 15px; color: #94a3b8; font-size: 14px; text-decoration: underline; cursor: pointer; }
+        #login-section { display: none; } /* শুরুতে লগইন লুকানো থাকবে */
+    </style>
+    <script>
+        function showLogin() {
+            document.getElementById('registration-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+        function showReg() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('registration-section').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="logo-circle">
+        <img src="1000148612.jpg" alt="Logo" style="width:100%; height:100%; object-fit: cover;">
+    </div>
 
-script>
-    // বিক্রেতা ফর্ম সাবমিট করার ফাংশন
-    function submitSellerForm() {
-        const name = document.getElementById('sellerName').value;
-        const shop = document.getElementById('shopName').value;
-        const phone = document.getElementById('sellerPhone').value;
-        const cat = document.getElementById('category').value;
+    <div id="registration-section" class="card">
+        <h2>বিক্রেতা হিসেবে যোগ দিন</h2>
+        <input type="text" placeholder="আপনার পূর্ণ নাম">
+        <input type="text" placeholder="দোকান বা ব্যবসার নাম">
+        <input type="tel" placeholder="আপনার ফোন নম্বর">
+        <button class="btn">আবেদন জমা দিন</button>
+        
+        <div style="margin-top: 20px; border-top: 1px solid #334155; padding-top: 15px;">
+            <button class="btn btn-blue" onclick="showLogin()">লগইন করুন (Login)</button>
+            <button class="btn btn-gray">গেস্ট হিসেবে দেখুন (Guest)</button>
+        </div>
+    </div>
 
-        if(name && shop && phone) {
-            // ফায়ারবেস ডাটাবেজে তথ্য সেভ করা
-            const sellerRef = firebase.database().ref('pending_sellers');
-            sellerRef.push({
-                fullName: name,
-                businessName: shop,
-                contactNumber: phone,
-                category: cat,
-                status: "pending",
-                timestamp: Date.now()
-            }).then(() => {
-                alert("জনাব, বিক্রেতার আবেদনটি সফলভাবে জমা হয়েছে!");
-                // ফর্ম খালি করে দেওয়া
-                document.getElementById('sellerName').value = "";
-                document.getElementById('shopName').value = "";
-                document.getElementById('sellerPhone').value = "";
-            }).catch((error) => {
-                alert("দুঃখিত, কোনো সমস্যা হয়েছে: " + error.message);
-            });
-        } else {
-            alert("দয়া করে সবগুলো ঘর পূরণ করুন।");
-    
-    
+    <div id="login-section" class="card">
+        <h2 style="color: #3b82f6;">আপনার অ্যাকাউন্টে লগইন</h2>
+        <input type="email" placeholder="জিমেইল অ্যাড্রেস">
+        <input type="password" placeholder="গোপন পাসওয়ার্ড">
+        <button class="btn btn-blue">প্রবেশ করুন</button>
+        <p class="toggle-text" onclick="showReg()">নতুন অ্যাকাউন্ট খুলতে ব্যাকে যান</p>
+    </div>
+</div>
+</body>
+</html>
 
-
-    
