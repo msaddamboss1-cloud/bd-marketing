@@ -3,134 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saddam Admin | BD Marketing</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Saddam Admin | BD Marketing Ultimate</title>
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        :root { --bg: #0b1120; --card: rgba(30, 41, 59, 0.85); --text: #ffffff; }
-        .light-mode { --bg: #f8fafc; --card: rgba(255, 255, 255, 0.95); --text: #0f172a; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.5s; margin: 0; overflow-x: hidden; }
-        .glass-ui { background: var(--card); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
-        .sidebar { position: fixed; left: -280px; top: 0; height: 100%; width: 280px; background: #0f172a; z-index: 1000; transition: 0.4s; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --primary: #3b82f6; --secondary: #10b981; --dark-bg: #030712;
+            --glass: rgba(17, 24, 39, 0.8); --card-border: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background: var(--dark-bg); color: #f3f4f6;
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Loading Screen */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center;
+        }
+
+        .loader-orbit { width: 60px; height: 60px; border: 4px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Custom Sidebar */
+        .sidebar {
+            position: fixed; left: -320px; top: 0; height: 100%; width: 300px;
+            background: #0f172a; z-index: 999; transition: 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
         .sidebar.active { left: 0; }
-        .input-box { width: 100%; padding: 18px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: white; outline: none; transition: 0.3s; }
-        .input-box:focus { border-color: #3b82f6; background: rgba(0,0,0,0.6); }
+
+        /* Inputs */
+        .premium-input {
+            width: 100%; padding: 18px; background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+            color: white; transition: 0.3s;
+        }
+        .premium-input:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); outline: none; }
+
+        .btn-glow {
+            transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .btn-glow:active { transform: scale(0.95); }
+
         .hidden { display: none; }
     </style>
 </head>
-<body class="pb-20">
+<body>
 
-    <header class="flex justify-between items-center p-4 m-3 glass-ui shadow-2xl sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="text-2xl text-blue-500 active:scale-90 transition"><i class="fas fa-bars"></i></button>
-            <div class="flex flex-col">
-                <span class="text-sm font-bold tracking-tight" id="brand-name">বিডি মার্কেটিং</span>
-                <span class="text-[7px] text-gray-500 uppercase tracking-[2px] font-bold">Admin: Saddam</span>
+    <div id="preloader"><div class="loader-orbit"></div></div>
+
+    <div class="fixed top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none">
+        <div class="absolute top-10 left-10 w-96 h-96 bg-blue-600 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-600 rounded-full blur-[120px]"></div>
+    </div>
+
+    <header class="m-5 p-5 glass-card sticky top-5 z-50 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleNav()" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-blue-600/10 text-blue-500 text-2xl">
+                <i class="fas fa-bars-staggered"></i>
+            </button>
+            <div>
+                <h1 id="b-name" class="text-lg font-bold tracking-tight">বিডি মার্কেটিং</h1>
+                <p class="text-[8px] uppercase tracking-[3px] text-gray-500 font-bold">Admin: Saddam</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <button onclick="toggleLang()" class="text-[9px] font-bold border px-2 py-1 rounded-lg border-blue-500/50 text-blue-400" id="lang-btn">BN/EN</button>
-            <button onclick="toggleTheme()" class="text-yellow-400 text-lg"><i class="fas fa-moon" id="theme-icon"></i></button>
-            <button onclick="showSection('home')" class="text-blue-400 text-lg"><i class="fas fa-home"></i></button>
+            <button onclick="switchLang()" id="lang-btn" class="px-4 py-2 border border-white/10 rounded-full text-[10px] font-bold">BN / EN</button>
+            <div id="status-dot" class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
         </div>
     </header>
 
-    <div id="sidebar" class="sidebar p-8">
-        <div class="flex justify-between items-center mb-10 border-b border-gray-800 pb-5">
-            <span class="font-bold text-sm uppercase tracking-widest" id="menu-title">মেনু লিস্ট</span>
-            <button onclick="toggleSidebar()" class="text-xl text-red-500"><i class="fas fa-times"></i></button>
+    <aside id="sidebar" class="sidebar p-10">
+        <div class="flex justify-between items-center mb-12 border-b border-gray-800 pb-6">
+            <h2 id="s-menu" class="text-xs font-bold uppercase tracking-widest text-blue-400">মাস্টার মেনু</h2>
+            <button onclick="toggleNav()" class="text-red-500"><i class="fas fa-times"></i></button>
         </div>
-        <nav class="space-y-6">
-            <button onclick="showSection('profile')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-2xl transition text-sm"><i class="fas fa-user-circle text-blue-500"></i> <span id="nav-profile">প্রোফাইল</span></button>
-            <button onclick="showSection('wallet')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-2xl transition text-sm"><i class="fas fa-wallet text-green-500"></i> <span id="nav-wallet">ওয়ালেট</span></button>
-            <button onclick="showSection('mode')" class="flex items-center gap-4 w-full p-3 hover:bg-blue-600/10 rounded-2xl transition text-sm"><i class="fas fa-briefcase text-yellow-500"></i> <span id="nav-work">কাজের প্যানেল</span></button>
-            <div class="pt-10"><a href="index.html" class="flex items-center gap-4 text-red-500 p-4 border border-red-500/20 rounded-2xl text-xs font-bold uppercase"><i class="fas fa-power-off"></i> লগআউট</a></div>
+        <nav class="space-y-8">
+            <button onclick="navigate('home')" class="nav-btn flex items-center gap-4 w-full"><i class="fas fa-home text-blue-400"></i> <span id="n-home">হোম ড্যাশবোর্ড</span></button>
+            <button onclick="navigate('profile')" class="nav-btn flex items-center gap-4 w-full"><i class="fas fa-user-astronaut text-purple-400"></i> <span id="n-prof">ইউজার প্রোফাইল</span></button>
+            <button onclick="navigate('wallet')" class="nav-btn flex items-center gap-4 w-full"><i class="fas fa-wallet text-green-400"></i> <span id="n-wall">পেমেন্ট ওয়ালেট</span></button>
+            <button onclick="navigate('market')" class="nav-btn flex items-center gap-4 w-full"><i class="fas fa-shopping-cart text-yellow-400"></i> <span id="n-mark">মার্কেট প্যানেল</span></button>
         </nav>
-    </div>
+        <div class="absolute bottom-10 left-10 text-[10px] text-gray-600 font-bold uppercase tracking-widest">Version 4.0.1 Stable</div>
+    </aside>
 
-    <main id="home-section" class="px-4 animate-fade-in">
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="p-6 glass-ui border-b-4 border-green-500 text-center">
-                <p class="text-[9px] text-gray-500 uppercase font-bold mb-1" id="bal-text">মোট ব্যালেন্স</p>
-                <p class="text-2xl font-bold text-green-500">৳ ০.০০</p>
+    <main id="main-content" class="px-6 space-y-8">
+        
+        <section id="view-home" class="animate-view">
+            <div class="grid grid-cols-2 gap-5 mb-8">
+                <div class="p-8 glass-card border-l-8 border-green-500 shadow-lg">
+                    <p id="l-bal" class="text-[10px] text-gray-500 font-bold mb-2">মোট উপার্জন</p>
+                    <p class="text-3xl font-bold font-[Orbitron]">৳ ০.০০</p>
+                </div>
+                <div class="p-8 glass-card border-l-8 border-yellow-500 shadow-lg">
+                    <p id="l-pend" class="text-[10px] text-gray-500 font-bold mb-2">পেন্ডিং ব্যালেন্স</p>
+                    <p class="text-3xl font-bold font-[Orbitron]">৳ ০.০০</p>
+                </div>
             </div>
-            <div class="p-6 glass-ui border-b-4 border-yellow-500 text-center">
-                <p class="text-[9px] text-gray-500 uppercase font-bold mb-1" id="pend-text">পেন্ডিং টাকা</p>
-                <p class="text-2xl font-bold text-yellow-500">৳ ০.০০</p>
+            <div class="p-12 glass-card text-center group">
+                <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-full mx-auto flex items-center justify-center text-4xl mb-6 shadow-2xl group-hover:rotate-12 transition duration-500"><i class="fas fa-award text-white"></i></div>
+                <h2 id="l-welcome" class="text-2xl font-bold">স্বাগতম জনাব সাদ্দাম!</h2>
+                <p id="l-sub" class="text-xs text-gray-500 mt-3 leading-relaxed">আপনার অ্যাকাউন্টটি এখন ভেরিফাইড। আপনি এখন যেকোনো প্রজেক্ট পাবলিশ বা গ্রহণ করতে পারেন।</p>
             </div>
-        </div>
-        <div class="p-10 glass-ui text-center border border-white/5 shadow-inner">
-            <div class="w-20 h-20 bg-blue-600/10 rounded-full mx-auto flex items-center justify-center text-blue-500 text-3xl mb-5 shadow-lg"><i class="fas fa-shield-alt"></i></div>
-            <h2 class="text-xl font-bold mb-2" id="welcome-msg">স্বাগতম, জনাব!</h2>
-            <p class="text-xs text-gray-400" id="sub-msg">আপনার অ্যাকাউন্টটি এখন ফায়ারবেস ক্লাউডের সাথে সুরক্ষিত।</p>
-        </div>
+        </section>
+
+        <section id="view-market" class="hidden animate-view">
+            <div class="flex gap-4 mb-8 bg-black/30 p-2 rounded-3xl">
+                <button onclick="setMode('buyer')" id="btn-buyer" class="flex-1 py-4 rounded-2xl font-bold text-xs uppercase bg-blue-600 shadow-xl transition">ক্রেতা মোড</button>
+                <button onclick="setMode('seller')" id="btn-seller" class="flex-1 py-4 rounded-2xl font-bold text-xs uppercase bg-transparent transition">বিক্রেতা মোড</button>
+            </div>
+
+            <div id="buyer-panel" class="p-10 text-center text-gray-600 italic text-sm">বর্তমানে কোনো প্রজেক্ট নেই। অনুগ্রহ করে অপেক্ষা করুন।</div>
+
+            <div id="seller-panel" class="hidden glass-card p-10 space-y-6">
+                <h3 id="l-post" class="text-center font-bold text-yellow-500 uppercase tracking-widest mb-4">নতুন প্রজেক্ট তৈরি করুন</h3>
+                
+                <div class="grid gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-blue-400 ml-4 uppercase">কাজের লোগো (সর্বোচ্চ ২ এমবি)</label>
+                        <input type="file" id="j-img" accept="image/*" class="premium-input text-[10px] border-dashed border-2">
+                    </div>
+                    <input type="text" id="j-name" placeholder="কাজের শিরোনাম (যেমন: ইউটিউব সাবস্ক্রাইব)" class="premium-input text-xs">
+                    <input type="url" id="j-url" placeholder="কাজের ওয়েবসাইট বা ভিডিও লিংক" class="premium-input text-xs">
+                    <input type="number" id="j-pay" placeholder="ইউজার পেমেন্ট (৳)" class="premium-input text-xs">
+                    <textarea id="j-rule" placeholder="কিভাবে কাজ করতে হবে? নিয়মগুলো ধাপে ধাপে লিখুন..." class="premium-input h-32 text-xs"></textarea>
+                    <textarea id="j-proof" placeholder="প্রমাণ হিসেবে কি কি স্ক্রিনশট দিতে হবে?" class="premium-input h-24 text-xs"></textarea>
+                </div>
+
+                <button onclick="publishProject()" class="w-full py-5 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-3xl font-bold text-xs uppercase shadow-2xl hover:scale-[1.02] transition">পাবলিশ করুন (লাইভ)</button>
+            </div>
+        </section>
+
+        <section id="view-wallet" class="hidden animate-view">
+            <div id="w-guard" class="hidden p-20 glass-card text-center">
+                <i class="fas fa-lock text-5xl text-red-500 mb-6"></i>
+                <p id="l-lock" class="font-bold text-lg">জনাব, ওয়ালেট ব্যবহার করতে লগইন প্রয়োজন!</p>
+            </div>
+            <div id="w-main" class="glass-card p-8 space-y-8">
+                <div class="flex gap-4">
+                    <button onclick="setTab('dep')" id="tab-dep" class="flex-1 py-4 bg-green-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg">ডিপোজিট</button>
+                    <button onclick="setTab('wd')" id="tab-wd" class="flex-1 py-4 bg-transparent rounded-2xl font-bold text-[10px] uppercase">উত্তোলন</button>
+                </div>
+
+                <div id="dep-form" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-5 bg-pink-600/10 border border-pink-500/20 rounded-3xl text-center"><p class="text-[8px] uppercase">Bkash</p><b>01725780575</b></div>
+                        <div class="p-5 bg-orange-600/10 border border-orange-500/20 rounded-3xl text-center"><p class="text-[8px] uppercase">Nagad</p><b>01763584939</b></div>
+                    </div>
+                    <p class="text-center text-[9px] text-gray-500 uppercase tracking-widest">সর্বোচ্চ লিমিট: ৳২৫,০০০</p>
+                    <input type="number" id="d-amount" placeholder="টাকার পরিমাণ (৳)" class="premium-input text-xs">
+                    <input type="text" id="d-trx" placeholder="Transaction ID (TrxID)" class="premium-input text-xs">
+                    <button onclick="sendDep()" class="w-full py-5 bg-blue-600 rounded-3xl font-bold text-xs uppercase shadow-xl">সাবমিট করুন</button>
+                </div>
+
+                <div id="wd-form" class="hidden space-y-6">
+                    <p class="text-center text-[9px] text-red-400 uppercase tracking-widest">সর্বনিম্ন উত্তোলন: ৳১০০</p>
+                    <input type="number" id="w-amount" placeholder="কত টাকা তুলতে চান? (৳)" class="premium-input text-xs">
+                    <input type="text" id="w-number" placeholder="আপনার বিকাশ বা নগদ নম্বর" class="premium-input text-xs">
+                    <button onclick="sendWd()" class="w-full py-5 bg-yellow-600 rounded-3xl font-bold text-xs uppercase shadow-xl">রিকোয়েস্ট পাঠান</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-profile" class="hidden animate-view">
+            <div class="glass-card p-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full -mr-16 -mt-16"></div>
+                <div class="w-28 h-28 bg-gradient-to-br from-blue-600 to-indigo-800 rounded-full mx-auto flex items-center justify-center text-4xl font-bold border-8 border-black/20 shadow-2xl mb-6 font-[Orbitron]">S</div>
+                <h2 class="text-2xl font-bold">জনাব সাদ্দাম</h2>
+                <p id="l-status" class="text-[10px] text-gray-500 uppercase tracking-[4px] mt-2">অ্যাডমিন প্রোফাইল</p>
+                
+                <div class="grid grid-cols-2 gap-4 mt-12">
+                    <div class="p-6 bg-black/30 rounded-3xl border border-white/5"><p id="l-done" class="text-[8px] text-gray-500 mb-2 uppercase">সম্পন্ন কাজ</p><p class="text-2xl font-bold">০</p></div>
+                    <div class="p-6 bg-black/30 rounded-3xl border border-white/5"><p id="l-joined" class="text-[8px] text-gray-500 mb-2 uppercase">সদস্য হয়েছেন</p><p class="text-[10px] font-bold">JAN 2026</p></div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <div id="mode-section" class="px-4 hidden">
-        <div class="p-6 glass-ui text-center mb-8">
-            <h3 class="font-bold mb-6 text-sm uppercase tracking-wider" id="panel-title">আপনার মোড নির্বাচন করুন</h3>
-            <div class="flex gap-4">
-                <button onclick="switchMode('buyer')" id="btn-buyer" class="flex-1 p-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg transition">ক্রেতা মোড</button>
-                <button onclick="switchMode('seller')" id="btn-seller" class="flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px] uppercase transition">বিক্রেতা মোড</button>
-            </div>
-        </div>
-
-        <div id="buyer-content" class="p-12 glass-ui text-center text-xs text-gray-500 italic">বর্তমানে কাজ খালি রয়েছে।</div>
-
-        <div id="seller-content" class="hidden p-8 glass-ui border-t-4 border-yellow-500 space-y-5">
-            <h4 class="font-bold text-sm text-center text-yellow-500 uppercase tracking-widest mb-4">নতুন কাজ পাবলিশ করুন</h4>
-            <input type="text" id="job-title" placeholder="কাজের শিরোনাম (উদা: ফেসবুক ফলো)" class="input-box text-xs">
-            <input type="url" id="job-link" placeholder="কাজের ওয়েব লিংক (URL)" class="input-box text-xs">
-            <input type="number" id="job-pay" placeholder="পেমেন্ট এমাউন্ট (৳)" class="input-box text-xs">
-            <textarea id="job-rules" placeholder="কাজের সঠিক নিয়মাবলী লিখুন..." class="input-box text-xs h-28"></textarea>
-            <textarea id="job-proof" placeholder="কাজের প্রমাণ হিসেবে যা যা দিতে হবে..." class="input-box text-xs h-24"></textarea>
-            <button onclick="publishJob()" class="w-full p-5 bg-yellow-600 hover:bg-yellow-500 rounded-2xl font-bold text-xs uppercase shadow-2xl transition-all">পাবলিশ করুন</button>
-        </div>
-    </div>
-
-    <div id="wallet-section" class="px-4 hidden">
-        <div id="wallet-guard" class="hidden p-12 glass-ui text-center">
-            <i class="fas fa-user-slash text-4xl text-yellow-500 mb-5"></i>
-            <p class="font-bold text-sm">দুঃখিত জনাব! ওয়ালেট ব্যবহার করতে লগইন প্রয়োজন।</p>
-        </div>
-        <div id="wallet-main" class="p-8 glass-ui space-y-8">
-            <div class="flex gap-2 p-1 bg-black/20 rounded-xl">
-                <button class="flex-1 py-3 bg-green-600 rounded-lg text-[10px] font-bold uppercase">ডিপোজিট</button>
-                <button class="flex-1 py-3 bg-transparent rounded-lg text-[10px] font-bold uppercase">উত্তোলন</button>
-            </div>
-            <div class="space-y-3">
-                <div class="p-4 bg-pink-600/10 border border-pink-500/20 rounded-2xl flex justify-between items-center"><span class="text-xs">Bkash (Personal)</span><b class="text-xs">01725780575</b></div>
-                <div class="p-4 bg-orange-600/10 border border-orange-500/20 rounded-2xl flex justify-between items-center"><span class="text-xs">Nagad (Personal)</span><b class="text-xs">01763584939</b></div>
-            </div>
-            <input type="text" id="trx-id" placeholder="Transaction ID (TrxID) লিখুন" class="input-box text-xs">
-            <button onclick="submitDeposit()" class="w-full p-5 bg-blue-600 rounded-2xl font-bold text-xs uppercase shadow-xl active:scale-95 transition">সাবমিট রিপোর্ট</button>
-        </div>
-    </div>
-
-    <div id="profile-section" class="px-4 hidden">
-        <div id="profile-guard" class="hidden p-12 glass-ui text-center">
-            <i class="fas fa-lock text-4xl text-red-500 mb-5"></i>
-            <p class="font-bold text-sm">প্রোফাইল দেখতে দয়া করে একটি অ্যাকাউন্ট খুলুন!</p>
-        </div>
-        <div id="profile-main" class="p-10 glass-ui text-center">
-            <div class="w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-800 rounded-full mx-auto flex items-center justify-center text-4xl font-bold border-4 border-white/10 shadow-2xl mb-5">J</div>
-            <h2 class="text-2xl font-bold">জনাব</h2>
-            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">ভেরিফাইড ইউজার</p>
-            <div class="grid grid-cols-2 gap-4 mt-10">
-                <div class="p-5 bg-black/20 rounded-3xl border border-white/5"><p class="text-[9px] text-gray-400">সম্পন্ন</p><p class="text-lg font-bold">০</p></div>
-                <div class="p-5 bg-black/20 rounded-3xl border border-white/5"><p class="text-[9px] text-gray-400">পেন্ডিং</p><p class="text-lg font-bold">০</p></div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Firebase Config
-        const firebaseConfig = {
+        // --- 1. Firebase Initialization ---
+        const config = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_Tf9O0KzGqM",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
             databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
@@ -140,81 +214,109 @@
             appId: "1:678696512628:web:edfc22a62f55dad41df521",
             measurementId: "G-3CP5DC4H44"
         };
-
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(config);
         const database = firebase.database();
 
-        let isGuest = true; // গেস্ট চেক (True থাকলে প্রোফাইল/ওয়ালেট লক থাকবে)
-        let currentLang = 'BN';
+        // --- 2. Global Variables ---
+        let isGuest = true; // Guest protection logic
+        let language = 'BN';
+        const MIN_WD = 100;
+        const MAX_DEP = 25000;
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        // --- 3. UI Logic Functions ---
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 1500);
+        };
 
-        function toggleLang() {
-            currentLang = currentLang === 'BN' ? 'EN' : 'BN';
-            document.getElementById('lang-btn').innerText = currentLang === 'BN' ? 'BN/EN' : 'EN/BN';
-            
-            // ভাষা পরিবর্তনের কিছু স্যাম্পল ডাটা
-            if(currentLang === 'EN') {
-                document.getElementById('brand-name').innerText = "BD Marketing";
-                document.getElementById('bal-text').innerText = "TOTAL BALANCE";
-                document.getElementById('welcome-msg').innerText = "Welcome, Janab!";
-                document.getElementById('nav-profile').innerText = "Profile";
-                document.getElementById('nav-wallet').innerText = "Wallet";
-            } else {
-                document.getElementById('brand-name').innerText = "বিডি মার্কেটিং";
-                document.getElementById('bal-text').innerText = "মোট ব্যালেন্স";
-                document.getElementById('welcome-msg').innerText = "স্বাগতম, জনাব!";
-                document.getElementById('nav-profile').innerText = "প্রোফাইল";
-                document.getElementById('nav-wallet').innerText = "ওয়ালেট";
+        function toggleNav() { document.getElementById('sidebar').classList.toggle('active'); }
+        
+        function navigate(view) {
+            ['home', 'market', 'wallet', 'profile'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+
+            // Guest Restriction
+            if (isGuest && (view === 'wallet' || view === 'profile')) {
+                document.getElementById('w-guard').classList.remove('hidden');
+                document.getElementById('w-main').classList.add('hidden');
             }
-            alert(currentLang === 'EN' ? 'Language switched to English' : 'ভাষা বাংলায় পরিবর্তন করা হয়েছে');
+
+            toggleNav();
+            anime({ targets: `#view-${view}`, opacity: [0, 1], translateY: [20, 0], duration: 800, easing: 'easeOutExpo' });
         }
 
-        function showSection(id) {
-            ['home-section', 'mode-section', 'wallet-section', 'profile-section'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(id + '-section').classList.remove('hidden');
+        function setMode(mode) {
+            document.getElementById('buyer-panel').classList.toggle('hidden', mode !== 'buyer');
+            document.getElementById('seller-panel').classList.toggle('hidden', mode !== 'seller');
+            document.getElementById('btn-buyer').classList.toggle('bg-blue-600', mode === 'buyer');
+            document.getElementById('btn-seller').classList.toggle('bg-yellow-600', mode === 'seller');
+        }
 
-            if(isGuest && (id === 'wallet' || id === 'profile')) {
-                document.getElementById(id + '-guard').classList.remove('hidden');
-                document.getElementById(id + '-main').classList.add('hidden');
+        function setTab(tab) {
+            document.getElementById('dep-form').classList.toggle('hidden', tab !== 'dep');
+            document.getElementById('wd-form').classList.toggle('hidden', tab !== 'wd');
+            document.getElementById('tab-dep').classList.toggle('bg-green-600', tab === 'dep');
+            document.getElementById('tab-wd').classList.toggle('bg-yellow-600', tab === 'wd');
+        }
+
+        // --- 4. Micro-Level Validations ---
+        function publishProject() {
+            const file = document.getElementById('j-img').files[0];
+            const title = document.getElementById('j-name').value;
+            const pay = document.getElementById('j-pay').value;
+
+            if (file && file.size > 2 * 1024 * 1024) {
+                return Swal.fire('Error', 'জনাব, ইমেজের সাইজ অবশ্যই ২ এমবি এর নিচে হতে হবে!', 'error');
             }
-            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
-        }
 
-        function switchMode(mode) {
-            document.getElementById('buyer-content').classList.toggle('hidden', mode !== 'buyer');
-            document.getElementById('seller-content').classList.toggle('hidden', mode !== 'seller');
-            document.getElementById('btn-buyer').className = mode === 'buyer' ? 'flex-1 p-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg' : 'flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px] uppercase';
-            document.getElementById('btn-seller').className = mode === 'seller' ? 'flex-1 p-4 bg-yellow-600 rounded-2xl font-bold text-[10px] uppercase shadow-lg' : 'flex-1 p-4 bg-gray-800 rounded-2xl font-bold text-[10px] uppercase';
-        }
+            if (!title || !pay) return Swal.fire('Warning', 'সবগুলো ঘর পূরণ করুন জনাব!', 'info');
 
-        function publishJob() {
-            const title = document.getElementById('job-title').value;
-            const pay = document.getElementById('job-pay').value;
-            const link = document.getElementById('job-link').value;
-            if(!title || !pay || !link) return alert('জনাব, দয়া করে সব তথ্য পূরণ করুন!');
-
-            database.ref('jobs/').push({
-                title, pay, link,
-                rules: document.getElementById('job-rules').value,
-                proof: document.getElementById('job-proof').value,
+            database.ref('live_jobs/').push({
+                title, pay, link: document.getElementById('j-url').value,
+                rules: document.getElementById('j-rule').value,
+                proof: document.getElementById('j-proof').value,
                 timestamp: Date.now()
             }).then(() => {
-                alert('অভিনন্দন! আপনার কাজটি ডাটাবেসে সফলভাবে পাবলিশ হয়েছে।');
-                document.querySelectorAll('#seller-content input, #seller-content textarea').forEach(i => i.value = '');
+                Swal.fire('সফল', 'আপনার প্রজেক্টটি এখন লাইভ হয়েছে!', 'success');
+                document.querySelectorAll('#seller-panel input, #seller-panel textarea').forEach(i => i.value = '');
             });
         }
 
-        function submitDeposit() {
-            const trx = document.getElementById('trx-id').value;
-            if(!trx) return alert('TrxID লিখুন!');
-            database.ref('deposits/').push({ trx, status: 'pending', time: Date.now() }).then(() => {
-                alert('রিপোর্ট পাঠানো হয়েছে। জনাব, দয়া করে অনুমোদনের জন্য অপেক্ষা করুন।');
-                document.getElementById('trx-id').value = '';
-            });
+        function sendDep() {
+            const amt = document.getElementById('d-amount').value;
+            if (amt > MAX_DEP) return Swal.fire('সীমাবদ্ধতা', `একবারে সর্বোচ্চ ৳${MAX_DEP} ডিপোজিট সম্ভব।`, 'error');
+            database.ref('reports/deposits').push({ amount: amt, trx: document.getElementById('d-trx').value, status: 'pending' });
+            Swal.fire('জনাব!', 'আপনার ডিপোজিট রিপোর্ট পাঠানো হয়েছে।', 'success');
+        }
+
+        function sendWd() {
+            const amt = document.getElementById('w-amount').value;
+            if (amt < MIN_WD) return Swal.fire('ব্যর্থ', `সর্বনিম্ন ৳${MIN_WD} না হলে টাকা তোলা যাবে না।`, 'warning');
+            database.ref('reports/withdraws').push({ amount: amt, account: document.getElementById('w-number').value, status: 'pending' });
+            Swal.fire('সফল রিকোয়েস্ট', 'অ্যাডমিন খুব দ্রুত আপনার পেমেন্ট পাঠিয়ে দিবে।', 'success');
+        }
+
+        // --- 5. Real-Time Language Switcher (Complete Overhaul) ---
+        function switchLang() {
+            language = (language === 'BN') ? 'EN' : 'BN';
+            document.getElementById('lang-btn').innerText = language === 'BN' ? 'BN / EN' : 'EN / BN';
+            
+            const dictionary = {
+                BN: { b: 'বিডি মার্কেটিং', sm: 'মাস্টার মেনু', bal: 'মোট উপার্জন', welcome: 'স্বাগতম জনাব সাদ্দাম!', post: 'নতুন প্রজেক্ট তৈরি করুন' },
+                EN: { b: 'BD Marketing', sm: 'MASTER MENU', bal: 'TOTAL REVENUE', welcome: 'Welcome Janab Saddam!', post: 'CREATE NEW PROJECT' }
+            };
+
+            document.getElementById('b-name').innerText = dictionary[language].b;
+            document.getElementById('s-menu').innerText = dictionary[language].sm;
+            document.getElementById('l-bal').innerText = dictionary[language].bal;
+            document.getElementById('l-welcome').innerText = dictionary[language].welcome;
+            document.getElementById('l-post').innerText = dictionary[language].post;
+
+            Swal.fire({ title: language === 'BN' ? 'ভাষা সফলভাবে পরিবর্তিত!' : 'Language Changed!', icon: 'success', timer: 1000, showConfirmButton: false });
         }
     </script>
 </body>
     </html>
     
+            
