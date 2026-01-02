@@ -1,70 +1,4 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | BD Marketing</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        :root { --bg: #0b1120; --card: rgba(30, 41, 59, 0.7); --text: #ffffff; }
-        .light-mode { --bg: #f3f4f6; --card: rgba(255, 255, 255, 0.9); --text: #1f2937; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.3s; margin: 0; }
-        .glass-ui { background: var(--card); backdrop-filter: blur(15px); border: 1px solid #334155; border-radius: 20px; }
-        .sidebar { position: fixed; left: -100%; top: 0; height: 100%; width: 280px; background: #0f172a; z-index: 1000; transition: 0.4s; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-        .sidebar.active { left: 0; }
-        .master-logo-sm { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; background: #1e293b; font-weight: bold; color: #fff; }
-        .hidden { display: none; }
-    </style>
-</head>
-<body class="pb-6">
-
-    <header class="flex justify-between items-center p-4 m-3 glass-ui">
-        <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="text-2xl"><i class="fas fa-bars"></i></button>
-            <div class="master-logo-sm">BD</div>
-            <div>
-                <h1 class="text-sm font-bold lang-bn">বিডি মার্কেটিং</h1>
-                <h1 class="text-sm font-bold lang-en hidden">BD Marketing</h1>
-                <p class="text-[8px] text-gray-400">ADMIN: SADDAM</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" class="text-lg"><i class="fas fa-moon" id="theme-icon"></i></button>
-            <button onclick="toggleLang()" id="lang-btn" class="text-[10px] font-bold border px-2 py-1 rounded">EN</button>
-        </div>
-    </header>
-
-    <div id="sidebar" class="sidebar p-6">
-        <div class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
-            <div class="flex items-center gap-2">
-                <div class="master-logo-sm">BD</div>
-                <span class="font-bold">MENU</span>
-            </div>
-            <button onclick="toggleSidebar()" class="text-xl text-red-500"><i class="fas fa-times"></i></button>
-        </div>
-        <nav class="space-y-6">
-            <a href="#" class="flex items-center gap-4 hover:text-blue-400"><i class="fas fa-user-circle"></i> <span class="lang-bn">প্রোফাইল</span><span class="lang-en hidden">Profile</span></a>
-            <a href="#" class="flex items-center gap-4 hover:text-blue-400"><i class="fas fa-wallet"></i> <span class="lang-bn">ওয়ালেট</span><span class="lang-en hidden">Wallet</span></a>
-            <a href="#" class="flex items-center gap-4 hover:text-blue-400"><i class="fas fa-exchange-alt"></i> <span class="lang-bn">ক্রেতা/বিক্রেতা মোড</span><span class="lang-en hidden">Buyer/Seller Mode</span></a>
-            <a href="#" class="flex items-center gap-4 hover:text-blue-400"><i class="fas fa-headset"></i> <span class="lang-bn">হেল্প সেন্টার</span><span class="lang-en hidden">Help Center</span></a>
-            <a href="index.html" class="flex items-center gap-4 text-red-400 pt-10 border-t border-gray-800"><i class="fas fa-lock"></i> <span class="lang-bn">লকডাউন</span><span class="lang-en hidden">Logout</span></a>
-        </nav>
-    </div>
-
-    <main class="px-4">
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="p-4 glass-ui text-center border-b-4 border-green-500">
-                <p class="text-[10px] text-gray-400 uppercase lang-bn">মোট ব্যালেন্স</p>
-                <p class="text-[10px] text-gray-400 uppercase lang-en hidden">Total Balance</p>
-                <p id="balance" class="text-lg font-bold text-green-400">৳ ০.০০</p>
-            </div>
-            <div class="p-4 glass-ui text-center border-b-4 border-yellow-500">
-                <p class="text-[10px] text-gray-400 uppercase lang-bn">পেন্ডিং কাজ</p>
-                <p class="text-[10px] text-gray-400 uppercase lang-en hidden">Pending Work</p>
-                <p id="pending" class="text-lg font-bold text-yellow-400">০</p>
-            </div>
+</div>
         </div>
 
         <div class="p-5 glass-ui mb-6">
@@ -139,4 +73,5 @@
     </script>
 </body>
                   </html>
+
                   
