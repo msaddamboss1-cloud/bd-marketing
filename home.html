@@ -3,266 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BD Marketing | Saddam Admin</title>
+    <title>Saddam Official | Secure Home</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&family=Orbitron:wght@600;800&display=swap');
-
-        :root {
-            --bg: #ffffff; --text: #1a1a1a; --glass: rgba(255, 255, 255, 0.8);
-            --primary: #2563eb; --border: rgba(0,0,0,0.1);
-        }
-
-        .dark-mode {
-            --bg: #020617; --text: #f3f4f6; --glass: rgba(15, 23, 42, 0.9);
-            --primary: #3b82f6; --border: rgba(255,255,255,0.1);
-        }
-
-        body { background: var(--bg); color: var(--text); font-family: 'Hind Siliguri', sans-serif; transition: 0.4s; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Orbitron:wght@700&display=swap');
         
-        /* মাখন গ্লাস ইফেক্ট */
-        .master-glass {
-            background: var(--glass); backdrop-filter: blur(20px);
-            border: 1px solid var(--border); border-radius: 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+        body { background: #010409; color: #e6edf3; font-family: 'Hind Siliguri', sans-serif; overflow-x: hidden; }
+        
+        /* প্রিমিয়াম গ্লাস কার্ড */
+        .glass-card { background: rgba(13, 17, 23, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(48, 54, 61, 1); border-radius: 24px; transition: 0.3s; }
+        
+        /* অনলাইন সিগন্যাল */
+        .online-blink { width: 8px; height: 8px; background: #238636; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #238636; animation: blinker 1.5s infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
 
-        /* প্রি-লোডার */
-        #os-loader {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+        /* সাইড মেনু এনিমেশন */
+        #side-nav { transition: transform 0.4s ease; transform: translateX(-100%); z-index: 9999; }
+        #side-nav.open { transform: translateX(0); }
 
-        /* সাইড মেনু */
-        .sidebar {
-            position: fixed; left: -300px; top: 0; height: 100%; width: 280px;
-            background: var(--bg); z-index: 5000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 2px solid var(--primary);
-        }
-        .sidebar.active { left: 0; }
-
-        .btn-master {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            color: white; border-radius: 20px; transition: 0.3s;
-        }
-        .btn-master:active { transform: scale(0.95); }
-
-        .hidden { display: none; }
-        .page-entry { animation: slideIn 0.5s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-glow { background: linear-gradient(135deg, #1f6feb, #0969da); border-radius: 16px; font-weight: bold; }
+        .btn-glow:active { transform: scale(0.95); }
     </style>
 </head>
-<body class="dark-mode pb-10">
+<body class="max-w-md mx-auto min-h-screen pb-10">
 
-    <div id="os-loader">
-        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <h1 class="mt-6 font-[Orbitron] text-blue-500 tracking-[8px] text-[10px] animate-pulse">SADDAM OS 5.0</h1>
-    </div>
-
-    <header class="m-4 p-5 master-glass sticky top-4 z-[4000] flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <button onclick="nav()" class="text-blue-500 text-xl"><i class="fas fa-bars-staggered"></i></button>
-            <div>
-                <h1 id="txt-brand" class="text-xs font-bold uppercase tracking-widest">বিডি মার্কেটিং</h1>
-                <p class="text-[7px] text-gray-500 font-black uppercase tracking-[2px]">Admin: Saddam</p>
+    <header class="p-6 flex justify-between items-center border-b border-gray-800 sticky top-0 bg-[#0d1117]/90 z-50">
+        <div>
+            <h1 class="text-xl font-black font-[Orbitron] text-blue-500 tracking-tighter">BDMARKETING.COM</h1>
+            <div class="flex items-center gap-2">
+                <span class="online-blink"></span>
+                <span class="text-[10px] text-gray-400 font-bold uppercase">Admin: Saddam</span>
             </div>
         </div>
-        <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" class="w-8 h-8 rounded-full border border-gray-700 flex items-center justify-center text-xs"><i class="fas fa-moon"></i></button>
-            <button onclick="toggleLang()" id="btn-lang" class="px-3 py-1 border border-blue-500/30 rounded-full text-[9px] font-bold text-blue-400">BN</button>
-            <div class="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e]"></div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleLang()" class="text-[9px] font-bold border border-gray-700 px-3 py-1 rounded-md">BN/EN</button>
+            <button onclick="openMenu()" class="text-2xl text-blue-500"><i class="fas fa-bars-staggered"></i></button>
         </div>
     </header>
 
-    <aside id="menu-side" class="sidebar p-8">
-        <div class="flex justify-between items-center mb-10 pb-4 border-b border-gray-800">
-            <span id="txt-menu-label" class="text-[10px] font-bold text-blue-500 uppercase">মাস্টার ড্যাশবোর্ড</span>
-            <button onclick="nav()" class="text-red-500"><i class="fas fa-times"></i></button>
+    <div id="side-nav" class="fixed top-0 left-0 w-4/5 h-full bg-[#0d1117] border-r border-gray-800 p-8 shadow-2xl">
+        <button onclick="closeMenu()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times"></i></button>
+        
+        <div class="mt-12 space-y-8">
+            <div class="border-b border-gray-800 pb-6">
+                <p id="nav-user" class="text-lg font-bold text-blue-400">Guest User</p>
+                <span id="verify-badge" class="hidden text-[8px] bg-green-900/40 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20 uppercase font-bold">Verified User</span>
+            </div>
+            
+            <nav class="space-y-5">
+                <a href="javascript:void(0)" onclick="gate('Profile')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-user-circle text-blue-500"></i> Profile</a>
+                <a href="javascript:void(0)" onclick="gate('Wallet')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-wallet text-blue-500"></i> Wallet</a>
+                <a href="javascript:void(0)" onclick="gate('History')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-history text-blue-500"></i> History</a>
+                <a href="javascript:void(0)" onclick="gate('Support')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-headset text-blue-500"></i> Support Center</a>
+                <a href="javascript:void(0)" onclick="logoutUser()" class="flex items-center gap-4 text-sm font-bold text-red-500 pt-10"><i class="fas fa-power-off"></i> Logout</a>
+            </nav>
         </div>
-        <nav class="space-y-6">
-            <button onclick="page('h')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-house"></i> <span id="txt-m1">হোম</span></button>
-            <button onclick="page('m')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-store"></i> <span id="txt-m2">মার্কেট</span></button>
-            <button onclick="page('w')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-wallet"></i> <span id="txt-m3">ওয়ালেট</span></button>
-            <button onclick="page('p')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-user-circle"></i> <span id="txt-m4">প্রোফাইল</span></button>
-            <button onclick="page('l')" class="flex items-center gap-4 w-full p-4 hover:bg-blue-600/10 rounded-2xl transition"><i class="fas fa-headset text-orange-400"></i> <span id="txt-m5">হেল্প সাপোর্ট</span></button>
-        </nav>
-    </aside>
+    </div>
 
-    <main class="px-5 space-y-6">
+    <main class="p-6 space-y-6">
+        
+        <div class="glass-card p-10 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
+            <p id="txt-bal-title" class="text-[10px] uppercase tracking-[5px] text-gray-500 font-bold mb-2">Total Balance</p>
+            <h2 class="text-5xl font-bold font-[Orbitron] text-white tracking-tighter">৳ <span id="user-bal">0.00</span></h2>
+        </div>
 
-        <section id="p-h" class="page-entry">
+        <div class="space-y-4">
+            <h3 class="text-xs font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
+                <i class="fas fa-layer-group text-blue-500"></i> Pocket Market
+            </h3>
             <div class="grid grid-cols-2 gap-4">
-                <div class="p-6 master-glass border-b-4 border-blue-600">
-                    <p id="txt-bal-label" class="text-[8px] text-gray-500 font-bold uppercase mb-2">মূল ব্যালেন্স</p>
-                    <p id="val-bal" class="text-xl font-bold font-[Orbitron]">৳ ০.০০</p>
+                <div onclick="gate('Seller Mode')" class="glass-card p-6 text-center cursor-pointer active:bg-blue-500/10 border-blue-500/10">
+                    <i class="fas fa-briefcase text-2xl text-blue-500 mb-2"></i>
+                    <p class="text-[9px] font-black uppercase tracking-widest">Seller Mode</p>
                 </div>
-                <div class="p-6 master-glass border-b-4 border-yellow-500">
-                    <p id="txt-pend-label" class="text-[8px] text-gray-500 font-bold uppercase mb-2">পেন্ডিং কাজ</p>
-                    <p id="val-pend" class="text-xl font-bold font-[Orbitron]">০</p>
+                <div onclick="gate('Buyer Mode')" class="glass-card p-6 text-center cursor-pointer active:bg-blue-500/10 border-blue-500/10">
+                    <i class="fas fa-cart-shopping text-2xl text-green-500 mb-2"></i>
+                    <p class="text-[9px] font-black uppercase tracking-widest">Buyer Mode</p>
                 </div>
             </div>
-            <div class="mt-6 p-10 master-glass text-center">
-                <h2 id="txt-greet" class="text-xl font-bold">স্বাগতম, জনাব!</h2>
-                <p id="txt-sub" class="text-[10px] text-gray-500 mt-2">আপনার সুরক্ষিত প্যানেলটি এখন লাইভ আছে।</p>
-                <button onclick="page('m')" id="txt-start-btn" class="mt-8 px-10 py-4 btn-master text-[10px] font-bold uppercase shadow-xl">কাজ শুরু করুন</button>
-            </div>
-        </section>
+        </div>
 
-        <section id="p-m" class="hidden page-entry">
-            <div class="flex gap-4 p-2 bg-black/20 rounded-3xl mb-8">
-                <button onclick="marketMode('b')" id="btn-buy" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] uppercase text-white">Buyer</button>
-                <button onclick="marketMode('s')" id="btn-sell" class="flex-1 py-4 rounded-2xl font-bold text-[10px] uppercase">Seller</button>
+        <div class="glass-card p-6">
+            <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-4">Official Help Center</p>
+            <div class="flex justify-between items-center px-4">
+                <a id="wa-link" href="#" class="text-2xl text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp"></i></a>
+                <a id="fb-link" href="#" class="text-2xl text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
+                <a id="tw-link" href="#" class="text-2xl text-blue-400 hover:scale-110 transition"><i class="fab fa-twitter"></i></a>
+                <a id="mail-link" href="#" class="text-2xl text-red-500 hover:scale-110 transition"><i class="fas fa-envelope"></i></a>
             </div>
-            <div id="zone-b" class="p-12 master-glass text-center text-gray-600 text-sm italic" id="txt-no-job">বর্তমানে কোনো কাজ নেই।</div>
-            <div id="zone-s" class="hidden master-glass p-8 space-y-4">
-                <input type="file" id="f-img" class="w-full p-4 bg-black/20 rounded-2xl text-[10px]">
-                <input type="text" id="f-title" placeholder="কাজের নাম" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                <input type="number" id="f-pay" placeholder="পেমেন্ট (৳)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                <textarea id="f-desc" placeholder="বিস্তারিত নিয়ম..." class="w-full p-4 bg-black/20 rounded-2xl text-xs h-24"></textarea>
-                <button onclick="postJob()" id="txt-post-btn" class="w-full py-4 btn-master text-[10px] font-bold uppercase">পাবলিশ করুন</button>
-            </div>
-        </section>
+        </div>
 
-        <section id="p-w" class="hidden page-entry">
-            <div id="gate-lock" class="p-16 master-glass text-center">
-                <i class="fas fa-user-shield text-4xl text-red-500/50 mb-4"></i>
-                <p id="txt-lock-msg" class="text-xs font-bold">জনাব, লেনদেন করতে আইডি খুলুন!</p>
+        <div id="extra-modules-holder" class="space-y-4">
             </div>
-            <div id="gate-open" class="hidden space-y-6">
-                <div class="flex gap-4">
-                    <button onclick="wall('d')" id="bw-d" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold text-[10px] text-white">ডিপোজিট</button>
-                    <button onclick="wall('w')" id="bw-w" class="flex-1 py-4 bg-black/20 rounded-2xl font-bold text-[10px]">উত্তোলন</button>
-                </div>
-                <div id="box-d" class="master-glass p-8 space-y-4">
-                    <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-500/20 text-center">
-                        <p id="txt-pay-n" class="text-[8px] font-bold text-blue-400 mb-2 uppercase tracking-widest">টাকা পাঠানোর নম্বর</p>
-                        <p class="font-bold text-xs">বিকাশ: 01725780575</p>
-                        <p class="font-bold text-xs">নগদ: 01763584939</p>
-                    </div>
-                    <input type="number" id="d-val" placeholder="টাকা (৳৫০ - ৳৫০০০)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                    <input type="text" id="d-trx" placeholder="TrxID" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                    <button onclick="doDep()" id="txt-dep-btn" class="w-full py-4 btn-master text-[10px] font-bold">রিপোর্ট পাঠান</button>
-                </div>
-                <div id="box-w" class="hidden master-glass p-8 space-y-4">
-                    <input type="number" id="w-val" placeholder="টাকা (৳১০০ সর্বনিম্ন)" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                    <input type="text" id="w-num" placeholder="বিকাশ/নগদ নম্বর" class="w-full p-4 bg-black/20 rounded-2xl text-xs border border-white/5">
-                    <button onclick="doWd()" id="txt-wd-btn" class="w-full py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-bold">টাকা তুলুন</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="p-l" class="hidden page-entry">
-            <div class="p-10 master-glass text-center border-b-4 border-blue-600">
-                <h3 id="txt-email-h" class="font-bold">সরাসরি ইমেইল করুন</h3>
-                <p class="text-xs font-bold text-blue-500 mt-2">msaddamsarker65@gmail.com</p>
-            </div>
-            <div class="mt-6 p-6 master-glass flex items-center gap-4">
-                <i class="fab fa-whatsapp text-3xl text-green-500"></i>
-                <div>
-                    <p class="text-[8px] uppercase text-gray-500 font-bold">Support Center</p>
-                    <p class="font-bold text-xs">01725780575</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="p-p" class="hidden page-entry">
-            <div class="master-glass p-12 text-center">
-                <div class="w-20 h-20 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-2xl font-bold mb-4 text-white">জ</div>
-                <h2 id="txt-user-n" class="text-xl font-bold">জনাব</h2>
-                <p id="txt-user-s" class="text-[8px] text-gray-500 uppercase tracking-widest mt-2">ভেরিফাইড ইউজার</p>
-            </div>
-        </section>
 
     </main>
 
     <script>
-        const config = {
-            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_Tf9O0KzGqM",
-            authDomain: "bd-marketing-55a81.firebaseapp.com",
-            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
-            projectId: "bd-marketing-55a81",
-            storageBucket: "bd-marketing-55a81.appspot.com",
-            messagingSenderId: "678696512628",
-            appId: "1:678696512628:web:edfc22a62f55dad41df521"
+        // Firebase Configuration (Verified Link)
+        const firebaseConfig = {
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com"
         };
-        firebase.initializeApp(config);
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let state = { lang: 'BN', theme: 'dark', user: 'guest', bal: 0 };
+        // লোকাল মেমোরি থেকে ডাটা চেক
+        const uName = localStorage.getItem("user_name");
+        const isLogged = localStorage.getItem("bd_market_logged");
 
-        window.onload = () => {
-            setTimeout(() => { document.getElementById('os-loader').style.display = 'none'; }, 2000);
-            updateUI();
+        window.onload = function() {
+            if (isLogged === "true" && uName) {
+                document.getElementById('nav-user').innerText = uName;
+                document.getElementById('verify-badge').classList.remove('hidden');
+                
+                // লাইভ ব্যালেন্স ট্র্যাকিং
+                db.ref('Users/' + uName.replace(/\s+/g, '_') + '/balance').on('value', (s) => {
+                    document.getElementById('user-bal').innerText = s.val() || "0.00";
+                });
+            }
+            fetchSupportLinks();
         };
 
-        function nav() { document.getElementById('menu-side').classList.toggle('active'); }
-
-        function page(id) {
-            ['h', 'm', 'w', 'p', 'l'].forEach(x => document.getElementById('p-'+x).classList.add('hidden'));
-            document.getElementById('p-'+id).classList.remove('hidden');
-            if(document.getElementById('menu-side').classList.contains('active')) nav();
-            window.scrollTo(0,0);
+        // এডমিন থেকে সোশ্যাল সাপোর্ট লিঙ্ক লোড
+        function fetchSupportLinks() {
+            db.ref('AdminSettings/Support').on('value', (s) => {
+                const data = s.val();
+                if(data) {
+                    document.getElementById('wa-link').href = "https://wa.me/" + data.whatsapp;
+                    document.getElementById('fb-link').href = data.facebook;
+                    document.getElementById('mail-link').href = "mailto:" + data.email;
+                }
+            });
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            state.theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        // গেস্টদের জন্য কঠোর সিকিউরিটি গেট
+        function gate(feature) {
+            if (isLogged !== "true") {
+                Swal.fire({
+                    title: 'অ্যাক্সেস সীমিত!',
+                    text: 'জনাব, ' + feature + ' ব্যবহার করতে অনুগ্রহ করে একাউন্ট খুলুন তারপর আসুন।',
+                    icon: 'lock',
+                    showCancelButton: true,
+                    confirmButtonText: 'Register Now',
+                    confirmButtonColor: '#1f6feb',
+                    cancelButtonText: 'Later'
+                }).then((res) => {
+                    if(res.isConfirmed) window.location.href = "index.html";
+                });
+            } else {
+                Swal.fire({
+                    title: feature,
+                    text: 'সাদ্দাম ভাইয়ার তত্ত্বাবধানে এই মডিউলটি শীঘ্রই লাইভ হবে।',
+                    icon: 'info'
+                });
+            }
         }
 
+        function openMenu() { document.getElementById('side-nav').classList.add('open'); }
+        function closeMenu() { document.getElementById('side-nav').classList.remove('open'); }
+
+        function logoutUser() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        let isBN = true;
         function toggleLang() {
-            state.lang = (state.lang === 'BN') ? 'EN' : 'BN';
-            updateUI();
-        }
-
-        function updateUI() {
-            const isBN = state.lang === 'BN';
-            document.getElementById('btn-lang').innerText = state.lang;
-            document.getElementById('txt-brand').innerText = isBN ? "বিডি মার্কেটিং" : "BD Marketing";
-            document.getElementById('txt-menu-label').innerText = isBN ? "মাস্টার ড্যাশবোর্ড" : "MASTER PANEL";
-            document.getElementById('txt-greet').innerText = isBN ? "স্বাগতম, জনাব!" : "Welcome, Janab!";
-            document.getElementById('txt-sub').innerText = isBN ? "আপনার সুরক্ষিত প্যানেলটি এখন লাইভ আছে।" : "Your secure panel is now live.";
-            document.getElementById('txt-m1').innerText = isBN ? "হোম" : "Home";
-            document.getElementById('txt-m2').innerText = isBN ? "মার্কেট" : "Market";
-            document.getElementById('txt-m3').innerText = isBN ? "ওয়ালেট" : "Wallet";
-            document.getElementById('txt-m4').innerText = isBN ? "প্রোফাইল" : "Profile";
-            document.getElementById('txt-m5').innerText = isBN ? "হেল্প সাপোর্ট" : "Help Support";
-            document.getElementById('txt-start-btn').innerText = isBN ? "কাজ শুরু করুন" : "Start Working";
-            document.getElementById('txt-bal-label').innerText = isBN ? "মূল ব্যালেন্স" : "Main Balance";
-            document.getElementById('txt-lock-msg').innerText = isBN ? "জনাব, লেনদেন করতে আইডি খুলুন!" : "Janab, Please Login to Trade!";
-            document.getElementById('txt-wd-btn').innerText = isBN ? "টাকা তুলুন" : "Withdraw Cash";
-            document.getElementById('txt-dep-btn').innerText = isBN ? "রিপোর্ট পাঠান" : "Send Report";
-        }
-
-        function doDep() {
-            const v = parseFloat(document.getElementById('d-val').value);
-            if (v < 50 || v > 5000) return Swal.fire('Error', state.lang==='BN' ? '৳৫০ - ৳৫০০০ এর মধ্যে দিন' : 'Amount must be ৳50 - ৳5000', 'error');
-            db.ref('reports/deposits').push({ val: v, trx: document.getElementById('d-trx').value, time: Date.now() });
-            Swal.fire('Success', state.lang==='BN' ? 'রিপোর্ট পাঠানো হয়েছে' : 'Report Sent Successfully', 'success');
-        }
-
-        function doWd() {
-            const v = parseFloat(document.getElementById('w-val').value);
-            if (v < 100) return Swal.fire('Error', state.lang==='BN' ? 'সর্বনিম্ন ১০০ টাকা' : 'Min ৳100 Required', 'error');
-            if (v > state.bal) return Swal.fire('Error', state.lang==='BN' ? 'পর্যাপ্ত ব্যালেন্স নেই' : 'Insufficient Balance', 'error');
-            db.ref('reports/withdraws').push({ val: v, num: document.getElementById('w-num').value, status: 'pending' });
-            Swal.fire('Sent', 'Success', 'success');
-        }
-
-        function marketMode(m) {
-            document.getElementById('zone-b').classList.toggle('hidden', m !== 'b');
-            document.getElementById('zone-s').classList.toggle('hidden', m !== 's');
-            document.getElementById('btn-buy').classList.toggle('bg-blue-600', m === 'b');
-            document.getElementById('btn-sell').classList.toggle('bg-blue-600', m === 's');
+            isBN = !isBN;
+            document.getElementById('txt-bal-title').innerText = isBN ? "Total Balance" : "মোট ব্যালেন্স";
         }
     </script>
 </body>
-    </html>
-    
+</html>
