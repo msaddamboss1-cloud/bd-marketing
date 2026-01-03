@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BD MARKETING | Admin Saddam Official</title>
+    <title>BD MARKETING | Saddam Official</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,257 +12,151 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;600;800&family=Hind+Siliguri:wght@600&display=swap');
         
-        :root {
-            --saddam-primary: #1f6feb;
-            --saddam-bg: #010409;
-            --saddam-card: #0d1117;
-            --saddam-border: #30363d;
-        }
+        body { background: #010409; color: #ffffff; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* সাদ্দাম ভাইয়ার স্পেশাল প্রিমিয়াম থিম */
+        .saddam-gradient { background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); border-radius: 35px; box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2); }
+        .glass-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border-radius: 28px; transition: 0.3s; }
+        
+        /* নোটিশ বোর্ড অ্যানিমেশন */
+        .notice-board { background: rgba(0, 210, 255, 0.1); border-bottom: 1px solid rgba(0, 210, 255, 0.2); overflow: hidden; white-space: nowrap; }
+        .notice-text { display: inline-block; animation: scroll-notice 18s linear infinite; font-size: 11px; font-weight: bold; color: #00d2ff; }
+        @keyframes scroll-notice { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        body { 
-            background: var(--saddam-bg); 
-            color: #e6edf3; 
-            font-family: 'Hind Siliguri', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        /* মাষ্টার কার্ড ডিজাইন */
-        .master-card { 
-            background: var(--saddam-card); 
-            border: 1px solid var(--saddam-border); 
-            border-radius: 35px; 
-            transition: 0.4s;
-        }
-
-        /* গোলগাল প্রিমিয়াম বাটন */
-        .saddam-btn {
-            background: linear-gradient(135deg, #1f6feb, #0969da);
-            border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(31, 111, 235, 0.2);
-        }
-
-        /* নোটিফিকেশন বার */
-        .admin-notice-bar {
-            background: rgba(31, 111, 235, 0.1);
-            border-bottom: 1px solid rgba(31, 111, 235, 0.2);
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .scroll-text {
-            display: inline-block;
-            animation: scroll 20s linear infinite;
-        }
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* সাইড মেনু আল্ট্রা */
-        #side-drawer {
-            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            transform: translateX(-100%);
-            z-index: 10000;
-        }
-        #side-drawer.open { transform: translateX(0); }
-
-        /* পকেট মার্কেট গ্রিড */
-        .market-grid { display: grid; grid-cols: 2; gap: 15px; }
-
-        /* লোডিং অ্যানিমেশন */
-        .loader-dot { width: 12px; height: 12px; background: #238636; border-radius: 50%; box-shadow: 0 0 10px #238636; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 50% { opacity: 0.4; transform: scale(0.8); } }
+        #sidebar { transition: 0.5s cubic-bezier(0.85, 0, 0.15, 1); transform: translateX(-100%); z-index: 9999; }
+        #sidebar.active { transform: translateX(0); }
+        .online-dot { width: 10px; height: 10px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; animation: pulse 2s infinite; }
+        @keyframes pulse { 50% { opacity: 0.4; } }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen">
 
-    <div class="admin-notice-bar py-2">
-        <div class="scroll-text text-[11px] font-bold text-blue-400" id="live-notice">
-            সাদ্দাম ভাইয়ার ড্যাশবোর্ডে আপনাকে স্বাগতম। পেমেন্ট এবং কাজের আপডেট এখানে পাবেন।
+    <div class="notice-board py-2">
+        <div class="notice-text">
+            আপনাকে ড্যাশবোর্ডে স্বাগতম, আপনি রেজিস্ট্রেশন করে কাজ শুরু করতে পারেন। সকল পেমেন্ট ২৪ ঘন্টার মধ্যে সম্পন্ন করা হয়।
         </div>
     </div>
 
-    <header class="p-6 flex justify-between items-center sticky top-0 bg-[#010409]/90 backdrop-blur-xl z-50">
+    <header class="p-5 flex justify-between items-center sticky top-0 bg-[#010409]/90 backdrop-blur-md z-50">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 saddam-btn flex items-center justify-center text-white font-black text-2xl shadow-blue-900/40">B</div>
+            <div class="w-12 h-12 saddam-gradient flex items-center justify-center text-white font-black text-2xl shadow-lg">B</div>
             <div>
                 <h1 class="text-sm font-black tracking-tight font-[Orbitron]">BD MARKETING</h1>
                 <div class="flex items-center gap-2">
-                    <span class="loader-dot"></span>
-                    <span class="text-[9px] font-bold text-gray-500 uppercase">Admin: Saddam Official</span>
+                    <span class="online-dot"></span>
+                    <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Admin Saddam</span>
                 </div>
             </div>
         </div>
-        <div class="flex items-center gap-3">
-            <button onclick="changeLanguage()" id="lang-btn" class="text-[9px] font-bold bg-gray-800 px-3 py-1.5 rounded-full border border-gray-700 uppercase">English</button>
-            <button onclick="toggleMenu(true)" class="text-blue-500 text-2xl"><i class="fas fa-bars-staggered"></i></button>
-        </div>
+        <button onclick="toggleNav(true)" class="text-blue-400 text-2xl"><i class="fas fa-bars-staggered"></i></button>
     </header>
 
-    <div id="side-drawer" class="fixed top-0 left-0 w-4/5 h-full bg-[#0d1117] border-r border-gray-800 p-8 shadow-2xl overflow-y-auto">
-        <button onclick="toggleMenu(false)" class="absolute top-6 right-6 text-gray-500 text-2xl"><i class="fas fa-times"></i></button>
-        
-        <div class="mt-10 space-y-8">
-            <div class="text-center border-b border-gray-800 pb-6">
-                <div class="w-20 h-20 mx-auto saddam-btn flex items-center justify-center mb-4 border-4 border-gray-800">
-                    <i class="fas fa-user-tie text-3xl"></i>
+    <div id="sidebar" class="fixed top-0 left-0 w-[78%] h-full bg-[#0d1117] border-r border-gray-800 p-8">
+        <button onclick="toggleNav(false)" class="absolute top-6 right-6 text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        <div class="mt-12 space-y-10">
+            <div class="text-center pb-8 border-b border-gray-800">
+                <div class="w-20 h-20 mx-auto saddam-gradient flex items-center justify-center mb-4 border-4 border-[#010409]">
+                    <i class="fas fa-user-shield text-3xl"></i>
                 </div>
-                <h3 id="u-name" class="font-bold text-white text-lg">Guest User</h3>
-                <p id="u-id" class="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Unverified Account</p>
+                <h3 id="side-name" class="font-bold text-lg">Guest User</h3>
+                <p class="text-[9px] text-blue-400 font-bold uppercase tracking-widest mt-1">Saddam Official System</p>
             </div>
-
-            <nav class="flex flex-col gap-6 font-bold text-sm text-gray-400">
-                <a href="#" onclick="actionGate('Profile')" class="flex items-center gap-4 hover:text-blue-500"><i class="fas fa-id-badge text-blue-500"></i> Profile Details</a>
-                <a href="#" onclick="actionGate('Market')" class="flex items-center gap-4 hover:text-blue-500"><i class="fas fa-store text-blue-500"></i> Pocket Market</a>
-                <a href="#" onclick="actionGate('Wallet')" class="flex items-center gap-4 hover:text-blue-500"><i class="fas fa-wallet text-blue-500"></i> My Wallet</a>
-                <a href="#" onclick="actionGate('History')" class="flex items-center gap-4 hover:text-blue-500"><i class="fas fa-file-invoice text-blue-500"></i> Transaction History</a>
-                <a href="#" onclick="actionGate('Support')" class="flex items-center gap-4 hover:text-blue-500"><i class="fas fa-headset text-blue-500"></i> Help Center</a>
-                <button onclick="userLogout()" class="text-left flex items-center gap-4 text-red-500 mt-10 pt-6 border-t border-gray-800"><i class="fas fa-power-off"></i> LOGOUT SYSTEM</button>
+            <nav class="flex flex-col gap-6 font-semibold text-sm text-gray-400">
+                <a href="#" onclick="gate('Profile')"><i class="fas fa-user-circle text-blue-500 mr-3"></i> Profile</a>
+                <a href="#" onclick="gate('Wallet')"><i class="fas fa-wallet text-blue-500 mr-3"></i> My Wallet</a>
+                <a href="#" onclick="gate('History')"><i class="fas fa-history text-blue-500 mr-3"></i> History</a>
+                <a href="#" onclick="gate('Support')"><i class="fas fa-headset text-blue-500 mr-3"></i> Support</a>
+                <button onclick="logout()" class="text-left text-red-500 mt-10 pt-6 border-t border-gray-800"><i class="fas fa-power-off mr-3"></i> EXIT SYSTEM</button>
             </nav>
         </div>
     </div>
 
     <main class="p-6 space-y-8">
         
-        <section class="saddam-btn p-12 text-center relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-            <p id="txt-bal-label" class="text-[10px] font-black text-blue-100 uppercase tracking-[5px] mb-3">Total Account Balance</p>
-            <h2 class="text-5xl font-black font-[Orbitron] tracking-tighter">৳ <span id="main-balance">0.00</span></h2>
+        <section class="saddam-gradient p-12 text-center relative overflow-hidden">
+            <div class="absolute -top-5 -left-5 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+            <p class="text-[10px] font-black text-blue-100 uppercase tracking-[5px] mb-3">Available Balance</p>
+            <h2 class="text-5xl font-black font-[Orbitron] tracking-tighter">৳ <span id="user-bal">0.00</span></h2>
         </section>
 
         <section class="space-y-4">
-            <div class="flex justify-between items-center px-2">
-                <h3 id="txt-market" class="text-[10px] font-black text-gray-500 uppercase tracking-[3px]">Pocket Market</h3>
-                <i class="fas fa-bolt text-yellow-500 text-xs"></i>
-            </div>
+            <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[3px] px-2">Market Hub Selection</h3>
             <div class="grid grid-cols-2 gap-4">
-                <div onclick="loadWork('seller')" class="master-card p-7 text-center cursor-pointer active:scale-95 border-blue-500/10">
-                    <i class="fas fa-briefcase text-2xl text-blue-500 mb-3"></i>
+                <div onclick="openMarket('seller')" class="glass-card p-7 text-center cursor-pointer active:scale-95 border-blue-500/20">
+                    <i class="fas fa-laptop-code text-2xl text-blue-400 mb-2"></i>
                     <p class="text-[10px] font-black uppercase">Seller Mode</p>
                 </div>
-                <div onclick="loadWork('buyer')" class="master-card p-7 text-center cursor-pointer active:scale-95 border-green-500/10">
-                    <i class="fas fa-cart-arrow-down text-2xl text-green-500 mb-3"></i>
+                <div onclick="openMarket('buyer')" class="glass-card p-7 text-center cursor-pointer active:scale-95 border-green-500/20">
+                    <i class="fas fa-shopping-bag text-2xl text-green-400 mb-2"></i>
                     <p class="text-[10px] font-black uppercase">Buyer Mode</p>
                 </div>
             </div>
         </section>
 
-        <div id="dynamic-work-area" class="space-y-4">
-            <div class="border-2 border-dashed border-gray-800 rounded-[40px] p-12 text-center">
-                <i class="fas fa-fingerprint text-3xl text-gray-700 mb-4"></i>
-                <p id="txt-hint" class="text-xs font-bold text-gray-600">কাজ শুরু করতে মোড সিলেক্ট করুন</p>
+        <div id="work-space" class="space-y-4">
+            <div class="glass-card p-14 text-center border-dashed border-gray-700 bg-transparent">
+                <i class="fas fa-layer-group text-3xl text-gray-800 mb-4"></i>
+                <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Select a mode to continue</p>
             </div>
         </div>
-
-        <div id="future-module-1" class="space-y-4">
-            </div>
-
-        <footer class="master-card p-8">
-            <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest text-center mb-6">Official Saddam Support</p>
-            <div class="flex justify-around items-center">
-                <a id="s-wa" href="#" class="w-14 h-14 bg-green-900/20 rounded-full flex items-center justify-center text-green-500 text-xl"><i class="fab fa-whatsapp"></i></a>
-                <a id="s-fb" href="#" class="w-14 h-14 bg-blue-900/20 rounded-full flex items-center justify-center text-blue-600 text-xl"><i class="fab fa-facebook"></i></a>
-                <a id="s-mail" href="#" class="w-14 h-14 bg-red-900/20 rounded-full flex items-center justify-center text-red-500 text-xl"><i class="fas fa-envelope"></i></a>
-            </div>
-        </footer>
 
     </main>
 
     <script>
-        // Firebase মাষ্টার কানেকশন
         const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ইউজার মেমোরি চেক
-        const userName = localStorage.getItem("user_name");
-        const userEmail = localStorage.getItem("user_email");
+        const uName = localStorage.getItem("user_name");
         const isLoggedIn = localStorage.getItem("bd_market_logged");
 
         window.onload = function() {
-            if (isLoggedIn === "true" && userName) {
-                document.getElementById('u-name').innerText = userName;
-                document.getElementById('u-id').innerText = "Verified User ✅";
-                
-                // জিমেইল বা নামের আইডি দিয়ে অটোমেটিক ডাটা রিডিং
-                const userPath = userName.replace(/\s+/g, '_');
-                db.ref('Users/' + userPath + '/balance').on('value', (snap) => {
-                    document.getElementById('main-balance').innerText = snap.val() || "0.00";
+            if (isLoggedIn === "true" && uName) {
+                document.getElementById('side-name').innerText = uName;
+                const userKey = uName.replace(/\s+/g, '_');
+                db.ref('Users/' + userKey + '/balance').on('value', (s) => {
+                    document.getElementById('user-bal').innerText = s.val() || "0.00";
                 });
             }
-            syncAdminSettings();
         };
 
-        // ১০. এডমিন সিঙ্ক (নোটিশ ও সাপোর্ট লিঙ্ক)
-        function syncAdminSettings() {
-            db.ref('AdminSettings').on('value', (snap) => {
-                const data = snap.val();
-                if(data) {
-                    if(data.notice) document.getElementById('live-notice').innerText = data.notice;
-                    document.getElementById('s-wa').href = "https://wa.me/" + data.whatsapp;
-                    document.getElementById('s-fb').href = data.facebook;
-                    document.getElementById('s-mail').href = "mailto:" + data.email;
-                }
-            });
-        }
-
-        // ১১. পকেট মার্কেট লজিক (Seller/Buyer)
-        function loadWork(mode) {
-            if (isLoggedIn !== "true") return actionGate('Market');
-            const display = document.getElementById('dynamic-work-area');
+        function openMarket(mode) {
+            if (isLoggedIn !== "true") return gate('Market');
+            const space = document.getElementById('work-space');
             
             if(mode === 'seller') {
-                display.innerHTML = `
-                    <div class="master-card p-10 text-center border-yellow-500/20">
-                        <i class="fas fa-box-open text-4xl text-yellow-600 mb-4"></i>
-                        <h4 class="text-sm font-bold">এই মুহূর্তে কোন কাজ নেই</h4>
-                        <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">নতুন কাজের জন্য অপেক্ষা করুন</p>
-                    </div>
-                `;
+                space.innerHTML = `
+                    <div class="glass-card p-10 text-center border-yellow-500/10">
+                        <i class="fas fa-folder-open text-3xl text-yellow-600 mb-4"></i>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-gray-300">এই মুহূর্তে কোন কাজ নেই</h4>
+                        <p class="text-[9px] text-gray-500 mt-2 uppercase">Admin Saddam will update soon</p>
+                    </div>`;
             } else {
-                display.innerHTML = `
-                    <div class="master-card p-8 border-blue-500/20">
-                        <h4 class="text-xs font-black uppercase text-blue-500 mb-4">অর্ডার ফর্ম (Buyer Mode)</h4>
-                        <div class="space-y-3">
-                            <input type="text" placeholder="কাজের নাম" class="w-full bg-[#161b22] border border-gray-800 rounded-2xl p-4 text-xs outline-none focus:border-blue-500">
-                            <textarea placeholder="বিস্তারিত কাজের বিবরণ..." class="w-full bg-[#161b22] border border-gray-800 rounded-2xl p-4 text-xs h-28 outline-none focus:border-blue-500"></textarea>
-                            <button class="w-full saddam-btn py-4 font-black text-[10px] uppercase tracking-widest">সাবমিট করুন</button>
-                        </div>
-                    </div>
-                `;
+                space.innerHTML = `
+                    <div class="glass-card p-8 border-blue-500/20">
+                        <h4 class="text-[10px] font-black uppercase text-blue-400 mb-5">Submit New Project</h4>
+                        <input type="text" placeholder="Work Title" class="w-full bg-[#010409] border border-gray-800 rounded-2xl p-4 text-xs mb-3 outline-none focus:border-blue-500 text-white">
+                        <textarea placeholder="Work Description..." class="w-full bg-[#010409] border border-gray-800 rounded-2xl p-4 text-xs h-24 mb-4 outline-none focus:border-blue-500 text-white"></textarea>
+                        <button class="w-full saddam-gradient py-4 font-black text-[10px] uppercase tracking-widest shadow-lg">Submit Work</button>
+                    </div>`;
             }
         }
 
-        // ১২. সিকিউরিটি গেট (রেস্ট্রিকশন)
-        function actionGate(title) {
-            if (isLoggedIn !== "true") {
-                Swal.fire({
-                    title: 'অ্যাক্সেস সীমিত!',
-                    text: 'জনাব সিস্টেম অনুযায়ী এই মডিউলটি ব্যবহার করতে রেজিস্ট্রেশন বাধ্যতামূলক।',
-                    icon: 'lock',
-                    confirmButtonText: 'রেজিস্ট্রেশন করুন',
-                    confirmButtonColor: '#1f6feb',
-                    background: '#0d1117',
-                    color: '#fff'
-                }).then((res) => { if(res.isConfirmed) window.location.href = "index.html"; });
-            } else {
-                Swal.fire({ title: title, text: 'জনাব এই মডিউলটি শীঘ্রই মডিফাই করবেন।', icon: 'info' });
-            }
+        function gate(feat) {
+            Swal.fire({
+                title: 'Access Denied!',
+                text: 'জনাব, ' + feat + ' ব্যবহার করতে রেজিস্ট্রেশন করুন।',
+                icon: 'lock',
+                confirmButtonText: 'Register Now',
+                confirmButtonColor: '#00d2ff',
+                background: '#0d1117', color: '#fff'
+            }).then((r) => { if(r.isConfirmed) window.location.href = "index.html"; });
         }
 
-        // ১৩. ল্যাঙ্গুয়েজ লজিক (বাংলা/ইংরেজি)
-        let currentBN = true;
-        function changeLanguage() {
-            currentBN = !currentBN;
-            document.getElementById('lang-btn').innerText = currentBN ? "English" : "বাংলা";
-            document.getElementById('txt-bal-label').innerText = currentBN ? "Total Account Balance" : "আপনার মোট ব্যালেন্স";
-            document.getElementById('txt-market').innerText = currentBN ? "Pocket Market" : "পকেট মার্কেট";
-            document.getElementById('txt-hint').innerText = currentBN ? "কাজ শুরু করতে মোড সিলেক্ট করুন" : "Please select a mode to start";
-        }
-
-        function toggleMenu(open) { document.getElementById('side-drawer').classList.toggle('open', open); }
-        function userLogout() { localStorage.clear(); window.location.href = "index.html"; }
+        function toggleNav(s) { document.getElementById('sidebar').classList.toggle('active', s); }
+        function logout() { localStorage.clear(); window.location.href = "index.html"; }
     </script>
 </body>
 </html>
