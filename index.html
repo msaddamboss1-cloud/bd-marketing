@@ -119,5 +119,48 @@
             window.location.href = "home.html";
         }
     </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+    // ১. আপনার ডাটাবেস কনফিগারেশন (ভুল সংশোধন করা হয়েছে)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+        authDomain: "bd-marketing-55a81.firebaseapp.com",
+        databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+        projectId: "bd-marketing-55a81",
+        storageBucket: "bd-marketing-55a81.firebasestorage.app",
+        messagingSenderId: "678696512628",
+        appId: "1:678696512628:web:edfc22a62f55dad41df521"
+    };
+
+    // ফায়ারবেস কানেক্ট করা
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // ২. স্মার্ট রিডাইরেক্ট (ভেরিফিকেশন চেক)
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // যদি ইমেইল ভেরিফাইড থাকে, তবে তাকে ড্যাশবোর্ডে পাঠান
+            if (user.emailVerified) {
+                localStorage.setItem("user_name", user.displayName || "এডমিন ইউজার");
+                window.location.href = "home.html";
+            } else {
+                console.log("জনাব, ইউজার এখনো ইমেইল ভেরিফাই করেননি।");
+            }
+        }
+    });
+
+    // ৩. সেফটি চেক: যদি আগে থেকেই লগইন থাকে
+    window.onload = function() {
+        if (localStorage.getItem("user_name")) {
+            window.location.href = "home.html";
+        }
+    };
+</script>
 </body>
 </html>
