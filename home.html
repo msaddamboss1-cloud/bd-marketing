@@ -264,5 +264,77 @@
         function toggleDrawer(s) { document.getElementById('side-drawer').classList.toggle('active', s); }
         function logout() { localStorage.clear(); window.location.href = "index.html"; }
     </script>
+    <script>
+    // ১. ডাটাবেস থেকে কাজগুলো লোড করার ফাংশন
+    function loadAvailableJobs() {
+        const jobListContainer = document.getElementById('job-list');
+        
+        // ফায়ারবেস থেকে কাজের ডাটা রিড করা
+        db.ref('GlobalJobs').on('value', (snapshot) => {
+            jobListContainer.innerHTML = ""; // আগের লিস্ট পরিষ্কার করা
+            const jobs = snapshot.val();
+            
+            if (jobs) {
+                Object.keys(jobs).forEach(key => {
+                    const job = jobs[key];
+                    const jobCard = `
+                        <div class="bg-[#0d1117] p-5 rounded-2xl border border-gray-800 flex justify-between items-center shadow-lg">
+                            <div>
+                                <h4 class="font-bold text-white text-md">${job.title}</h4>
+                                <p class="text-xs text-blue-400 mt-1">পেমেন্ট: ৳ ${job.pay}</p>
+                            </div>
+                            <button onclick="window.open('${job.link}', '_blank')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
+                                কাজ করুন
+                            </button>
+                        </div>
+                    `;
+                    jobListContainer.innerHTML += jobCard;
+                });
+            } else {
+                jobListContainer.innerHTML = `<p class="text-gray-600 text-sm text-center">বর্তমানে কোনো কাজ উপলব্ধ নেই।</p>`;
+            }
+        });
+    }
+
+    // ২. বিক্রেতা যখন কাজ পোস্ট করবে (Realtime Database Integration)
+    async function postJob() {
+        const title = document.getElementById('job-title').value;
+        const link = document.getElementById('job-link').value;
+        const cost = document.getElementById('job-cost').value;
+
+        if(!title || !link || !cost) {
+            return Swal.fire('দুঃখিত', 'সবগুলো ঘর পূরণ করুন', 'error');
+        }
+
+        // বিক্রেতার ব্যালেন্স চেক করার লজিক এখানে আসবে (ভবিষ্যতে)
+        const jobData = {
+            title: title,
+            link: link,
+            pay: cost,
+            postedBy: userName,
+            time: Date.now()
+        };
+
+        try {
+            await db.ref('GlobalJobs').push(jobData);
+            Swal.fire('সফল!', 'আপনার কাজটি লাইভ হয়েছে।', 'success');
+            // ফরম পরিষ্কার করা
+            document.getElementById('job-title').value = "";
+            document.getElementById('job-link').value = "";
+            document.getElementById('job-cost').value = "";
+        } catch (e) {
+            Swal.fire('এরর', 'কাজটি পাবলিশ করা যায়নি।', 'error');
+        }
+    }
+
+    // ৩. পেজ লোড হওয়ার সাথে সাথে কাজগুলো দেখানো শুরু করো
+    window.onload = function() {
+        if(typeof db !== 'undefined') {
+            loadAvailableJobs();
+        } else {
+            console.log("সাদ্দাম ভাইয়া, ফায়ারবেস এখনো লোড হয়নি!");
+        }
+    };
+    </script>
 </body>
 </html>
