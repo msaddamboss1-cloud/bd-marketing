@@ -3,182 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Saddam Official | Secure Home</title>
+    <title>BD Marketing | Ultra Modified Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Orbitron:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;600;700&display=swap');
         
-        body { background: #010409; color: #e6edf3; font-family: 'Hind Siliguri', sans-serif; overflow-x: hidden; }
-        
-        /* প্রিমিয়াম গ্লাস কার্ড */
-        .glass-card { background: rgba(13, 17, 23, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(48, 54, 61, 1); border-radius: 24px; transition: 0.3s; }
+        :root {
+            --primary-bg: #010409;
+            --card-bg: #0d1117;
+            --accent-blue: #1f6feb;
+            --success-green: #238636;
+        }
+
+        body { 
+            background-color: var(--primary-bg); 
+            color: #e6edf3; 
+            font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* প্রিমিয়াম গোলগাল ডিজাইন */
+        .m-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); overflow: hidden; }
+        .m-gradient { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border-radius: 35px; }
         
         /* অনলাইন সিগন্যাল */
-        .online-blink { width: 8px; height: 8px; background: #238636; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #238636; animation: blinker 1.5s infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        .status-dot { width: 10px; height: 10px; background: #2ea043; border-radius: 50%; box-shadow: 0 0 12px #2ea043; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* সাইড মেনু এনিমেশন */
-        #side-nav { transition: transform 0.4s ease; transform: translateX(-100%); z-index: 9999; }
-        #side-nav.open { transform: translateX(0); }
+        /* সাইড নেভিগেশন */
+        #main-menu { transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translateX(-100%); z-index: 9999; }
+        #main-menu.active { transform: translateX(0); }
 
-        .btn-glow { background: linear-gradient(135deg, #1f6feb, #0969da); border-radius: 16px; font-weight: bold; }
-        .btn-glow:active { transform: scale(0.95); }
+        /* নোটিশ বোর্ড অ্যানিমেশন */
+        .scrolling-text { white-space: nowrap; animation: scroll 15s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* ইনপুট স্টাইল */
+        .m-input { background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 15px; width: 100%; color: white; outline: none; transition: 0.3s; }
+        .m-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(31, 111, 235, 0.3); }
     </style>
 </head>
-<body class="max-w-md mx-auto min-h-screen pb-10">
+<body class="max-w-md mx-auto min-h-screen relative shadow-2xl">
 
-    <header class="p-6 flex justify-between items-center border-b border-gray-800 sticky top-0 bg-[#0d1117]/90 z-50">
-        <div>
-            <h1 class="text-xl font-black font-[Orbitron] text-blue-500 tracking-tighter">BDMARKETING.COM</h1>
-            <div class="flex items-center gap-2">
-                <span class="online-blink"></span>
-                <span class="text-[10px] text-gray-400 font-bold uppercase">Admin: Saddam</span>
+    <header class="sticky top-0 bg-[#0d1117]/95 backdrop-blur-md p-5 flex justify-between items-center z-50 border-b border-gray-800">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 m-gradient flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-900/40">B</div>
+            <div>
+                <h1 class="text-sm font-black tracking-tight">BD MARKETING</h1>
+                <div class="flex items-center gap-2">
+                    <span class="status-dot"></span>
+                    <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Admin: Saddam</span>
+                </div>
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <button onclick="toggleLang()" class="text-[9px] font-bold border border-gray-700 px-3 py-1 rounded-md">BN/EN</button>
-            <button onclick="openMenu()" class="text-2xl text-blue-500"><i class="fas fa-bars-staggered"></i></button>
+            <button onclick="toggleLang()" id="lang-btn" class="text-[9px] font-black bg-gray-800 px-4 py-1.5 rounded-full border border-gray-700">English</button>
+            <button onclick="toggleSidebar()" class="text-blue-500 text-2xl"><i class="fas fa-bars-staggered"></i></button>
         </div>
     </header>
 
-    <div id="side-nav" class="fixed top-0 left-0 w-4/5 h-full bg-[#0d1117] border-r border-gray-800 p-8 shadow-2xl">
-        <button onclick="closeMenu()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times"></i></button>
+    <div id="main-menu" class="fixed top-0 left-0 w-[80%] h-full bg-[#0d1117] border-r border-gray-800 p-8 overflow-y-auto">
+        <button onclick="toggleSidebar()" class="absolute top-6 right-6 text-gray-400 text-2xl"><i class="fas fa-times"></i></button>
         
-        <div class="mt-12 space-y-8">
-            <div class="border-b border-gray-800 pb-6">
-                <p id="nav-user" class="text-lg font-bold text-blue-400">Guest User</p>
-                <span id="verify-badge" class="hidden text-[8px] bg-green-900/40 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20 uppercase font-bold">Verified User</span>
+        <div class="mt-10 space-y-8">
+            <div class="text-center pb-6 border-b border-gray-800">
+                <div class="w-20 h-20 mx-auto bg-gray-800 rounded-full mb-4 flex items-center justify-center border-2 border-blue-500/30">
+                    <i class="fas fa-user-shield text-3xl text-blue-500"></i>
+                </div>
+                <h3 id="u-display" class="font-bold text-lg text-white">Guest User</h3>
+                <span id="v-badge" class="hidden text-[8px] bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full border border-blue-500/20 uppercase font-black">Verified Account</span>
             </div>
-            
-            <nav class="space-y-5">
-                <a href="javascript:void(0)" onclick="gate('Profile')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-user-circle text-blue-500"></i> Profile</a>
-                <a href="javascript:void(0)" onclick="gate('Wallet')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-wallet text-blue-500"></i> Wallet</a>
-                <a href="javascript:void(0)" onclick="gate('History')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-history text-blue-500"></i> History</a>
-                <a href="javascript:void(0)" onclick="gate('Support')" class="flex items-center gap-4 text-sm font-semibold hover:text-blue-400 transition"><i class="fas fa-headset text-blue-500"></i> Support Center</a>
-                <a href="javascript:void(0)" onclick="logoutUser()" class="flex items-center gap-4 text-sm font-bold text-red-500 pt-10"><i class="fas fa-power-off"></i> Logout</a>
+
+            <nav class="flex flex-col gap-5">
+                <a href="#" onclick="gate('প্রোফাইল')" class="flex items-center gap-4 text-sm font-semibold text-gray-300 hover:text-blue-500"><i class="fas fa-id-card text-blue-500"></i> <span class="lang-text" data-en="Profile Settings" data-bn="প্রোফাইল সেটিংস">প্রোফাইল সেটিংস</span></a>
+                <a href="#" onclick="gate('উইথড্র')" class="flex items-center gap-4 text-sm font-semibold text-gray-300 hover:text-blue-500"><i class="fas fa-money-bill-transfer text-blue-500"></i> <span class="lang-text" data-en="Withdraw Money" data-bn="টাকা উত্তোলন">টাকা উত্তোলন</span></a>
+                <a href="#" onclick="gate('ডিপোজিট হিস্ট্রি')" class="flex items-center gap-4 text-sm font-semibold text-gray-300 hover:text-blue-500"><i class="fas fa-clock-rotate-left text-blue-500"></i> <span class="lang-text" data-en="Transaction History" data-bn="লেনদেনের ইতিহাস">লেনদেনের ইতিহাস</span></a>
+                <a href="#" onclick="gate('সাপোর্ট')" class="flex items-center gap-4 text-sm font-semibold text-gray-300 hover:text-blue-500"><i class="fas fa-headset text-blue-500"></i> <span class="lang-text" data-en="Help Center" data-bn="হেল্প সেন্টার">হেল্প সেন্টার</span></a>
+                <button onclick="logout()" class="text-left flex items-center gap-4 text-sm font-bold text-red-500 mt-10"><i class="fas fa-power-off"></i> <span>LOGOUT</span></button>
             </nav>
+        </div>
+    </div>
+
+    <div class="bg-blue-600/10 border-y border-blue-500/20 py-2 overflow-hidden">
+        <div id="notice-text" class="scrolling-text text-[11px] font-bold text-blue-400">
+            স্বাগতম সাদ্দাম ভাইয়ার অফিশিয়াল প্ল্যাটফর্মে! আজকের পেমেন্ট ক্লিয়ার করা হয়েছে।
         </div>
     </div>
 
     <main class="p-6 space-y-6">
         
-        <div class="glass-card p-10 text-center relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
-            <p id="txt-bal-title" class="text-[10px] uppercase tracking-[5px] text-gray-500 font-bold mb-2">Total Balance</p>
-            <h2 class="text-5xl font-bold font-[Orbitron] text-white tracking-tighter">৳ <span id="user-bal">0.00</span></h2>
+        <div class="m-gradient p-12 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+            <p id="txt-bal-label" class="text-[10px] uppercase font-black text-blue-100 tracking-[5px] mb-3">CURRENT BALANCE</p>
+            <h2 class="text-5xl font-black text-white">৳ <span id="u-bal">0.00</span></h2>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="gate('ডিপোজিট')" class="m-card py-6 flex flex-col items-center gap-2 border-green-500/20 active:bg-green-500/5 transition">
+                <i class="fas fa-plus-circle text-2xl text-green-500"></i>
+                <span class="text-[10px] font-black uppercase tracking-widest lang-text" data-en="Deposit" data-bn="টাকা জমা">টাকা জমা</span>
+            </button>
+            <button onclick="gate('উইথড্র')" class="m-card py-6 flex flex-col items-center gap-2 border-red-500/20 active:bg-red-500/5 transition">
+                <i class="fas fa-minus-circle text-2xl text-red-500"></i>
+                <span class="text-[10px] font-black uppercase tracking-widest lang-text" data-en="Withdraw" data-bn="টাকা উত্তোলন">টাকা উত্তোলন</span>
+            </button>
         </div>
 
         <div class="space-y-4">
-            <h3 class="text-xs font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
-                <i class="fas fa-layer-group text-blue-500"></i> Pocket Market
+            <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[3px] px-2 flex items-center justify-between">
+                <span>Pocket Market</span>
+                <i class="fas fa-chevron-right"></i>
             </h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div onclick="gate('Seller Mode')" class="glass-card p-6 text-center cursor-pointer active:bg-blue-500/10 border-blue-500/10">
-                    <i class="fas fa-briefcase text-2xl text-blue-500 mb-2"></i>
-                    <p class="text-[9px] font-black uppercase tracking-widest">Seller Mode</p>
+            <div class="m-card p-6 flex items-center justify-between border-blue-500/10">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500"><i class="fas fa-briefcase text-xl"></i></div>
+                    <div>
+                        <h4 class="text-sm font-bold lang-text" data-en="Seller Dashboard" data-bn="বিক্রেতা ড্যাশবোর্ড">বিক্রেতা ড্যাশবোর্ড</h4>
+                        <p class="text-[9px] text-gray-500 uppercase font-bold">Earn Money Daily</p>
+                    </div>
                 </div>
-                <div onclick="gate('Buyer Mode')" class="glass-card p-6 text-center cursor-pointer active:bg-blue-500/10 border-blue-500/10">
-                    <i class="fas fa-cart-shopping text-2xl text-green-500 mb-2"></i>
-                    <p class="text-[9px] font-black uppercase tracking-widest">Buyer Mode</p>
-                </div>
+                <button onclick="gate('Seller')" class="px-5 py-2 bg-blue-600 rounded-xl text-[10px] font-black uppercase">Start</button>
             </div>
         </div>
 
-        <div class="glass-card p-6">
-            <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-4">Official Help Center</p>
-            <div class="flex justify-between items-center px-4">
-                <a id="wa-link" href="#" class="text-2xl text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp"></i></a>
-                <a id="fb-link" href="#" class="text-2xl text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
-                <a id="tw-link" href="#" class="text-2xl text-blue-400 hover:scale-110 transition"><i class="fab fa-twitter"></i></a>
-                <a id="mail-link" href="#" class="text-2xl text-red-500 hover:scale-110 transition"><i class="fas fa-envelope"></i></a>
+        <div class="m-card p-6">
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest text-center mb-5">Admin Live Support</p>
+            <div class="flex justify-around items-center">
+                <a id="link-wa" href="#" class="w-12 h-12 flex items-center justify-center bg-green-600/10 rounded-full text-green-500 text-xl"><i class="fab fa-whatsapp"></i></a>
+                <a id="link-fb" href="#" class="w-12 h-12 flex items-center justify-center bg-blue-600/10 rounded-full text-blue-600 text-xl"><i class="fab fa-facebook"></i></a>
+                <a id="link-mail" href="#" class="w-12 h-12 flex items-center justify-center bg-red-600/10 rounded-full text-red-500 text-xl"><i class="fas fa-envelope"></i></a>
             </div>
         </div>
-
-        <div id="extra-modules-holder" class="space-y-4">
-            </div>
 
     </main>
 
     <script>
-        // Firebase Configuration (Verified Link)
-        const firebaseConfig = {
-            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com"
-        };
+        // সাদ্দাম ভাইয়ার ফায়ারবেস কনফিগারেশন
+        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // লোকাল মেমোরি থেকে ডাটা চেক
-        const uName = localStorage.getItem("user_name");
-        const isLogged = localStorage.getItem("bd_market_logged");
+        // লোকাল মেমোরি ডাটা
+        const user_name = localStorage.getItem("user_name");
+        const is_logged = localStorage.getItem("bd_market_logged");
 
         window.onload = function() {
-            if (isLogged === "true" && uName) {
-                document.getElementById('nav-user').innerText = uName;
-                document.getElementById('verify-badge').classList.remove('hidden');
+            if (is_logged === "true" && user_name) {
+                document.getElementById('u-display').innerText = user_name;
+                document.getElementById('v-badge').classList.remove('hidden');
                 
-                // লাইভ ব্যালেন্স ট্র্যাকিং
-                db.ref('Users/' + uName.replace(/\s+/g, '_') + '/balance').on('value', (s) => {
-                    document.getElementById('user-bal').innerText = s.val() || "0.00";
+                // ব্যালেন্স ও নোটিশ লাইভ সিঙ্ক (এডমিন থেকে কাস্টমাইজযোগ্য)
+                const safeName = user_name.replace(/\s+/g, '_');
+                db.ref('Users/' + safeName + '/balance').on('value', (s) => {
+                    document.getElementById('u-bal').innerText = s.val() || "0.00";
                 });
             }
-            fetchSupportLinks();
+            loadAdminSync();
         };
 
-        // এডমিন থেকে সোশ্যাল সাপোর্ট লিঙ্ক লোড
-        function fetchSupportLinks() {
-            db.ref('AdminSettings/Support').on('value', (s) => {
+        // ফুল কাস্টম এডমিন সিঙ্ক লজিক
+        function loadAdminSync() {
+            db.ref('AdminSettings').on('value', (s) => {
                 const data = s.val();
                 if(data) {
-                    document.getElementById('wa-link').href = "https://wa.me/" + data.whatsapp;
-                    document.getElementById('fb-link').href = data.facebook;
-                    document.getElementById('mail-link').href = "mailto:" + data.email;
+                    if(data.notice) document.getElementById('notice-text').innerText = data.notice;
+                    document.getElementById('link-wa').href = "https://wa.me/" + data.whatsapp;
+                    document.getElementById('link-fb').href = data.facebook;
+                    document.getElementById('link-mail').href = "mailto:" + data.email;
                 }
             });
         }
 
-        // গেস্টদের জন্য কঠোর সিকিউরিটি গেট
-        function gate(feature) {
-            if (isLogged !== "true") {
+        // গেস্ট মোড সিকিউরিটি ও মডিফাইড পপ-আপ
+        function gate(type) {
+            if (is_logged !== "true") {
                 Swal.fire({
-                    title: 'অ্যাক্সেস সীমিত!',
-                    text: 'জনাব, ' + feature + ' ব্যবহার করতে অনুগ্রহ করে একাউন্ট খুলুন তারপর আসুন।',
+                    title: 'Access Restricted!',
+                    text: 'জনাব, ' + type + ' ব্যবহার করতে অনুগ্রহ করে একাউন্ট খুলুন।',
                     icon: 'lock',
-                    showCancelButton: true,
                     confirmButtonText: 'Register Now',
                     confirmButtonColor: '#1f6feb',
-                    cancelButtonText: 'Later'
-                }).then((res) => {
-                    if(res.isConfirmed) window.location.href = "index.html";
-                });
+                    background: '#0d1117',
+                    color: '#fff'
+                }).then((r) => { if(r.isConfirmed) window.location.href = "index.html"; });
             } else {
                 Swal.fire({
-                    title: feature,
-                    text: 'সাদ্দাম ভাইয়ার তত্ত্বাবধানে এই মডিউলটি শীঘ্রই লাইভ হবে।',
-                    icon: 'info'
+                    title: type,
+                    text: 'সাদ্দাম ভাইয়ার অনুমতি অনুযায়ী এই মডিউলটি লোড হচ্ছে...',
+                    icon: 'info',
+                    timer: 1500,
+                    showConfirmButton: false
                 });
             }
         }
 
-        function openMenu() { document.getElementById('side-nav').classList.add('open'); }
-        function closeMenu() { document.getElementById('side-nav').classList.remove('open'); }
+        function toggleSidebar() { document.getElementById('main-menu').classList.toggle('active'); }
 
-        function logoutUser() {
-            localStorage.clear();
-            window.location.href = "index.html";
-        }
-
+        // ভাষা পরিবর্তন ইঞ্জিন (নিখুঁত লজিক)
         let isBN = true;
         function toggleLang() {
             isBN = !isBN;
-            document.getElementById('txt-bal-title').innerText = isBN ? "Total Balance" : "মোট ব্যালেন্স";
+            document.getElementById('lang-btn').innerText = isBN ? "English" : "বাংলা";
+            document.getElementById('txt-bal-label').innerText = isBN ? "CURRENT BALANCE" : "আপনার বর্তমান ব্যালেন্স";
+            
+            const transElements = document.querySelectorAll('.lang-text');
+            transElements.forEach(el => {
+                el.innerText = isBN ? el.getAttribute('data-bn') : el.getAttribute('data-en');
+            });
         }
+
+        function logout() { localStorage.clear(); window.location.href = "index.html"; }
     </script>
 </body>
-</html>
+            </html>
+                    
