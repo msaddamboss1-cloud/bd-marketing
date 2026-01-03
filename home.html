@@ -1,340 +1,114 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>বিডি মার্কেটিং | অফিশিয়াল ড্যাশবোর্ড</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
-        
-        :root { --main-blue: #00d2ff; --bg-dark: #010409; --card-bg: #0d1117; }
-        body { background: var(--bg-dark); color: #e6edf3; font-family: 'Hind Siliguri', sans-serif; }
+<script>
+    // ১. আপনার ফায়ারবেস কনফিগারেশন
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+        authDomain: "bd-marketing-55a81.firebaseapp.com",
+        databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+        projectId: "bd-marketing-55a81",
+        storageBucket: "bd-marketing-55a81.firebasestorage.app",
+        messagingSenderId: "678696512628",
+        appId: "1:678696512628:web:edfc22a62f55dad41df521"
+    };
 
-        /* প্রিমিয়াম ইউআই এলিমেন্টস */
-        .master-panel { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; transition: 0.3s ease; }
-        .gradient-btn { background: linear-gradient(135deg, #1f6feb 0%, #0969da 100%); border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-        
-        /* নোটিশ বোর্ড অ্যানিমেশন */
-        .scrolling-notice { background: rgba(31, 111, 235, 0.1); border-bottom: 1px solid #30363d; overflow: hidden; white-space: nowrap; padding: 10px 0; }
-        .notice-content { display: inline-block; animation: scroll-left 25s linear infinite; color: var(--main-blue); font-weight: 700; font-size: 13px; }
-        @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* ইনপুট ফিল্ডস */
-        .custom-input { background: #010409 !important; border: 1px solid #30363d !important; border-radius: 12px; padding: 14px; color: #fff; width: 100%; font-size: 14px; outline: none; }
-        .custom-input:focus { border-color: var(--main-blue) !important; box-shadow: 0 0 10px rgba(0, 210, 255, 0.1); }
-
-        /* ড্রয়ার মেনু */
-        #side-drawer { transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 10000; }
-        #side-drawer.active { transform: translateX(0); }
-    </style>
-</head>
-<body class="max-w-md mx-auto min-h-screen relative shadow-2xl">
-
-    <div class="scrolling-notice">
-        <div id="notice-board" class="notice-content">
-            স্বাগতম! আমাদের প্ল্যাটফর্মে কাজ শুরু করতে একাউন্ট ভেরিফাই করুন। সর্বনিম্ন জমা ৫০ টাকা এবং উত্তোলন ১০০ টাকা।
-        </div>
-    </div>
-
-    <header class="p-5 flex justify-between items-center sticky top-0 bg-[#010409]/90 backdrop-blur-md z-50">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 gradient-btn flex items-center justify-center text-white font-bold text-xl">বি</div>
-            <div>
-                <h1 class="text-sm font-bold tracking-tight">বিডি মার্কেটিং</h1>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">অফিশিয়াল সিস্টেম</span>
-                </div>
-            </div>
-        </div>
-        <button onclick="toggleDrawer(true)" class="text-blue-500 text-xl"><i class="fas fa-bars-staggered"></i></button>
-    </header>
-
-    <div id="side-drawer" class="fixed top-0 left-0 w-3/4 h-full bg-[#0d1117] border-r border-gray-800 p-8">
-        <button onclick="toggleDrawer(false)" class="absolute top-6 right-6 text-gray-500 text-xl"><i class="fas fa-times"></i></button>
-        <div class="mt-12 space-y-10">
-            <div class="text-center pb-8 border-b border-gray-800">
-                <div class="w-20 h-20 mx-auto gradient-btn flex items-center justify-center mb-4 shadow-xl"><i class="fas fa-user-circle text-3xl"></i></div>
-                <h3 id="display-user" class="font-bold text-lg">গেস্ট ইউজার</h3>
-                <p class="text-[9px] text-blue-500 font-bold uppercase tracking-widest mt-1">Status: Unverified</p>
-            </div>
-            <nav class="flex flex-col gap-6 text-sm font-bold text-gray-400">
-                <a href="#"><i class="fas fa-home text-blue-500 mr-3"></i> ড্যাশবোর্ড</a>
-                <a href="#" onclick="gate('History')"><i class="fas fa-history text-blue-500 mr-3"></i> লেনদেনের ইতিহাস</a>
-                <a href="#" onclick="gate('Support')"><i class="fas fa-headset text-blue-500 mr-3"></i> হেল্প সেন্টার</a>
-                <button onclick="logout()" class="text-left text-red-500 mt-10 pt-6 border-t border-gray-800"><i class="fas fa-sign-out-alt mr-3"></i> সিস্টেম থেকে বের হন</button>
-            </nav>
-        </div>
-    </div>
-
-    <main class="p-6 space-y-8 pb-24">
-        
-        <section class="master-panel p-8 text-center bg-gradient-to-br from-[#0d1117] to-[#161b22] relative overflow-hidden">
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">আপনার ব্যালেন্স</p>
-            <h2 class="text-3xl font-black text-white">৳ <span id="user-balance">0.00</span></h2>
-            <div class="mt-6 pt-4 border-t border-gray-800 flex justify-around">
-                <div class="text-center">
-                    <p class="text-[8px] text-gray-500 uppercase font-black">পেন্ডিং</p>
-                    <p class="text-sm font-bold text-blue-400">৳ <span id="pending-val">0.00</span></p>
-                </div>
-            </div>
-        </section>
-
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="openPanel('Deposit')" class="master-panel p-6 flex flex-col items-center border-green-500/10">
-                <i class="fas fa-arrow-down text-green-500 text-xl mb-2"></i>
-                <span class="text-[10px] font-black uppercase">টাকা জমা</span>
-            </button>
-            <button onclick="openPanel('Withdraw')" class="master-panel p-6 flex flex-col items-center border-red-500/10">
-                <i class="fas fa-arrow-up text-red-500 text-xl mb-2"></i>
-                <span class="text-[10px] font-black uppercase">টাকা উত্তোলন</span>
-            </button>
-        </div>
-
-        <div id="action-panel" class="hidden master-panel p-8 border-blue-500/20 shadow-xl"></div>
-
-        <section class="space-y-4">
-            <h3 class="text-[10px] font-black text-gray-600 uppercase tracking-widest px-2">সার্ভিস মার্কেটপ্লেস</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div onclick="switchMode('seller')" class="master-panel p-8 text-center border-blue-500/10 cursor-pointer">
-                    <i class="fas fa-tools text-2xl text-blue-500 mb-3"></i>
-                    <p class="text-[10px] font-black uppercase">বিক্রেতা মোড</p>
-                </div>
-                <div onclick="switchMode('buyer')" class="master-panel p-8 text-center border-orange-500/10 cursor-pointer">
-                    <i class="fas fa-briefcase text-2xl text-orange-500 mb-3"></i>
-                    <p class="text-[10px] font-black uppercase">ক্রেতা মোড</p>
-                </div>
-            </div>
-        </section>
-
-        <div id="market-display" class="master-panel p-12 text-center border-dashed border-gray-800">
-            <i class="fas fa-folder-open text-3xl text-gray-800 mb-4"></i>
-            <p class="text-[11px] font-bold text-gray-600 uppercase">কাজ দেখতে একটি মোড নির্বাচন করুন</p>
-        </div>
-
-    </main>
-
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com" };
+    // ফায়ারবেস ইনিশিয়ালাইজেশন
+    if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    }
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-        // Admin Controlled Config
-        let siteSettings = { bkash: "01725780575", nagad: "01763584939", notice: "আমাদের সিস্টেমে স্বাগতম।" };
-        const uName = localStorage.getItem("user_name");
-        const isLoggedIn = localStorage.getItem("bd_market_logged");
+    // ২. রিয়েল-টাইম ইউজার কন্ট্রোল ইঞ্জিন
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // ডাটাবেস থেকে ইউজারের Saddam বা Saddam15 আইডি শনাক্ত করা
+            const userPath = user.displayName ? user.displayName.replace(/\s+/g, '_') : "Admin_User";
+            
+            db.ref('Users/' + userPath).on('value', (snapshot) => {
+                const userData = snapshot.val();
+                
+                if (userData) {
+                    // UI আপডেট (নাম গোপন রেখে এডমিন দেখানো)
+                    updateUI(userData);
 
-        window.onload = function() {
-            if (isLoggedIn === "true" && uName) {
-                document.getElementById('display-user').innerText = uName;
-                const path = uName.replace(/\s+/g, '_');
-                db.ref('Users/' + path).on('value', (s) => {
-                    const data = s.val();
-                    if(data) {
-                        document.getElementById('user-balance').innerText = data.balance || "0.00";
-                        document.getElementById('pending-val').innerText = data.pending || "0.00";
+                    // ভেরিফিকেশন এবং স্ট্যাটাস চেক
+                    if (userData.status === "Active") {
+                        if (Swal.isVisible()) Swal.close(); // একটিভ হলে পপ-আপ বন্ধ হবে
+                    } else {
+                        showLockPopup(); // একটিভ না হলে লক থাকবে
                     }
-                });
-            }
-            syncAdminData();
-        };
-
-        function syncAdminData() {
-            db.ref('AdminSettings').on('value', (s) => {
-                if(s.val()) {
-                    siteSettings = { ...siteSettings, ...s.val() };
-                    document.getElementById('notice-board').innerText = siteSettings.notice;
+                } else {
+                    showLockPopup(); // ডাটা না থাকলে লক থাকবে
                 }
             });
+        } else {
+            // সেশন শেষ হলে লগইন পেজে রিডাইরেক্ট
+            window.location.href = "index.html";
         }
+    });
 
-        // ট্রানজেকশন প্যানেল (লিমিট চেকসহ)
-        function openPanel(type) {
-            if(isLoggedIn !== "true") return gate('ট্রানজেকশন');
-            const panel = document.getElementById('action-panel');
-            panel.classList.remove('hidden');
-            
-            const isDep = type === 'Deposit';
-            const min = isDep ? 50 : 100;
-            const title = isDep ? 'টাকা জমা প্রদান' : 'টাকা উত্তোলন রিকোয়েস্ট';
+    // ৩. UI আপডেট ফাংশন (কাস্টমাইজযোগ্য)
+    function updateUI(data) {
+        document.getElementById('user-balance').innerText = data.balance || "0.00";
+        document.getElementById('pending-val').innerText = data.pending || "0.00";
+        document.getElementById('display-user').innerText = "স্বাগতম এডমিন"; 
+        console.log("সিস্টেম: ডাটাবেস সিঙ্ক সফল।");
+    }
 
-            panel.innerHTML = `
-                <div class="relative">
-                    <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="absolute -top-2 -right-2 text-gray-500"><i class="fas fa-times"></i></button>
-                    <h4 class="text-xs font-black uppercase text-blue-400 mb-6">${title}</h4>
-                    <div class="space-y-4">
-                        <select id="m-method" onchange="updateAdminNum()" class="custom-input">
-                            <option value="bkash">বিকাশ (পার্সোনাল)</option>
-                            <option value="nagad">নগদ (পার্সোনাল)</option>
-                        </select>
-                        ${isDep ? `
-                        <div class="bg-blue-500/5 p-4 rounded-xl border border-dashed border-blue-500/20 flex justify-between items-center">
-                            <div>
-                                <p class="text-[8px] text-gray-500 uppercase font-bold">অ্যাডমিন নম্বর</p>
-                                <p id="adm-num-box" class="text-sm font-bold text-blue-400">${siteSettings.bkash}</p>
-                            </div>
-                            <button onclick="copyAdminNumber()" class="text-[10px] bg-blue-600 px-4 py-1.5 rounded-lg font-bold">কপি</button>
-                        </div>` : ''}
-                        <input type="number" id="m-amount" class="custom-input" placeholder="পরিমাণ (৳ সর্বনিম্ন ${min})">
-                        <input type="text" id="m-info" class="custom-input" placeholder="${isDep ? 'ট্রানজেকশন আইডি' : 'টাকা পাওয়ার নম্বর'}">
-                        <button onclick="processRequest('${type}', ${min})" class="w-full gradient-btn py-4 font-black text-xs uppercase text-white shadow-xl">রিকোয়েস্ট পাঠান</button>
-                    </div>
-                </div>`;
-            panel.scrollIntoView({ behavior: 'smooth' });
-        }
+    // ৪. প্রোটেকশন গেট (পপ-আপ)
+    function showLockPopup() {
+        Swal.fire({
+            title: 'অ্যাক্সেস সংরক্ষিত!',
+            text: 'আপনার প্রোফাইলটি এখনো অনুমোদিত নয়। এডমিনের অনুমতির অপেক্ষা করুন।',
+            icon: 'lock',
+            confirmButtonText: 'রেজিস্ট্রেশন চেক',
+            confirmButtonColor: '#1f6feb',
+            background: '#0d1117',
+            color: '#fff',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) window.location.href = "index.html";
+        });
+    }
 
-        function updateAdminNum() {
-            const m = document.getElementById('m-method').value;
-            document.getElementById('adm-num-box').innerText = siteSettings[m];
-        }
+    // ৫. সিকিউর লগআউট
+    function logout() {
+        auth.signOut().then(() => {
+            localStorage.clear();
+            window.location.href = "index.html";
+        });
+    }
 
-        function copyAdminNumber() {
-            const num = document.getElementById('adm-num-box').innerText;
-            navigator.clipboard.writeText(num);
-            Swal.fire({ title: 'কপি হয়েছে!', icon: 'success', timer: 800, showConfirmButton: false });
-        }
-
-        function processRequest(type, min) {
-            const amt = parseInt(document.getElementById('m-amount').value);
-            const info = document.getElementById('m-info').value;
-            const method = document.getElementById('m-method').value;
-
-            if(amt < min) return Swal.fire('ভুল', `সর্বনিম্ন পরিমাণ ${min} টাকা হতে হবে।`, 'error');
-            if(!info) return Swal.fire('ভুল', 'প্রয়োজনীয় তথ্য প্রদান করুন।', 'error');
-
-            const path = type === 'Deposit' ? 'Deposit_Requests' : 'Withdraw_Requests';
-            db.ref(path).push({
-                user: uName, amount: amt, info: info, method: method, status: 'পেন্ডিং', date: new Date().toLocaleString('bn-BD')
-            }).then(() => {
-                Swal.fire('সফল!', 'আপনার রিকোয়েস্টটি অ্যাডমিনের কাছে পাঠানো হয়েছে।', 'success');
-                document.getElementById('action-panel').classList.add('hidden');
-            });
-        }
-
-        // মার্কেটপ্লেস সুইচিং
-        function switchMode(mode) {
-            if(isLoggedIn !== "true") return gate('মার্কেট');
-            const display = document.getElementById('market-display');
-            if(mode === 'seller') {
-                display.innerHTML = `
-                    <div class="py-6">
-                        <i class="fas fa-clock text-3xl text-yellow-600 mb-4 animate-pulse"></i>
-                        <h4 class="text-sm font-bold text-gray-400">এই মুহূর্তে কোনো কাজ নেই</h4>
-                        <p class="text-[9px] text-gray-600 mt-2 uppercase">অ্যাডমিন নতুন কাজ দিলে এখানে দেখা যাবে</p>
-                    </div>`;
-            } else {
-                display.innerHTML = `
-                    <div class="text-left space-y-4">
-                        <h4 class="text-[10px] font-black uppercase text-orange-500 mb-2 tracking-widest">নতুন কাজের অর্ডার দিন (Buyer)</h4>
-                        <input type="text" id="job-title" class="custom-input" placeholder="কাজের টাইটেল">
-                        <textarea id="job-desc" class="custom-input h-24" placeholder="কাজের বিবরণ এবং প্রমাণ (স্ক্রিনশট) এর নিয়মাবলী..."></textarea>
-                        <p class="text-[9px] text-gray-500 italic">নোট: প্রমাণ হিসেবে সর্বোচ্চ ২ এমবি স্ক্রিনশট গ্রাহ্য করা হবে।</p>
-                        <button onclick="submitJob()" class="w-full gradient-btn py-4 font-black text-xs uppercase text-white">অর্ডার সাবমিট করুন</button>
-                    </div>`;
-            }
-        }
-
-        function submitJob() {
-            const t = document.getElementById('job-title').value;
-            const d = document.getElementById('job-desc').value;
-            if(!t || !d) return Swal.fire('ভুল', 'সবগুলো ঘর পূরণ করুন', 'error');
-            db.ref('Market_Orders').push({
-                buyer: uName, title: t, description: d, status: 'পেন্ডিং', time: new Date().toLocaleString('bn-BD')
-            }).then(() => {
-                Swal.fire('সফল!', 'আপনার অর্ডারটি কর্তৃপক্ষের কাছে পাঠানো হয়েছে।', 'success');
-                switchMode('buyer');
-            });
-        }
-
-        function gate(feat) {
-            Swal.fire({
-                title: 'অ্যাক্সেস বন্ধ!', text: 'অনুগ্রহ করে ' + feat + ' ব্যবহার করতে রেজিস্ট্রেশন সম্পন্ন করুন।',
-                icon: 'lock', confirmButtonText: 'রেজিস্ট্রেশন', confirmButtonColor: '#1f6feb', background: '#0d1117', color: '#fff'
-            }).then((r) => { if(r.isConfirmed) window.location.href = "index.html"; });
-        }
-
-        function toggleDrawer(s) { document.getElementById('side-drawer').classList.toggle('active', s); }
-        function logout() { localStorage.clear(); window.location.href = "index.html"; }
-    </script>
-    <script>
-    // ১. ডাটাবেস থেকে কাজগুলো লোড করার ফাংশন
-    function loadAvailableJobs() {
-        const jobListContainer = document.getElementById('job-list');
-        
-        // ফায়ারবেস থেকে কাজের ডাটা রিড করা
-        db.ref('GlobalJobs').on('value', (snapshot) => {
-            jobListContainer.innerHTML = ""; // আগের লিস্ট পরিষ্কার করা
-            const jobs = snapshot.val();
-            
+    // ৬. গ্লোবাল জব লোডার
+    function loadGlobalJobs() {
+        db.ref('GlobalJobs').on('value', (snap) => {
+            const jobs = snap.val();
+            const container = document.getElementById('market-display');
             if (jobs) {
-                Object.keys(jobs).forEach(key => {
-                    const job = jobs[key];
-                    const jobCard = `
-                        <div class="bg-[#0d1117] p-5 rounded-2xl border border-gray-800 flex justify-between items-center shadow-lg">
+                let jobHtml = '<div class="space-y-4">';
+                Object.keys(jobs).forEach(id => {
+                    const j = jobs[id];
+                    jobHtml += `
+                        <div class="master-panel p-4 border-gray-800 flex justify-between items-center">
                             <div>
-                                <h4 class="font-bold text-white text-md">${job.title}</h4>
-                                <p class="text-xs text-blue-400 mt-1">পেমেন্ট: ৳ ${job.pay}</p>
+                                <h4 class="font-bold text-sm text-white">${j.title}</h4>
+                                <p class="text-[10px] text-blue-500">পারিশ্রমিক: ৳ ${j.pay}</p>
                             </div>
-                            <button onclick="window.open('${job.link}', '_blank')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
-                                কাজ করুন
-                            </button>
-                        </div>
-                    `;
-                    jobListContainer.innerHTML += jobCard;
+                            <button onclick="window.open('${j.link}', '_blank')" class="bg-blue-600 text-[10px] px-3 py-2 rounded-lg font-bold">কাজ দেখুন</button>
+                        </div>`;
                 });
-            } else {
-                jobListContainer.innerHTML = `<p class="text-gray-600 text-sm text-center">বর্তমানে কোনো কাজ উপলব্ধ নেই।</p>`;
+                jobHtml += '</div>';
+                container.innerHTML = jobHtml;
             }
         });
     }
 
-    // ২. বিক্রেতা যখন কাজ পোস্ট করবে (Realtime Database Integration)
-    async function postJob() {
-        const title = document.getElementById('job-title').value;
-        const link = document.getElementById('job-link').value;
-        const cost = document.getElementById('job-cost').value;
-
-        if(!title || !link || !cost) {
-            return Swal.fire('দুঃখিত', 'সবগুলো ঘর পূরণ করুন', 'error');
-        }
-
-        // বিক্রেতার ব্যালেন্স চেক করার লজিক এখানে আসবে (ভবিষ্যতে)
-        const jobData = {
-            title: title,
-            link: link,
-            pay: cost,
-            postedBy: userName,
-            time: Date.now()
-        };
-
-        try {
-            await db.ref('GlobalJobs').push(jobData);
-            Swal.fire('সফল!', 'আপনার কাজটি লাইভ হয়েছে।', 'success');
-            // ফরম পরিষ্কার করা
-            document.getElementById('job-title').value = "";
-            document.getElementById('job-link').value = "";
-            document.getElementById('job-cost').value = "";
-        } catch (e) {
-            Swal.fire('এরর', 'কাজটি পাবলিশ করা যায়নি।', 'error');
-        }
-    }
-
-    // ৩. পেজ লোড হওয়ার সাথে সাথে কাজগুলো দেখানো শুরু করো
+    // পেজ রেডি হলে ফাংশন কল
     window.onload = function() {
-        if(typeof db !== 'undefined') {
-            loadAvailableJobs();
-        } else {
-            console.log("সাদ্দাম ভাইয়া, ফায়ারবেস এখনো লোড হয়নি!");
-        }
+        loadGlobalJobs();
     };
-    </script>
-</body>
-</html>
+</script>
+
