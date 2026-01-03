@@ -11,69 +11,113 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        body { background: #010409; color: white; font-family: 'Hind Siliguri', sans-serif; }
-        .input-st { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; padding: 15px; width: 100%; color: white; margin-bottom: 12px; outline: none; }
+        body { background: #010409; font-family: 'Hind Siliguri', sans-serif; color: white; overflow-x: hidden; }
+        .glass-card { background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .input-box { background: #010409; border: 1px solid #30363d; border-radius: 12px; padding: 15px; width: 100%; color: white; margin-bottom: 12px; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: #1f6feb; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-md bg-[#0d1117] p-8 rounded-[30px] border border-gray-800 shadow-2xl">
+    <div class="w-full max-w-md glass-card p-8 rounded-[30px] shadow-2xl">
         <div class="text-center mb-6">
-            <h1 class="text-2xl font-black text-blue-500">বিডি মার্কেটিং</h1>
-            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">অ্যাডমিন কন্ট্রোল সিস্টেম</p>
+            <h1 class="text-3xl font-black text-blue-500 tracking-tighter">BD MARKETING</h1>
+            <p class="text-[10px] text-gray-500 uppercase mt-1">Saddam </p>
         </div>
 
-        <div class="bg-blue-600/10 border border-blue-500/20 rounded-xl p-4 mb-6 text-sm">
-            <p>বিকাশ: <b>01725780575</b></p>
-            <p>নগদ: <b>01763584939</b></p>
+        <div class="bg-blue-600/5 border border-blue-500/20 rounded-2xl p-4 mb-6">
+            <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-400">বিকাশ (পার্সোনাল):</span>
+                <span class="text-pink-500 font-bold">01725780575</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-400">নগদ (পার্সোনাল):</span>
+                <span class="text-orange-500 font-bold">01763584939</span>
+            </div>
         </div>
 
-        <div id="reg-form">
-            <input type="text" id="r-name" class="input-st" placeholder="আপনার নাম">
-            <input type="number" id="r-age" class="input-st" placeholder="আপনার বয়স">
-            <input type="email" id="r-email" class="input-st" placeholder="আপনার জিমেইল">
-            <input type="password" id="r-pass" class="input-st" placeholder="পাসওয়ার্ড">
-            <button onclick="doSignup()" class="w-full bg-blue-600 p-4 rounded-xl font-bold mt-2">নিবন্ধন করুন</button>
+        <div id="auth-form">
+            <input type="text" id="r-name" class="input-box" placeholder="আপনার পূর্ণ নাম">
+            <input type="email" id="r-email" class="input-box" placeholder="আপনার জিমেইল">
+            <input type="password" id="r-pass" class="input-box" placeholder="পাসওয়ার্ড তৈরি করুন">
+            
+            <button onclick="handleSignup()" class="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-xl font-bold shadow-lg shadow-blue-600/20 transition">
+                নিবন্ধন সম্পন্ন করুন
+            </button>
+
+            <button onclick="guestAccess()" class="w-full bg-transparent border border-gray-800 p-3 rounded-xl font-bold mt-4 text-gray-400 hover:text-white hover:border-gray-600 transition">
+                অতিথি হিসেবে দেখুন (Guest)
+            </button>
         </div>
+
+        <p class="text-center mt-8 text-[10px] text-gray-700 tracking-widest">ময়মনসিংহ ডিজিটাল সার্ভিস ২০২৬</p>
     </div>
 
     <script>
-        // আপনার স্ক্রিনশট থেকে নেওয়া কনফিগারেশন
+        // সাদ্দাম ভাইয়া, আপনার সঠিক এবং চেক করা কনফিগারেশন
         const firebaseConfig = {
-            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_ID6yW7_G9s8",
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
             databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
             projectId: "bd-marketing-55a81",
-            storageBucket: "bd-marketing-55a81.appspot.com",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
             messagingSenderId: "678696512628",
-            appId: "1:678696512628:web:edfc22a62f55dad41df521",
-            measurementId: "G-3CP5DC4H44"
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
         };
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        async function doSignup() {
-            const name = document.getElementById('r-name').value;
-            const age = document.getElementById('r-age').value;
-            const email = document.getElementById('r-email').value;
-            const pass = document.getElementById('r-pass').value;
+        // ১. অটো লগইন চেক
+        window.onload = function() {
+            if(localStorage.getItem("user_name")) {
+                window.location.href = "home.html";
+            }
+        };
 
-            if(!name || !age || !email || !pass) return Swal.fire('ভুল', 'সব পূরণ করুন', 'error');
+        // ২. রেজিস্ট্রেশন ফাংশন
+        async function handleSignup() {
+            const name = document.getElementById('r-name').value.trim();
+            const email = document.getElementById('r-email').value.trim();
+            const pass = document.getElementById('r-pass').value.trim();
+
+            if(!name || !email || !pass) return Swal.fire('ভুল', 'সবগুলো ঘর পূরণ করুন', 'error');
 
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-                await userCredential.user.sendEmailVerification();
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await res.user.sendEmailVerification();
+                
+                // স্পেস সরিয়ে ইউজার আইডি তৈরি
+                const cleanID = name.replace(/\s+/g, '_');
 
-                const uid = name.replace(/\s+/g, '_');
-                masterEngine.initializeUser(uid, name, email, age);
+                await db.ref('Users/' + cleanID).set({
+                    full_name: name,
+                    email: email,
+                    buyer_wallet: 0.00,
+                    seller_wallet: 0.00,
+                    role: "জনাব",
+                    status: "Active",
+                    joined: Date.now()
+                });
 
                 localStorage.setItem("user_name", name);
-                Swal.fire('সফল!', 'জিমেইল ভেরিফাই করে লগইন করুন।', 'success')
-                    .then(() => window.location.href = "home.html");
-            } catch (e) { Swal.fire('এরর', e.message, 'error'); }
+                localStorage.setItem("login_type", "user");
+
+                Swal.fire('অভিনন্দন!', 'আপনার জিমেইলে ভেরিফিকেশন লিঙ্ক পাঠানো হয়েছে।', 'success')
+                .then(() => window.location.href = "home.html");
+
+            } catch (e) {
+                Swal.fire('ব্যর্থ!', e.message, 'error');
+            }
+        }
+
+        // ৩. গেস্ট মোড ফাংশন
+        function guestAccess() {
+            localStorage.setItem("user_name", "Guest_User");
+            localStorage.setItem("login_type", "guest");
+            window.location.href = "home.html";
         }
     </script>
-    <script src="master-engine.js"></script>
 </body>
 </html>
