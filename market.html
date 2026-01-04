@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পকেট মার্কেট - BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background: #010101; color: #fff; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 25px; }
+        .tab-btn.active { background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+    <header class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-gray-900 p-4 flex justify-between items-center">
+        <button onclick="window.location.href='home.html'"><i class="fas fa-arrow-left text-blue-500 text-xl"></i></button>
+        <h1 class="font-black text-lg tracking-widest text-blue-500 uppercase">পকেট মার্কেট</h1>
+        <div class="w-8"></div>
+    </header>
+
+    <main class="pt-24 px-6 pb-20">
+        <div class="flex space-x-2 mb-6 bg-gray-900/50 p-1 rounded-2xl">
+            <button onclick="switchTab('buy')" id="buyTab" class="tab-btn active flex-1 py-3 rounded-xl font-bold text-xs transition-all">কাজ খুঁজুন (Worker)</button>
+            <button onclick="switchTab('sell')" id="sellTab" class="tab-btn flex-1 py-3 rounded-xl font-bold text-xs transition-all text-gray-400">কাজ দিন (Employer)</button>
+        </div>
+
+        <div id="buySection">
+            <h2 class="text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest">উপলব্ধ কাজের তালিকা</h2>
+            <div id="jobList" class="space-y-4">
+                <p class="text-center text-gray-600 py-10 italic">অনুগ্রহ করে পরে আসুন, এই মুহূর্তে কোনো কাজ নেই...</p>
+            </div>
+        </div>
+
+        <div id="sellSection" class="hidden">
+            <div class="glass-card p-6">
+                <h2 class="text-blue-500 font-bold mb-5 italic"><i class="fas fa-plus-circle mr-2"></i>নতুন কাজ পোস্ট করুন</h2>
+                
+                <label class="text-[10px] text-gray-500 ml-1">কাজের শিরোনাম</label>
+                <input type="text" id="jobTitle" placeholder="উদা: ইউটিউব সাবস্ক্রাইব করুন" class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-4 text-sm outline-none">
+                
+                <label class="text-[10px] text-gray-500 ml-1">কাজের বৈশিষ্ট্য/বর্ণনা</label>
+                <textarea id="jobDesc" placeholder="কাজটি কীভাবে করতে হবে লিখুন..." class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-4 text-sm outline-none h-24"></textarea>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="text-[10px] text-gray-500 ml-1">বাজেট (প্রতি কাজ)</label>
+                        <input type="number" id="jobPay" placeholder="৳ ০.০০" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 ml-1">কতজন লোক লাগবে?</label>
+                        <input type="number" id="jobLimit" placeholder="উদা: ১০০" class="w-full bg-black border border-gray-800 p-4 rounded-xl text-sm outline-none">
+                    </div>
+                </div>
+
+                <label class="text-[10px] text-gray-500 ml-1">প্রমাণ হিসেবে কী জমা দিবে? (Proof)</label>
+                <input type="text" id="jobProof" placeholder="উদা: স্ক্রিনশট বা ইউজারনেম" class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-6 text-sm outline-none">
+
+                <button onclick="postNewJob()" class="w-full bg-blue-600 py-4 rounded-xl font-black uppercase text-xs shadow-lg shadow-blue-900/20 active:scale-95 transition">পাবলিশ করুন</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="master-engine.js"></script>
+
+    <script>
+        function switchTab(tab) {
+            const buySec = document.getElementById('buySection');
+            const sellSec = document.getElementById('sellSection');
+            const buyBtn = document.getElementById('buyTab');
+            const sellBtn = document.getElementById('sellTab');
+
+            if(tab === 'buy') {
+                buySec.classList.remove('hidden');
+                sellSec.classList.add('hidden');
+                buyBtn.classList.add('active', 'text-white');
+                sellBtn.classList.remove('active', 'text-white');
+            } else {
+                sellSec.classList.remove('hidden');
+                buySec.classList.add('hidden');
+                sellBtn.classList.add('active', 'text-white');
+                buyBtn.classList.remove('active', 'text-white');
+            }
+        }
+    </script>
+</body>
+  </html>
+  
