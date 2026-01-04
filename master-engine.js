@@ -83,4 +83,39 @@ function toggleSidebar() {
 
 function logoutUser() {
     auth.signOut().then(() => window.location.href = 'index.html');
+    // আল্ট্রা মাস্টার লগইন ও রেজিস্ট্রেশন ফাংশন
+function handleAuth() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+        return Swal.fire('সতর্কতা', 'ইমেইল এবং পাসওয়ার্ড দুটোই দিন', 'warning');
+    }
+
+    // বাটন লোডিং এফেক্ট
+    const authBtn = document.getElementById('authBtn');
+    if(authBtn) authBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> যাচাই চলছে...';
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            window.location.href = 'home.html';
+        })
+        .catch((error) => {
+            // যদি একাউন্ট না থাকে তবে নতুন তৈরি হবে (পাবলিকের জন্য সুবিধা)
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                        window.location.href = 'home.html';
+                    })
+                    .catch(err => {
+                        Swal.fire('ত্রুটি', 'একাউন্ট তৈরি করা যাচ্ছে না: ' + err.message, 'error');
+                        if(authBtn) authBtn.innerText = 'প্রবেশ করুন / একাউন্ট খুলুন';
+                    });
+            } else {
+                Swal.fire('ব্যর্থ', 'পাসওয়ার্ড ভুল বা সার্ভার সমস্যা', 'error');
+                if(authBtn) authBtn.innerText = 'প্রবেশ করুন / একাউন্ট খুলুন';
+            }
+        });
+}
+    
 }
