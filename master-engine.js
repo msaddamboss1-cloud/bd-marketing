@@ -1,4 +1,4 @@
-// ১. ফায়ারবেস কনফিগারেশন ও ইনিশিয়ালাইজেশন
+// ১. ফায়ারবেস কনফিগারেশন (আপনার ডাটাবেস ইউআরএল ব্যবহার করা হয়েছে)
 const firebaseConfig = {
     databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com"
 };
@@ -8,15 +8,16 @@ const auth = firebase.auth();
 
 let authMode = "login";
 
-// ২. অটো-ব্যালেন্স এবং ইউজার প্রোফাইল সিঙ্ক
+// ২. অটো-ব্যালেন্স এবং ইউজার প্রোফাইল সিঙ্ক (ইমেইল এবং ওয়ালেট ব্যালেন্স)
 auth.onAuthStateChanged(user => {
-    if (user && window.location.pathname.includes('home.html')) {
-        // ইউজারের ইমেইল প্রোফাইল মেনুতে দেখানো
-        if(document.getElementById('userEmail')) {
-            document.getElementById('userEmail').innerText = user.email;
+    if (user) {
+        // মেনুতে ইউজারের ইমেইল দেখানো
+        const userEmailElem = document.getElementById('userEmail');
+        if (userEmailElem) {
+            userEmailElem.innerText = user.email;
         }
 
-        // ব্যালেন্স আপডেট
+        // রিয়েল-টাইম ব্যালেন্স আপডেট (বিক্রেতা ও ক্রেতা ওয়ালেট)
         db.ref('Users/' + user.uid).on('value', snapshot => {
             const data = snapshot.val();
             if (data) {
@@ -29,7 +30,7 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-// ৩. মেনু বাটন ফাংশন (এটিই আপনার মেনু সচল করবে)
+// ৩. সাইডবার মেনু কন্ট্রোল ফাংশন
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
@@ -43,14 +44,36 @@ function toggleSidebar() {
     }
 }
 
-// ৪. ডিপোজিট রিকোয়েস্ট লজিক
+// ৪. লগআউট করার প্রফেশনাল ফাংশন
+function logoutUser() {
+    Swal.fire({
+        title: 'আপনি কি নিশ্চিত?',
+        text: "আপনি একাউন্ট থেকে লগআউট করতে চাচ্ছেন!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'হ্যাঁ, লগআউট করুন',
+        cancelButtonText: 'না'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                Swal.fire('Error', 'লগআউট হতে সমস্যা হচ্ছে!', 'error');
+            });
+        }
+    });
+}
+
+// ৫. ডিপোজিট রিকোয়েস্ট লজিক (সীমা: ৫০ - ৫০০০ টাকা)
 function handleDeposit() {
     const amount = parseFloat(document.getElementById('depositAmt').value);
     const trx = document.getElementById('depositTrx').value;
     const mode = document.getElementById('depositMode').value;
     const user = auth.currentUser;
 
-    if (!user) return Swal.fire('Error', 'আবার লগইন করুন।', 'error');
+    if (!user) return Swal.fire('Error', 'দয়া করে আবার লগইন করুন।', 'error');
 
     if (amount >= 50 && amount <= 5000 && trx.length > 5) {
         db.ref('TransactionRequests').push({
@@ -63,47 +86,23 @@ function handleDeposit() {
             status: 'Pending',
             time: Date.now()
         }).then(() => {
-            Swal.fire('সফল!', 'ডিপোজিট অনুরোধ পাঠানো হয়েছে।', 'success');
+            Swal.fire('সফল!', 'আপনার ডিপোজিট রিকোয়েস্ট এডমিনের কাছে পাঠানো হয়েছে।', 'success');
             document.getElementById('depositAmt').value = "";
             document.getElementById('depositTrx').value = "";
         });
     } else {
-        Swal.fire('ভুল', 'পরিমাণ ৫০-৫০০০৳ এবং সঠিক TrxID দিন।', 'error');
+        Swal.fire('ভুল তথ্য', 'সর্বনিম্ন ৫০ এবং সর্বোচ্চ ৫০০০ টাকা এবং সঠিক TrxID দিন।', 'error');
     }
 }
 
-// ৫. উইথড্র রিকোয়েস্ট লজিক
-function handleWithdraw() {
-    const amount = parseFloat(document.getElementById('withdrawAmt').value);
-    const target = document.getElementById('targetNum').value;
-    const user = auth.currentUser;
-    const currentBalance = parseFloat(document.getElementById('buyerBalance').innerText);
-
-    if (amount < 50 || amount > 5000) {
-        return Swal.fire('সীমাবদ্ধতা', 'সর্বনিম্ন ৫০ এবং সর্বোচ্চ ৫০০০৳ তুলতে পারবেন।', 'error');
-    }
-
-    if (amount > currentBalance) {
-        return Swal.fire('ব্যালেন্স কম', 'আপনার ক্রেতা ওয়ালেটে পর্যাপ্ত টাকা নেই।', 'error');
-    }
-
-    db.ref('WithdrawRequests').push({
-        uid: user.uid,
-        email: user.email,
-        amount: amount,
-        targetNumber: target,
-        status: 'Pending',
-        time: Date.now()
-    }).then(() => {
-        Swal.fire('সফল!', 'উইথড্র অনুরোধ পাঠানো হয়েছে।', 'success');
-        document.getElementById('withdrawAmt').value = "";
-    });
-}
-
-// ৬. অথেন্টিকেশন (লগইন/রেজিস্ট্রেশন)
+// ৬. লগইন এবং রেজিস্ট্রেশন হ্যান্ডলার
 async function handleAuth() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('pass').value;
+
+    if (!email || pass.length < 6) {
+        return Swal.fire('Error', 'সঠিক ইমেইল এবং অন্তত ৬ সংখ্যার পাসওয়ার্ড দিন।', 'error');
+    }
 
     try {
         if (authMode === "login") {
@@ -117,14 +116,17 @@ async function handleAuth() {
                 buyerBalance: 0,
                 joined: Date.now()
             });
-            Swal.fire('সফল!', 'রেজিস্ট্রেশন হয়েছে। লগইন করুন।', 'success');
+            Swal.fire('সফল!', 'রেজিস্ট্রেশন হয়েছে। এখন লগইন করুন।', 'success');
+            toggleAuth();
         }
     } catch (err) {
-        Swal.fire('ভুল', 'তথ্য সঠিক নয়।', 'error');
+        Swal.fire('ব্যর্থ!', 'ইমেইল বা পাসওয়ার্ড ভুল অথবা একাউন্ট তৈরি নেই।', 'error');
     }
 }
 
+// ৭. লগইন-রেজিস্ট্রেশন মোড পরিবর্তন
 function toggleAuth() {
     authMode = (authMode === "login") ? "signup" : "login";
-    document.getElementById('mainBtn').innerText = (authMode === "login") ? "প্রবেশ করুন" : "রেজিস্ট্রেশন করুন";
-        }
+    const btn = document.getElementById('mainBtn');
+    if(btn) btn.innerText = (authMode === "login") ? "প্রবেশ করুন" : "রেজিস্ট্রেশন করুন";
+}
