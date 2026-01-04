@@ -3,105 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD Marketing - Admin Panel</title>
+    <title>Home - BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    
     <style>
-        body { background-color: #030303; color: #e0e0e0; font-family: 'Inter', sans-serif; user-select: none; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-        .status-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        /* Anti-Code View */
-        body { -webkit-touch-callout: none; }
+        body { background: #000; color: #fff; user-select: none; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; }
+        .neon-border { border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 0 10px rgba(59, 130, 246, 0.1); }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-gray-800 p-4 flex justify-between items-center">
-        <button onclick="toggleSidebar()"><i class="fas fa-th-large text-xl text-blue-500"></i></button>
-        <div class="text-center">
-            <h1 class="text-xl font-black tracking-widest text-white">BD <span class="text-blue-500">MARKETING</span></h1>
-            <p class="text-[10px] text-gray-500">এডমিন: সাদ্দাম <span id="indicator" class="status-pulse text-green-500">●</span></p>
+    <header class="fixed top-0 w-full z-50">
+        <div class="bg-blue-600 text-center py-2 text-[11px] font-bold">
+            বিকাশ ও নগদ: +8801725780575 (পার্সোনাল) | লিমিট: ৫০ - ৫০০০ টাকা
         </div>
-        <div class="flex space-x-3 text-[11px] text-gray-400">
-            <span id="net"><i class="fas fa-signal"></i> Data</span>
-            <span id="bat"><i class="fas fa-bolt"></i> 100%</span>
-        </div>
-    </nav>
+        <nav class="bg-black/90 border-b border-gray-900 p-4 flex justify-between items-center">
+            <i class="fas fa-align-left text-blue-500 text-xl" onclick="toggleSidebar()"></i>
+            <div class="text-center">
+                <h1 class="font-black text-lg">BD MARKETING</h1>
+                <p class="text-[9px] text-gray-500">এডমিন: সাদ্দাম <span id="onlineInd" class="w-2 h-2 rounded-full bg-green-500 inline-block ml-1"></span></p>
+            </div>
+            <div class="flex items-center space-x-3 text-[10px] text-gray-400">
+                <span id="net"><i class="fas fa-wifi"></i> WiFi</span>
+                <span id="bat"><i class="fas fa-bolt"></i> 100%</span>
+            </div>
+        </nav>
+    </header>
 
-    <main class="pt-28 px-6 pb-10">
+    <main class="pt-32 px-6 pb-10">
         <h2 class="text-lg font-semibold mb-6">স্বাগতম, জনাব।</h2>
 
-        <div class="space-y-4 mb-8">
-            <div class="glass p-6 border-l-4 border-blue-500 neon-glow">
-                <div class="flex justify-between items-center">
-                    <p class="text-xs text-blue-400 font-bold uppercase">ক্রেতা ওয়ালেট (Buyer)</p>
-                    <i class="fas fa-shopping-cart text-blue-900"></i>
-                </div>
-                <h3 class="text-3xl font-black mt-2">৳ <span id="buyerBalance">0.00</span></h3>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="glass-card p-6 border-b-2 border-blue-500">
+                <p class="text-[9px] text-blue-400 uppercase font-bold tracking-widest">ক্রেতা ওয়ালেট</p>
+                <h3 class="text-2xl font-black mt-1">৳ <span id="buyerBalance">0.00</span></h3>
             </div>
-
-            <div class="glass p-6 border-l-4 border-green-500">
-                <div class="flex justify-between items-center">
-                    <p class="text-xs text-green-400 font-bold uppercase">বিক্রেতা ওয়ালেট (Seller)</p>
-                    <i class="fas fa-hand-holding-usd text-green-900"></i>
-                </div>
-                <h3 class="text-3xl font-black mt-2">৳ <span id="sellerBalance">0.00</span></h3>
+            <div class="glass-card p-6 border-b-2 border-green-500">
+                <p class="text-[9px] text-green-400 uppercase font-bold tracking-widest">বিক্রেতা ওয়ালেট</p>
+                <h3 class="text-2xl font-black mt-1">৳ <span id="sellerBalance">0.00</span></h3>
             </div>
         </div>
 
-        <div class="glass p-6">
-            <h4 class="text-sm font-bold mb-4 flex items-center"><i class="fas fa-shield-alt mr-2 text-yellow-500"></i> নিরাপদ রিচার্জ প্যানেল</h4>
-            <div class="bg-blue-900/10 p-4 rounded-xl border border-blue-900/30 mb-5">
-                <p class="text-xs text-center text-blue-200">বিকাশ/নগদ: +8801725780575 (Personal)</p>
-                <p class="text-[10px] text-center text-gray-500 mt-1">মিনিমাম ৫০৳ - ম্যাক্সিমাম ৫০০০৳</p>
-            </div>
+        <div class="glass-card p-6 neon-border">
+            <h4 class="text-sm font-bold mb-5 flex items-center"><i class="fas fa-shield-alt mr-2 text-blue-500"></i> নিরাপদ লেনদেন ফরম</h4>
             
-            <select id="m" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none border border-gray-800">
-                <option value="s">আমি বিক্রেতা হিসেবে টাকা পাঠাচ্ছি</option>
-                <option value="b">আমি ক্রেতা হিসেবে টাকা পাঠাচ্ছি</option>
+            <label class="text-[10px] text-gray-500 mb-1 block">ওয়ালেট নির্বাচন করুন</label>
+            <select id="accMode" class="w-full bg-gray-900 p-4 rounded-2xl mb-4 text-sm outline-none border border-gray-800">
+                <option value="seller">আমি বিক্রেতা (টাকা আয় করব)</option>
+                <option value="buyer">আমি ক্রেতা (কাজ দিতে চাই)</option>
             </select>
-            <input type="number" id="a" placeholder="টাকার পরিমাণ" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
-            <input type="text" id="t" placeholder="TrxID (ট্রানজেকশন আইডি)" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
-            <button onclick="sendReq()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-bold transition-all">অনুরোধ পাঠান</button>
+
+            <input type="number" id="amt" placeholder="টাকার পরিমাণ (মিনিমাম ৫০)" class="w-full bg-gray-900 p-4 rounded-2xl mb-4 text-sm outline-none border border-gray-800">
+            <input type="text" id="trx" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full bg-gray-900 p-4 rounded-2xl mb-6 outline-none border border-gray-800">
+            
+            <button onclick="submitRequest()" class="w-full bg-gradient-to-r from-blue-600 to-blue-800 py-4 rounded-2xl font-bold shadow-lg">রিকোয়েস্ট পাঠান</button>
         </div>
     </main>
 
-    <script>
-        // Database Config
-        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // Anti-Inspect Logic (Very Simple Version)
-        document.onkeydown = (e) => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) return false; };
-
-        // Real-time Sensors
-        window.addEventListener('online', () => document.getElementById('indicator').className = 'text-green-500 status-pulse');
-        window.addEventListener('offline', () => document.getElementById('indicator').className = 'text-red-500');
-
-        function sendReq() {
-            const amount = document.getElementById('a').value;
-            const trx = document.getElementById('t').value;
-            const type = document.getElementById('m').value;
-
-            if (amount >= 50 && trx !== "") {
-                Swal.fire('সফল!', 'আপনার ডাটা প্রাইভেসি মোডে এডমিনের কাছে পাঠানো হয়েছে।', 'success');
-                // Logic to push to Firebase
-            } else {
-                Swal.fire('ভুল', 'সঠিক তথ্য দিন।', 'error');
-            }
-        }
-
-        /* --- ADMIN CUSTOM UPDATES START HERE --- */
-        /* আপনি ভবিষ্যতে যেকোনো নতুন কোড বা আপডেট এখানে পেস্ট করতে পারবেন */
-
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="master-engine.js"></script>
 </body>
-    </html>
-    
+</html>
