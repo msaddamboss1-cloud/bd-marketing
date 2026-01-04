@@ -3,31 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD Marketing - Access Portal</title>
+    <title>BD Marketing - Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body { background: #020202; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass-ui { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 35px; }
-        .input-style { background: #0a0a0a; border: 1px solid #1a1a1a; transition: 0.4s; }
-        .input-style:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        body { background: #010101; color: #fff; user-select: none; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 30px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .pulse { animation: pulse-animation 2s infinite; }
+        @keyframes pulse-animation { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="glass-ui p-10 w-full max-w-sm shadow-2xl">
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-black tracking-widest text-blue-500">BD MARKETING</h1>
-            <p class="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">Digital Future Starts Here</p>
+<body oncontextmenu="return false;">
+
+    <header class="fixed top-0 w-full z-50 shadow-2xl">
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-900 text-center py-2 text-[10px] font-bold px-4">
+            বিকাশ: 01725780575 | নগদ: 01763584939 | লিমিট: ৫০৳ - ৫০০০৳
+        </div>
+        <nav class="bg-black/90 backdrop-blur-md border-b border-gray-900 p-4 flex justify-between items-center">
+            <i class="fas fa-th-large text-blue-500 text-xl"></i>
+            <div class="text-center">
+                <h1 class="font-black text-xl tracking-tighter text-blue-500">BD MARKETING</h1>
+                <p class="text-[9px] text-gray-500 uppercase">এডমিন: সাদ্দাম <span id="onlineInd" class="status-dot bg-green-500 pulse"></span></p>
+            </div>
+            <div class="flex items-center space-x-3 text-[10px] text-gray-400">
+                <span id="batStatus"><i class="fas fa-bolt"></i> 100%</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-32 px-6 pb-24">
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="glass-card p-6 border-b-4 border-red-600">
+                <p class="text-[9px] text-red-400 font-black uppercase">বিক্রেতা (Employer)</p>
+                <h3 class="text-2xl font-black mt-1">৳ <span id="sellerBalance">0.00</span></h3>
+            </div>
+            <div class="glass-card p-6 border-b-4 border-green-500">
+                <p class="text-[9px] text-green-400 font-black uppercase">ক্রেতা (Worker)</p>
+                <h3 class="text-2xl font-black mt-1">৳ <span id="buyerBalance">0.00</span></h3>
+            </div>
         </div>
 
-        <div id="authBox">
-            <input type="email" id="email" placeholder="ইমেইল অ্যাড্রেস" class="input-style w-full p-4 rounded-2xl mb-4 outline-none">
-            <input type="password" id="pass" placeholder="পাসওয়ার্ড" class="input-style w-full p-4 rounded-2xl mb-6 outline-none">
-            <button onclick="handleAuth()" id="mainBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-bold transition-all transform active:scale-95">প্রবেশ করুন</button>
-            
-            <p class="text-center text-xs text-gray-400 mt-8">একাউন্ট নেই? <span onclick="toggleAuth()" class="text-blue-500 cursor-pointer font-bold border-b border-blue-500">রেজিস্ট্রেশন করুন</span></p>
+        <div class="flex space-x-2 mb-6">
+            <button onclick="showTab('dep')" id="btnDep" class="flex-1 py-3 rounded-2xl font-bold bg-blue-600 text-sm">ডিপোজিট</button>
+            <button onclick="showTab('wd')" id="btnWd" class="flex-1 py-3 rounded-2xl font-bold bg-gray-800 text-sm">উইথড্র</button>
         </div>
-    </div>
+
+        <div id="depositBox" class="glass-card p-7 shadow-2xl">
+            <h4 class="text-xs font-bold mb-4 text-yellow-500 uppercase italic">টাকা জমা দিন (৫০ - ৫০০০৳)</h4>
+            <select id="depositMode" class="w-full bg-black border border-gray-800 p-4 rounded-2xl mb-4 text-sm outline-none">
+                <option value="seller">বিক্রেতা ওয়ালেট (কাজ দিতে)</option>
+                <option value="buyer">ক্রেতা ওয়ালেট (কাজ করতে)</option>
+            </select>
+            <input type="number" id="depositAmt" placeholder="টাকার পরিমাণ" class="w-full bg-black border border-gray-800 p-4 rounded-2xl mb-4 text-sm outline-none">
+            <input type="text" id="depositTrx" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full bg-black border border-gray-800 p-4 rounded-2xl mb-6 text-sm outline-none">
+            <button onclick="handleDeposit()" class="w-full bg-blue-600 py-4 rounded-2xl font-black shadow-lg uppercase text-xs">রিকোয়েস্ট পাঠান</button>
+        </div>
+
+        <div id="withdrawBox" class="glass-card p-7 shadow-2xl hidden">
+            <h4 class="text-xs font-bold mb-4 text-green-500 uppercase italic">টাকা তুলুন (৫০ - ৫০০০৳)</h4>
+            <input type="number" id="withdrawAmt" placeholder="টাকার পরিমাণ" class="w-full bg-black border border-gray-800 p-4 rounded-2xl mb-4 text-sm outline-none">
+            <input type="text" id="targetNum" placeholder="বিকাশ/নগদ নম্বর" class="w-full bg-black border border-gray-800 p-4 rounded-2xl mb-6 text-sm outline-none">
+            <button onclick="handleWithdraw()" class="w-full bg-green-600 py-4 rounded-2xl font-black shadow-lg uppercase text-xs">উইথড্র রিকোয়েস্ট</button>
+        </div>
+    </main>
+
+    <script>
+        function showTab(type) {
+            if(type === 'dep') {
+                document.getElementById('depositBox').classList.remove('hidden');
+                document.getElementById('withdrawBox').classList.add('hidden');
+                document.getElementById('btnDep').classList.replace('bg-gray-800', 'bg-blue-600');
+                document.getElementById('btnWd').classList.replace('bg-blue-600', 'bg-gray-800');
+            } else {
+                document.getElementById('withdrawBox').classList.remove('hidden');
+                document.getElementById('depositBox').classList.add('hidden');
+                document.getElementById('btnWd').classList.replace('bg-gray-800', 'bg-green-600');
+                document.getElementById('btnDep').classList.replace('bg-blue-600', 'bg-gray-800');
+            }
+        }
+    </script>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -35,3 +91,4 @@
     <script src="master-engine.js"></script>
 </body>
 </html>
+                
