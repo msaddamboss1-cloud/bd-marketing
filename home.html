@@ -3,96 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - BD Marketing</title>
+    <title>BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body { background: #000; color: #fff; user-select: none; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; }
-        .neon-border { border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 0 10px rgba(59, 130, 246, 0.1); }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <header class="fixed top-0 w-full z-50">
-        <div class="bg-blue-600 text-center py-2 text-[11px] font-bold">
-            বিকাশ ও নগদ: +8801725780575 (পার্সোনাল) | লিমিট: ৫০ - ৫০০০ টাকা
+        <div class="bg-blue-600 text-center py-2 text-[10px] font-bold">
+            বিকাশ: 01725780575 | নগদ: 01763584939 | লিমিট: ৫০-৫০০০৳
         </div>
-        <nav class="bg-black/90 border-b border-gray-900 p-4 flex justify-between items-center">
-            <i class="fas fa-align-left text-blue-500 text-xl" onclick="toggleSidebar()"></i>
+        <nav class="bg-black/90 p-4 flex justify-between items-center border-b border-gray-900">
+            <i class="fas fa-bars text-blue-500 text-xl" onclick="toggleSidebar()"></i>
             <div class="text-center">
-                <h1 class="font-black text-lg">BD MARKETING</h1>
-                <p class="text-[9px] text-gray-500">এডমিন: সাদ্দাম <span id="onlineInd" class="w-2 h-2 rounded-full bg-green-500 inline-block ml-1"></span></p>
+                <h1 class="font-bold text-lg">BD MARKETING</h1>
+                <p class="text-[9px] text-gray-500">এডমিন: সাদ্দাম <span class="text-green-500">●</span></p>
             </div>
-            <div class="flex items-center space-x-3 text-[10px] text-gray-400">
-                <span id="net"><i class="fas fa-wifi"></i> WiFi</span>
-                <span id="bat"><i class="fas fa-bolt"></i> 100%</span>
-            </div>
+            <div class="text-[10px] text-gray-400">WiFi 100%</div>
         </nav>
     </header>
 
-    <main class="pt-32 px-6 pb-10">
-        <h2 class="text-lg font-semibold mb-6">স্বাগতম, জনাব।</h2>
+    <main class="pt-28 px-6">
+        <h2 class="text-lg font-bold mb-6">স্বাগতম, জনাব।</h2>
 
         <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="glass-card p-6 border-b-2 border-blue-500">
-                <p class="text-[9px] text-blue-400 uppercase font-bold tracking-widest">ক্রেতা ওয়ালেট</p>
-                <h3 class="text-2xl font-black mt-1">৳ <span id="buyerBalance">0.00</span></h3>
+            <div class="glass-card p-5 border-b-4 border-red-600">
+                <p class="text-[9px] text-red-400 font-bold uppercase">বিক্রেতা (Employer)</p>
+                <h3 class="text-xl font-black mt-1">৳ <span id="sellerBalance">0.00</span></h3>
             </div>
-            <div class="glass-card p-6 border-b-2 border-green-500">
-                <p class="text-[9px] text-green-400 uppercase font-bold tracking-widest">বিক্রেতা ওয়ালেট</p>
-                <h3 class="text-2xl font-black mt-1">৳ <span id="sellerBalance">0.00</span></h3>
+            <div class="glass-card p-5 border-b-4 border-green-600">
+                <p class="text-[9px] text-green-400 font-bold uppercase">ক্রেতা (Worker)</p>
+                <h3 class="text-xl font-black mt-1">৳ <span id="buyerBalance">0.00</span></h3>
             </div>
         </div>
 
-        <div class="glass-card p-6 neon-border">
-            <h4 class="text-sm font-bold mb-5 flex items-center"><i class="fas fa-shield-alt mr-2 text-blue-500"></i> নিরাপদ লেনদেন ফরম</h4>
-            
-            <label class="text-[10px] text-gray-500 mb-1 block">ওয়ালেট নির্বাচন করুন</label>
-            <select id="accMode" class="w-full bg-gray-900 p-4 rounded-2xl mb-4 text-sm outline-none border border-gray-800">
-                <option value="seller">আমি বিক্রেতা (টাকা আয় করব)</option>
-                <option value="buyer">আমি ক্রেতা (কাজ দিতে চাই)</option>
+        <div class="glass-card p-6">
+            <h4 class="text-sm font-bold mb-4 text-blue-500">নিরাপদ লেনদেন ফরম</h4>
+            <select id="depositMode" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
+                <option value="seller">আমি বিক্রেতা (আমি কাজ দিতে চাই)</option>
+                <option value="buyer">আমি ক্রেতা (আমি কাজ করতে চাই)</option>
             </select>
-
-            <input type="number" id="amt" placeholder="টাকার পরিমাণ (মিনিমাম ৫০)" class="w-full bg-gray-900 p-4 rounded-2xl mb-4 text-sm outline-none border border-gray-800">
-            <input type="text" id="trx" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full bg-gray-900 p-4 rounded-2xl mb-6 outline-none border border-gray-800">
-            
-            <button onclick="submitRequest()" class="w-full bg-gradient-to-r from-blue-600 to-blue-800 py-4 rounded-2xl font-bold shadow-lg">রিকোয়েস্ট পাঠান</button>
+            <input type="number" id="depositAmt" placeholder="টাকার পরিমাণ (৫০-৫০০০)" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
+            <input type="text" id="depositTrx" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full bg-gray-900 p-4 rounded-xl mb-6 text-sm outline-none">
+            <button onclick="handleDeposit()" class="w-full bg-blue-600 py-4 rounded-xl font-bold uppercase">রিকোয়েস্ট পাঠান</button>
         </div>
     </main>
+
+    <div id="sidebar" class="fixed top-0 left-[-300px] w-[280px] h-full bg-black z-[100] transition-all border-r border-gray-800 p-6">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="font-bold text-blue-500">মেনু অপশন</h2>
+            <i class="fas fa-times" onclick="toggleSidebar()"></i>
+        </div>
+        <div class="glass-card p-4 mb-6">
+            <p class="text-[10px] text-gray-500">প্রোফাইল</p>
+            <p id="userEmail" class="text-xs font-bold italic">লোড হচ্ছে...</p>
+        </div>
+        <button onclick="auth.signOut().then(()=>location.href='index.html')" class="text-red-500 font-bold">লগআউট করুন</button>
+    </div>
+    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-[90]"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="master-engine.js"></script>
-    <div id="sidebar" class="fixed top-0 left-[-300px] w-[280px] h-full bg-black/95 backdrop-blur-2xl z-[100] transition-all duration-500 border-r border-gray-800 p-8">
-    <div class="flex justify-between items-center mb-10">
-        <h2 class="text-xl font-black text-blue-500 tracking-tighter">মেনু অপশন</h2>
-        <i class="fas fa-times text-xl text-gray-500" onclick="toggleSidebar()"></i>
-    </div>
-    
-    <div class="space-y-6">
-        <div class="flex items-center space-x-4 p-4 glass-card border-none bg-white/5 rounded-2xl">
-            <i class="fas fa-user-circle text-2xl text-blue-400"></i>
-            <div>
-                <p class="text-[10px] text-gray-500 uppercase">প্রোফাইল</p>
-                <p id="userEmail" class="text-xs font-bold truncate w-32">লোড হচ্ছে...</p>
-            </div>
-        </div>
-
-        <button onclick="Swal.fire('তথ্য', 'আপনার মোট আয় এবং কাজের বিবরণ এখানে থাকবে।', 'info')" class="w-full flex items-center space-x-4 p-4 hover:bg-white/5 rounded-2xl transition">
-            <i class="fas fa-history text-blue-500"></i>
-            <span class="text-sm">কাজের ইতিহাস</span>
-        </button>
-
-        <button onclick="auth.signOut().then(() => window.location.href='index.html')" class="w-full flex items-center space-x-4 p-4 hover:bg-red-500/10 rounded-2xl transition text-red-500">
-            <i class="fas fa-sign-out-alt"></i>
-            <span class="text-sm font-bold">লগআউট করুন</span>
-        </button>
-    </div>
-</div>
-
-<div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-[90] hidden backdrop-blur-sm"></div>
 </body>
 </html>
