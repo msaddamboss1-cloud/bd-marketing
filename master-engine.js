@@ -8,10 +8,10 @@ const firebaseConfig = {
   messagingSenderId: "678696512628",
   appId: "1:678696512628:web:edfc22a62f55dad41df521"
 };
-firebase.initializeApp(firebaseConfig);
+// Firebase App এবং Auth 初始化 করার আধুনিক পদ্ধতি
+const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
-
 // রিয়েল-টাইম অ্যাডমিন নোটিশ এবং সেটিংস লোডার]
 function loadAdminSettings() {
     db.ref('siteSettings').on('value', (snap) => {
