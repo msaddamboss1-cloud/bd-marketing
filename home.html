@@ -3,73 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD Marketing</title>
+    <title>BD Marketing - Ultra</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .ultra-card { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
+        .sidebar { position: fixed; top: 0; left: -300px; width: 280px; h-full; bg: #080808; z-index: 100; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid #1a1a1a; }
+        .sidebar.active { left: 0; }
     </style>
 </head>
-<body>
-
-    <header class="fixed top-0 w-full z-50">
-        <div class="bg-blue-600 text-center py-2 text-[10px] font-bold">
-            বিকাশ: 01725780575 | নগদ: 01763584939 | লিমিট: ৫০-৫০০০৳
+<body class="overflow-x-hidden">
+    <header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <i class="fas fa-grid-2 text-blue-500 text-xl" onclick="toggleSidebar()"></i>
+            <h1 class="font-black tracking-tighter text-lg">BD <span class="text-blue-500">MARKETING</span></h1>
         </div>
-        <nav class="bg-black/90 p-4 flex justify-between items-center border-b border-gray-900">
-            <i class="fas fa-bars text-blue-500 text-xl" onclick="toggleSidebar()"></i>
-            <div class="text-center">
-                <h1 class="font-bold text-lg">BD MARKETING</h1>
-                <p class="text-[9px] text-gray-500">এডমিন: সাদ্দাম <span class="text-green-500">●</span></p>
-            </div>
-            <div class="text-[10px] text-gray-400">WiFi 100%</div>
-        </nav>
+        <div class="flex items-center space-x-2 bg-blue-500/10 px-3 py-1 rounded-full">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+            <span class="text-[10px] font-bold text-blue-400">LIVE</span>
+        </div>
     </header>
 
-    <main class="pt-28 px-6">
-        <h2 class="text-lg font-bold mb-6">স্বাগতম, জনাব।</h2>
+    <main class="pt-24 px-5 space-y-6">
+        <div id="adminNotice" class="ultra-card p-4 text-[11px] text-blue-300 border-l-4 border-blue-500 bg-blue-500/5 hidden"></div>
 
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="glass-card p-5 border-b-4 border-red-600">
-                <p class="text-[9px] text-red-400 font-bold uppercase">বিক্রেতা (Employer)</p>
-                <h3 class="text-xl font-black mt-1">৳ <span id="sellerBalance">0.00</span></h3>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="ultra-card p-5 border-b-4 border-red-500/50">
+                <p class="text-[9px] text-gray-500 uppercase font-black">বিক্রেতা ব্যালেন্স</p>
+                <h3 class="text-2xl font-bold mt-1">৳ <span id="sellerBalance">0.00</span></h3>
             </div>
-            <div class="glass-card p-5 border-b-4 border-green-600">
-                <p class="text-[9px] text-green-400 font-bold uppercase">ক্রেতা (Worker)</p>
-                <h3 class="text-xl font-black mt-1">৳ <span id="buyerBalance">0.00</span></h3>
+            <div class="ultra-card p-5 border-b-4 border-green-500/50">
+                <p class="text-[9px] text-gray-500 uppercase font-black">ক্রেতা ব্যালেন্স</p>
+                <h3 class="text-2xl font-bold mt-1">৳ <span id="buyerBalance">0.00</span></h3>
             </div>
         </div>
 
-        <div class="glass-card p-6">
-            <h4 class="text-sm font-bold mb-4 text-blue-500">নিরাপদ লেনদেন ফরম</h4>
-            <select id="depositMode" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
-                <option value="seller">আমি বিক্রেতা (আমি কাজ দিতে চাই)</option>
-                <option value="buyer">আমি ক্রেতা (আমি কাজ করতে চাই)</option>
+        <div class="ultra-card p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="font-bold text-sm">টাকা জমা ও উত্তোলন</h4>
+                <i class="fas fa-wallet text-blue-500"></i>
+            </div>
+            <select id="depositMode" class="w-full bg-white/5 p-4 rounded-2xl mb-4 outline-none border border-white/10 text-sm">
+                <option value="seller">আমি বিক্রেতা (টাকা জমা)</option>
+                <option value="buyer">আমি ক্রেতা (টাকা উত্তোলন)</option>
             </select>
-            <input type="number" id="depositAmt" placeholder="টাকার পরিমাণ (৫০-৫০০০)" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
-            <input type="text" id="depositTrx" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full bg-gray-900 p-4 rounded-xl mb-6 text-sm outline-none">
-            <button onclick="handleDeposit()" class="w-full bg-blue-600 py-4 rounded-xl font-bold uppercase">রিকোয়েস্ট পাঠান</button>
+            <input type="number" id="depositAmt" placeholder="পরিমাণ (৫০ - ৫০০০)" class="w-full bg-white/5 p-4 rounded-2xl mb-4 outline-none border border-white/10 text-sm">
+            <input type="text" id="depositTrx" placeholder="বিকাশ/নগদ TrxID" class="w-full bg-white/5 p-4 rounded-2xl mb-6 outline-none border border-white/10 text-sm">
+            <button onclick="handleDeposit()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">কনফার্ম রিকোয়েস্ট</button>
         </div>
     </main>
 
-    <div id="sidebar" class="fixed top-0 left-[-300px] w-[280px] h-full bg-black z-[100] transition-all border-r border-gray-800 p-6">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="font-bold text-blue-500">মেনু অপশন</h2>
-            <i class="fas fa-times" onclick="toggleSidebar()"></i>
+    <div id="sidebar" class="sidebar p-6 flex flex-col justify-between">
+        <div>
+            <div class="flex justify-between items-center mb-10">
+                <span class="text-xs font-black text-gray-600 uppercase tracking-widest">মাস্টার মেনু</span>
+                <i class="fas fa-times" onclick="toggleSidebar()"></i>
+            </div>
+            <div class="ultra-card p-4 mb-8 bg-blue-500/5 border-blue-500/20">
+                <p class="text-[10px] text-gray-500 mb-1">প্রোফাইল আইডি</p>
+                <p id="userEmail" class="text-[11px] font-bold text-blue-400 truncate italic">লোড হচ্ছে...</p>
+            </div>
+            <nav class="space-y-2">
+                <a href="market.html" class="flex items-center space-x-4 p-4 hover:bg-white/5 rounded-2xl transition">
+                    <i class="fas fa-store text-blue-500"></i>
+                    <span class="text-sm font-bold">পকেট মার্কেট</span>
+                </a>
+                <button onclick="Swal.fire('শীঘ্রই আসছে', 'লেনদেন ইতিহাস ফিচারটি ডেভেলপ করা হচ্ছে', 'info')" class="w-full flex items-center space-x-4 p-4 hover:bg-white/5 rounded-2xl transition text-gray-500">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    <span class="text-sm">হিস্ট্রি</span>
+                </button>
+            </nav>
         </div>
-        <div class="glass-card p-4 mb-6">
-            <p class="text-[10px] text-gray-500">প্রোফাইল</p>
-            <p id="userEmail" class="text-xs font-bold italic">লোড হচ্ছে...</p>
-        </div>
-        <button onclick="auth.signOut().then(()=>location.href='index.html')" class="text-red-500 font-bold">লগআউট করুন</button>
+        <button onclick="logoutUser()" class="flex items-center space-x-4 p-4 text-red-500 bg-red-500/5 rounded-2xl border border-red-500/10">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="text-sm font-bold">লগআউট</span>
+        </button>
     </div>
-    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-[90]"></div>
+    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 hidden z-[90] backdrop-blur-sm"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="master-engine.js?v=2.0"></script>
+    <script src="master-engine.js?v=ULTRA-1.1"></script>
 </body>
 </html>
