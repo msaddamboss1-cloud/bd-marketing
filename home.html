@@ -1,114 +1,107 @@
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Marketing - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
+    <style>
+        body { background-color: #030303; color: #e0e0e0; font-family: 'Inter', sans-serif; user-select: none; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
+        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .status-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        /* Anti-Code View */
+        body { -webkit-touch-callout: none; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
 
-<script>
-    // ১. আপনার ফায়ারবেস কনফিগারেশন
-    const firebaseConfig = {
-        apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
-        authDomain: "bd-marketing-55a81.firebaseapp.com",
-        databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
-        projectId: "bd-marketing-55a81",
-        storageBucket: "bd-marketing-55a81.firebasestorage.app",
-        messagingSenderId: "678696512628",
-        appId: "1:678696512628:web:edfc22a62f55dad41df521"
-    };
+    <nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-gray-800 p-4 flex justify-between items-center">
+        <button onclick="toggleSidebar()"><i class="fas fa-th-large text-xl text-blue-500"></i></button>
+        <div class="text-center">
+            <h1 class="text-xl font-black tracking-widest text-white">BD <span class="text-blue-500">MARKETING</span></h1>
+            <p class="text-[10px] text-gray-500">এডমিন: সাদ্দাম <span id="indicator" class="status-pulse text-green-500">●</span></p>
+        </div>
+        <div class="flex space-x-3 text-[11px] text-gray-400">
+            <span id="net"><i class="fas fa-signal"></i> Data</span>
+            <span id="bat"><i class="fas fa-bolt"></i> 100%</span>
+        </div>
+    </nav>
 
-    // ফায়ারবেস ইনিশিয়ালাইজেশন
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const auth = firebase.auth();
-    const db = firebase.database();
+    <main class="pt-28 px-6 pb-10">
+        <h2 class="text-lg font-semibold mb-6">স্বাগতম, জনাব।</h2>
 
-    // ২. রিয়েল-টাইম ইউজার কন্ট্রোল ইঞ্জিন
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            // ডাটাবেস থেকে ইউজারের Saddam বা Saddam15 আইডি শনাক্ত করা
-            const userPath = user.displayName ? user.displayName.replace(/\s+/g, '_') : "Admin_User";
+        <div class="space-y-4 mb-8">
+            <div class="glass p-6 border-l-4 border-blue-500 neon-glow">
+                <div class="flex justify-between items-center">
+                    <p class="text-xs text-blue-400 font-bold uppercase">ক্রেতা ওয়ালেট (Buyer)</p>
+                    <i class="fas fa-shopping-cart text-blue-900"></i>
+                </div>
+                <h3 class="text-3xl font-black mt-2">৳ <span id="buyerBalance">0.00</span></h3>
+            </div>
+
+            <div class="glass p-6 border-l-4 border-green-500">
+                <div class="flex justify-between items-center">
+                    <p class="text-xs text-green-400 font-bold uppercase">বিক্রেতা ওয়ালেট (Seller)</p>
+                    <i class="fas fa-hand-holding-usd text-green-900"></i>
+                </div>
+                <h3 class="text-3xl font-black mt-2">৳ <span id="sellerBalance">0.00</span></h3>
+            </div>
+        </div>
+
+        <div class="glass p-6">
+            <h4 class="text-sm font-bold mb-4 flex items-center"><i class="fas fa-shield-alt mr-2 text-yellow-500"></i> নিরাপদ রিচার্জ প্যানেল</h4>
+            <div class="bg-blue-900/10 p-4 rounded-xl border border-blue-900/30 mb-5">
+                <p class="text-xs text-center text-blue-200">বিকাশ/নগদ: +8801725780575 (Personal)</p>
+                <p class="text-[10px] text-center text-gray-500 mt-1">মিনিমাম ৫০৳ - ম্যাক্সিমাম ৫০০০৳</p>
+            </div>
             
-            db.ref('Users/' + userPath).on('value', (snapshot) => {
-                const userData = snapshot.val();
-                
-                if (userData) {
-                    // UI আপডেট (নাম গোপন রেখে এডমিন দেখানো)
-                    updateUI(userData);
+            <select id="m" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none border border-gray-800">
+                <option value="s">আমি বিক্রেতা হিসেবে টাকা পাঠাচ্ছি</option>
+                <option value="b">আমি ক্রেতা হিসেবে টাকা পাঠাচ্ছি</option>
+            </select>
+            <input type="number" id="a" placeholder="টাকার পরিমাণ" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
+            <input type="text" id="t" placeholder="TrxID (ট্রানজেকশন আইডি)" class="w-full bg-gray-900 p-4 rounded-xl mb-4 text-sm outline-none">
+            <button onclick="sendReq()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-bold transition-all">অনুরোধ পাঠান</button>
+        </div>
+    </main>
 
-                    // ভেরিফিকেশন এবং স্ট্যাটাস চেক
-                    if (userData.status === "Active") {
-                        if (Swal.isVisible()) Swal.close(); // একটিভ হলে পপ-আপ বন্ধ হবে
-                    } else {
-                        showLockPopup(); // একটিভ না হলে লক থাকবে
-                    }
-                } else {
-                    showLockPopup(); // ডাটা না থাকলে লক থাকবে
-                }
-            });
-        } else {
-            // সেশন শেষ হলে লগইন পেজে রিডাইরেক্ট
-            window.location.href = "index.html";
-        }
-    });
+    <script>
+        // Database Config
+        const firebaseConfig = { databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-    // ৩. UI আপডেট ফাংশন (কাস্টমাইজযোগ্য)
-    function updateUI(data) {
-        document.getElementById('user-balance').innerText = data.balance || "0.00";
-        document.getElementById('pending-val').innerText = data.pending || "0.00";
-        document.getElementById('display-user').innerText = "স্বাগতম এডমিন"; 
-        console.log("সিস্টেম: ডাটাবেস সিঙ্ক সফল।");
-    }
+        // Anti-Inspect Logic (Very Simple Version)
+        document.onkeydown = (e) => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) return false; };
 
-    // ৪. প্রোটেকশন গেট (পপ-আপ)
-    function showLockPopup() {
-        Swal.fire({
-            title: 'অ্যাক্সেস সংরক্ষিত!',
-            text: 'আপনার প্রোফাইলটি এখনো অনুমোদিত নয়। এডমিনের অনুমতির অপেক্ষা করুন।',
-            icon: 'lock',
-            confirmButtonText: 'রেজিস্ট্রেশন চেক',
-            confirmButtonColor: '#1f6feb',
-            background: '#0d1117',
-            color: '#fff',
-            allowOutsideClick: false
-        }).then((result) => {
-            if (result.isConfirmed) window.location.href = "index.html";
-        });
-    }
+        // Real-time Sensors
+        window.addEventListener('online', () => document.getElementById('indicator').className = 'text-green-500 status-pulse');
+        window.addEventListener('offline', () => document.getElementById('indicator').className = 'text-red-500');
 
-    // ৫. সিকিউর লগআউট
-    function logout() {
-        auth.signOut().then(() => {
-            localStorage.clear();
-            window.location.href = "index.html";
-        });
-    }
+        function sendReq() {
+            const amount = document.getElementById('a').value;
+            const trx = document.getElementById('t').value;
+            const type = document.getElementById('m').value;
 
-    // ৬. গ্লোবাল জব লোডার
-    function loadGlobalJobs() {
-        db.ref('GlobalJobs').on('value', (snap) => {
-            const jobs = snap.val();
-            const container = document.getElementById('market-display');
-            if (jobs) {
-                let jobHtml = '<div class="space-y-4">';
-                Object.keys(jobs).forEach(id => {
-                    const j = jobs[id];
-                    jobHtml += `
-                        <div class="master-panel p-4 border-gray-800 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-sm text-white">${j.title}</h4>
-                                <p class="text-[10px] text-blue-500">পারিশ্রমিক: ৳ ${j.pay}</p>
-                            </div>
-                            <button onclick="window.open('${j.link}', '_blank')" class="bg-blue-600 text-[10px] px-3 py-2 rounded-lg font-bold">কাজ দেখুন</button>
-                        </div>`;
-                });
-                jobHtml += '</div>';
-                container.innerHTML = jobHtml;
+            if (amount >= 50 && trx !== "") {
+                Swal.fire('সফল!', 'আপনার ডাটা প্রাইভেসি মোডে এডমিনের কাছে পাঠানো হয়েছে।', 'success');
+                // Logic to push to Firebase
+            } else {
+                Swal.fire('ভুল', 'সঠিক তথ্য দিন।', 'error');
             }
-        });
-    }
+        }
 
-    // পেজ রেডি হলে ফাংশন কল
-    window.onload = function() {
-        loadGlobalJobs();
-    };
-</script>
+        /* --- ADMIN CUSTOM UPDATES START HERE --- */
+        /* আপনি ভবিষ্যতে যেকোনো নতুন কোড বা আপডেট এখানে পেস্ট করতে পারবেন */
 
+    </script>
+</body>
+    </html>
+    
