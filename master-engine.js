@@ -1,6 +1,6 @@
 // এডমিন সাদ্দাম, আপনার ফায়ারবেস কনফিগ (ভুল সংশোধন করা হয়েছে)
 const firebaseConfig = {
-  apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_X9D7_H-0",
+  apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg", 
   authDomain: "bd-marketing-55a81.firebaseapp.com",
   databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
   projectId: "bd-marketing-55a81",
@@ -8,7 +8,6 @@ const firebaseConfig = {
   messagingSenderId: "678696512628",
   appId: "1:678696512628:web:edfc22a62f55dad41df521"
 };
-
 // ফায়ারবেস শুরু করার সঠিক নিয়ম (Compat Mode)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
