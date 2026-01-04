@@ -1,45 +1,85 @@
-/* বিডি মার্কেটিং - মাস্টার ইঞ্জিন ২০২৬ 
-   অ্যাডমিন: সাদ্দাম হোসেন  
-*/
+// Firebase Configuration
+const firebaseConfig = {
+    databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
 
-const masterEngine = {
-    // ডাটাবেস সেটআপ
-    initializeUser: function(uid, name, email, age) {
-        db.ref('Users/' + uid).set({
-            full_name: name,
-            age: age,
-            email: email,
-            buyer_wallet: 0.00,
-            seller_wallet: 0.00,
-            role: "জনাব",
-            status: "Pending",
-            created_by: "Admin",
-            join_date: new Date().toLocaleDateString('bn-BD')
-        });
-    },
+let authMode = "login";
 
-    // ডাইনামিক ওয়ালেট সিঙ্ক
-    syncWallet: function() {
-        const userName = localStorage.getItem("user_name");
-        if (!userName) return;
-        const uid = userName.replace(/\s+/g, '_');
+function toggleAuth() {
+    authMode = (authMode === "login") ? "signup" : "login";
+    document.getElementById('mainBtn').innerText = (authMode === "login") ? "প্রবেশ করুন" : "রেজিস্ট্রেশন করুন";
+}
 
-        db.ref('Users/' + uid).on('value', (s) => {
-            const data = s.val();
-            if (data) {
-                const mode = localStorage.getItem("active_mode") || 'buyer';
-                let bal = (mode === 'seller') ? data.seller_wallet : data.buyer_wallet;
-                
-                if(document.getElementById("main-balance")) {
-                    document.getElementById("main-balance").innerText = parseFloat(bal).toFixed(2) + " ৳";
-                }
-                if(document.getElementById("wallet-label")) {
-                    document.getElementById("wallet-label").innerText = (mode === 'seller') ? "বিক্রেতা ব্যালেন্স" : "ক্রেতা ব্যালেন্স";
-                }
-            }
+// Authentication Logic
+async function handleAuth() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('pass').value;
+
+    if(!email || pass.length < 6) return Swal.fire('Error', 'সঠিক ইমেইল এবং অন্তত ৬ সংখ্যার পাসওয়ার্ড দিন।', 'error');
+
+    try {
+        if(authMode === "login") {
+            await auth.signInWithEmailAndPassword(email, pass);
+            window.location.href = "home.html";
+        } else {
+            const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+            await db.ref('Users/' + userCredential.user.uid).set({
+                email: email,
+                buyerBalance: 0,
+                sellerBalance: 0,
+                status: 'Pending',
+                joined: Date.now()
+            });
+            Swal.fire('সফল!', 'রেজিস্ট্রেশন হয়েছে। এডমিন অনুমতি দিলে লগইন করতে পারবেন।', 'success');
+        }
+    } catch (e) {
+        Swal.fire('Error', e.message, 'error');
+    }
+}
+
+// Balance Sync Logic
+auth.onAuthStateChanged(user => {
+    if(user && window.location.pathname.includes('home.html')) {
+        db.ref('Users/' + user.uid).on('value', snapshot => {
+            const data = snapshot.val();
+            document.getElementById('buyerBalance').innerText = data.buyerBalance.toFixed(2);
+            document.getElementById('sellerBalance').innerText = data.sellerBalance.toFixed(2);
         });
     }
-};
+});
 
-// অটো রান
-window.onload = () => masterEngine.syncWallet();
+// Transaction Submission
+function submitRequest() {
+    const amount = document.getElementById('amt').value;
+    const trxId = document.getElementById('trx').value;
+    const mode = document.getElementById('accMode').value;
+    const user = auth.currentUser;
+
+    if(amount >= 50 && trxId.length > 5) {
+        db.ref('TransactionRequests').push({
+            uid: user.uid,
+            email: user.email,
+            amount: amount,
+            trxId: trxId,
+            mode: mode,
+            status: 'Pending',
+            time: Date.now()
+        }).then(() => {
+            Swal.fire('সফল!', 'আপনার অনুরোধটি প্রাইভেসি মোডে জমা হয়েছে।', 'success');
+            document.getElementById('amt').value = "";
+            document.getElementById('trx').value = "";
+        });
+    } else {
+        Swal.fire('ভুল', 'সঠিক তথ্য দিন।', 'error');
+    }
+}
+
+// Smart Sensors
+window.addEventListener('online', () => document.getElementById('onlineInd').style.background = 'green');
+window.addEventListener('offline', () => document.getElementById('onlineInd').style.background = 'red');
+
+/* --- ADMIN CUSTOM UPDATES START HERE --- */
+                        
