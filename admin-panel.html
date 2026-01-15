@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Admin Panel</title></head>
+<body>
+    <div class="container" style="max-width:600px;"><div class="card" style="border-color: #ef4444;">
+        <h2 style="color:#ef4444; text-align:center;">অ্যাডমিন কন্ট্রোল</h2>
+        <div class="card" style="margin-bottom:20px;">
+            <h3>ব্যালেন্স অ্যাড করুন</h3>
+            <input type="text" id="target-uid" placeholder="ইউজার আইডি (UID)">
+            <input type="number" id="add-amt" placeholder="টাকার পরিমাণ">
+            <button class="btn buyer-btn" onclick="updateUserBalance()">কনফার্ম করুন</button>
+        </div>
+        <h3>ইউজার লিস্ট</h3>
+        <div id="user-list">লোডিং...</div>
+    </div></div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="admin-engine.js"></script>
+</body></html>
