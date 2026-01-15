@@ -1,24 +1,18 @@
-async function loadAdminData() {
-    db.collection("users").onSnapshot(snap => {
-        const list = document.getElementById('user-list');
-        list.innerHTML = "";
-        snap.forEach(doc => {
-            const u = doc.data();
-            list.innerHTML += `<div class="job-card" style="border-left:5px solid #3b82f6;">
-                <b>${u.name}</b> (${u.role})<br>
-                ব্যালেন্স: ৳${u.balance} <br><small>UID: ${doc.id}</small>
-            </div>`;
-        });
-    });
+// লগইন করার সময় সঠিক ড্যাশবোর্ডে পাঠানোর লজিক
+async function handleAuth() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('pass').value;
+    try {
+        const res = await auth.signInWithEmailAndPassword(email, pass);
+        const doc = await db.collection("users").doc(res.user.uid).get();
+        const userData = doc.data();
+
+        if (userData.role === 'seller') {
+            window.location.href = "seller-dashboard.html"; // যে কাজ দিবে
+        } else if (userData.role === 'buyer') {
+            window.location.href = "buyer-dashboard.html"; // যে কাজ করবে
+        } else if (userData.role === 'admin') {
+            window.location.href = "admin-panel.html";
+        }
+    } catch (e) { alert("লগইন ব্যর্থ! ইমেইল বা পাসওয়ার্ড চেক করুন।"); }
 }
-async function updateUserBalance() {
-    const uid = document.getElementById('target-uid').value;
-    const amt = parseFloat(document.getElementById('add-amt').value);
-    const uRef = db.collection("users").doc(uid);
-    const doc = await uRef.get();
-    if(doc.exists) {
-        await uRef.update({ balance: doc.data().balance + amt });
-        alert("টাকা যোগ হয়েছে!");
-    } else { alert("ইউজার আইডি পাওয়া যায়নি!"); }
-}
-loadAdminData();
