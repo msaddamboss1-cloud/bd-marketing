@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head><link rel="stylesheet" href="style.css"><title>Buyer Panel</title></head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h3>উপলব্ধ কাজ সমূহ (ক্রেতা)</h3>
+            <div id="jobList">লোডিং হচ্ছে...</div>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        db.collection("jobs").where("status", "==", "available").onSnapshot(snapshot => {
+            const list = document.getElementById('jobList');
+            list.innerHTML = "";
+            if(snapshot.empty) {
+                list.innerHTML = "<p style='text-align:center'>বর্তমানে এই সাইটে কোন কাজ নেই।</p>";
+                return;
+            }
+            snapshot.forEach(doc => {
+                const job = doc.data();
+                list.innerHTML += `
+                    <div class="job-card">
+                        <h4>${job.title}</h4>
+                        <p>মূল্য: ৳${job.price}</p>
+                        <button class="btn buyer-btn" onclick="window.open('${job.link}')">কাজটি শুরু করুন</button>
+                    </div>`;
+            });
+        });
+    </script>
+</body>
+</html>
