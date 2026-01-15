@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head><link rel="stylesheet" href="style.css"><title>Register</title></head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2 style="text-align:center">রেজিস্ট্রেশন করুন</h2>
+            <select id="userRole">
+                <option value="buyer">আমি ক্রেতা (কাজ কিনবো)</option>
+                <option value="seller">আমি বিক্রেতা (কাজ দিবো)</option>
+            </select>
+            <input type="text" id="userName" placeholder="পূর্ণ নাম">
+            <input type="email" id="userEmail" placeholder="ইমেইল">
+            <input type="password" id="userPass" placeholder="পাসওয়ার্ড">
+            <button class="btn buyer-btn" onclick="registerUser()">অ্যাকাউন্ট তৈরি করুন</button>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script>
+        async function registerUser() {
+            const role = document.getElementById('userRole').value;
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const pass = document.getElementById('userPass').value;
+            try {
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection("users").doc(res.user.uid).set({
+                    name, email, role, balance: 0, status: 'active'
+                });
+                alert("রেজিস্ট্রেশন সফল! লগইন করুন।");
+                window.location.href = 'index.html';
+            } catch(e) { alert(e.message); }
+        }
+    </script>
+</body>
+</html>
