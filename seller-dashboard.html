@@ -1,42 +1,34 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head><link rel="stylesheet" href="style.css"><title>Seller Panel</title></head>
-<body>
-    <div class="container">
-        <div class="card">
-            <h3>নতুন কাজ আপলোড (বিক্রেতা)</h3>
-            <p>প্রতিটি কাজে ১৫% অ্যাডমিন কমিশন প্রযোজ্য।</p>
-            <input type="text" id="jobTitle" placeholder="কাজের নাম (উদা: FB Followers)">
-            <input type="number" id="jobPrice" placeholder="কাজের মূল্য (৳)">
-            <input type="text" id="jobLink" placeholder="লিঙ্ক দিন">
-            <button class="btn seller-btn" onclick="postJob()">কাজ পাবলিশ করুন</button>
-        </div>
-    </div>
-    <script src="config.js"></script>
-    <script>
-        async function postJob() {
-            const title = document.getElementById('jobTitle').value;
-            const price = parseFloat(document.getElementById('jobPrice').value);
-            const commission = price * 0.15; // ১৫% কমিশন
-            const totalCost = price + commission;
+<div class="card">
+    <h3>আপনি কি কাজ দিতে চান? (বিক্রেতা প্যানেল)</h3>
+    <p style="font-size:12px; color:var(--primary);">*কাজ পোস্ট করলেই ১৫% কমিশন অটো কেটে নেওয়া হবে।</p>
+    <input type="text" id="jobTitle" placeholder="কাজের নাম">
+    <input type="number" id="jobPrice" placeholder="কাজের মূল্য">
+    <input type="text" id="jobLink" placeholder="কাজের লিঙ্ক">
+    <button class="btn seller-btn" onclick="postJobBySeller()">কাজ পাবলিশ করুন</button>
+</div>
 
-            const user = auth.currentUser;
-            const userDoc = await db.collection("users").doc(user.uid).get();
-            const balance = userDoc.data().balance;
+<script>
+async function postJobBySeller() {
+    const title = document.getElementById('jobTitle').value;
+    const price = parseFloat(document.getElementById('jobPrice').value);
+    const commission = price * 0.15; // ১৫% আপনার লাভ
+    const totalCost = price + commission;
 
-            if(balance < totalCost) {
-                alert("আপনার ওয়ালেটে পর্যাপ্ত টাকা নেই! কমিশন সহ মোট লাগবে: ৳" + totalCost);
-                return;
-            }
+    const user = auth.currentUser;
+    const doc = await db.collection("users").doc(user.uid).get();
+    const balance = doc.data().balance;
 
-            // ব্যালেন্স কাটা এবং কাজ পাবলিশ করা
-            await db.collection("users").doc(user.uid).update({ balance: balance - totalCost });
-            await db.collection("jobs").add({
-                title, price, link: document.getElementById('jobLink').value,
-                sellerId: user.uid, status: 'available'
-            });
-            alert("কাজ সফলভাবে আপলোড হয়েছে! ১৫% কমিশন কেটে নেওয়া হয়েছে।");
-        }
-    </script>
-</body>
-</html>
+    if(balance < totalCost) {
+        alert("অপর্যাপ্ত ব্যালেন্স! কমিশনসহ লাগবে ৳" + totalCost);
+        return;
+    }
+
+    // ব্যালেন্স কাটা এবং কাজ পোস্ট করা
+    await db.collection("users").doc(user.uid).update({ balance: balance - totalCost });
+    await db.collection("jobs").add({
+        title, price, link: document.getElementById('jobLink').value,
+        status: 'available', sellerId: user.uid
+    });
+    alert("কাজ পাবলিশ হয়েছে এবং কমিশন কেটে নেওয়া হয়েছে!");
+}
+</script>
