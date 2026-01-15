@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Deposit Balance</title></head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h3 style="text-align:center; color:var(--primary);">ওয়ালেট রিচার্জ করুন</h3>
+            <p style="font-size:13px; text-align:center; opacity:0.8;">নিচের নম্বরে টাকা পাঠিয়ে ফরমটি পূরণ করুন।</p>
+            
+            <div style="background:#0f172a; padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-bottom:15px;">
+                <p>🟠 <b>Nagad (Personal):</b> 01763584939</p>
+                <p>🔵 <b>Bkash (Personal):</b> 01725780575</p>
+            </div>
+
+            <label>টাকার পরিমাণ (৳)</label>
+            <input type="number" id="d-amt" placeholder="যেমন: ৫০০">
+            
+            <label>ট্রানজ্যাকশন আইডি (TrxID)</label>
+            <input type="text" id="d-trx" placeholder="যেমন: 8N76VLK9">
+            
+            <button class="btn buyer-btn" onclick="submitDeposit()">ডিপোজিট রিকোয়েস্ট পাঠান</button>
+            <button class="btn" style="background:#475569; margin-top:10px;" onclick="history.back()">ফিরে যান</button>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        function submitDeposit() {
+            const amt = document.getElementById('d-amt').value;
+            const trx = document.getElementById('d-trx').value;
+            if(!amt || !trx) return alert("সবগুলো ঘর পূরণ করুন!");
+            
+            // এখানে আপনার অ্যাডমিন প্যানেলে নোটিফিকেশন যাওয়ার লজিক থাকবে
+            alert("আপনার রিকোয়েস্টটি অ্যাডমিন সাদ্দামের কাছে পাঠানো হয়েছে। ভেরিফাই করার পর আপনার ব্যালেন্সে টাকা যোগ হবে।");
+            window.location.href = 'index.html';
+        }
+    </script>
+</body></html>
