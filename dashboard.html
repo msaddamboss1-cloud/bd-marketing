@@ -1,55 +1,15 @@
 <!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body { margin: 0; background: #0f172a; color: white; font-family: sans-serif; }
-        .header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 2px solid #10b981; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .box { background: #1e293b; padding: 25px; border-radius: 15px; text-align: center; border: 1px solid #334155; cursor: pointer; transition: 0.3s; }
-        .box:hover { background: #334155; transform: scale(1.02); }
-        .box h3 { margin: 10px 0 0; color: #10b981; }
-        .logout-btn { background: #ef4444; color: white; width: 90%; margin: 20px auto; display: block; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; }
-    </style>
-</head>
+<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Deposit</title></head>
 <body>
-
-<div class="header">
-    <h2>স্বাগতম, জনাব!</h2>
-    <p style="color: #94a3b8; margin-top: -10px;">BD Marketing ড্যাশবোর্ড</p>
-</div>
-
-<div class="grid-container">
-    <div class="box" onclick="window.location.href='market.html'">
-        <h1>🛒</h1>
-        <h3>মার্কেট</h3>
-    </div>
-    <div class="box">
-        <h1>💰</h1>
-        <h3>ওয়ালেট</h3>
-    </div>
-    <div class="box">
-        <h1>👤</h1>
-        <h3>প্রোফাইল</h3>
-    </div>
-    <div class="box">
-        <h1>📢</h1>
-        <h3>নোটিশ</h3>
-    </div>
-</div>
-
-<button class="logout-btn" onclick="logoutUser()">লগ আউট করুন</button>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="master-engine.js"></script>
-<script>
-    // সিকিউরিটি চেক: লগইন না থাকলে বের করে দেবে
-    checkAuth();
-</script>
-
-</body>
-</html>
+    <div class="container"><div class="card">
+        <h3>ডিপোজিট (Shopping Balance)</h3>
+        <div style="background:#0f172a; padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-bottom:15px;">
+            <p>🟠 Nagad: 01763584939</p>
+            <p>🔵 Bkash: 01725780575</p>
+        </div>
+        <input type="number" id="d-amt" placeholder="টাকার পরিমাণ">
+        <input type="text" id="d-trx" placeholder="Transaction ID (TrxID)">
+        <button class="btn buyer-btn" onclick="alert('রিকোয়েস্ট পাঠানো হয়েছে। অ্যাডমিন চেক করছেন।')">সাবমিট</button>
+        <button class="btn" style="background:#475569;" onclick="history.back()">ফিরে যান</button>
+    </div></div>
+</body></html>
