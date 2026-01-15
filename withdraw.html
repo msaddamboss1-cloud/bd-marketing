@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Withdraw Earnings</title></head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h3 style="text-align:center; color:#3b82f6;">টাকা উত্তোলন (Withdraw)</h3>
+            <p style="text-align:center; font-size:13px;">আপনার ইনকাম করা টাকা তুলে নিন।</p>
+            
+            <label>পেমেন্ট মেথড</label>
+            <select id="w-method">
+                <option value="Bkash">বিকাশ (Bkash)</option>
+                <option value="Nagad">নগদ (Nagad)</option>
+            </select>
+
+            <label>পরিমাণ (মিনিমাম ১০০৳)</label>
+            <input type="number" id="w-amt" placeholder="৳১০০">
+
+            <label>পার্সোনাল নম্বর</label>
+            <input type="text" id="w-num" placeholder="017xxxxxxxx">
+
+            <button class="btn seller-btn" onclick="submitWithdraw()">উইথড্র রিকোয়েস্ট দিন</button>
+            <button class="btn" style="background:#475569; margin-top:10px;" onclick="history.back()">ফিরে যান</button>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        function submitWithdraw() {
+            const amt = document.getElementById('w-amt').value;
+            const num = document.getElementById('w-num').value;
+            if(amt < 100) return alert("মিনিমাম ১০০৳ হতে হবে!");
+            if(!num) return alert("নম্বর দিন!");
+            
+            alert("আপনার উইথড্র রিকোয়েস্ট গ্রহণ করা হয়েছে। ২৪ ঘণ্টার মধ্যে পেমেন্ট পাবেন।");
+            window.location.href = 'index.html';
+        }
+    </script>
+</body></html>
