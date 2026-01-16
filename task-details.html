@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="taskInfo"></div>
+        <hr>
+        <h4>কাজের প্রুফ এখানে দিন:</h4>
+        <textarea id="pBox" rows="5" placeholder="ইউজারনেম/লিঙ্ক/স্ক্রিনশট লিঙ্ক লিখুন"></textarea>
+        <button class="btn-primary" onclick="sub()">সাবমিট করুন</button>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        const tid = new URLSearchParams(window.location.search).get('id');
+        db.collection("tasks").doc(tid).get().then(doc => {
+            const t = doc.data();
+            document.getElementById('taskInfo').innerHTML = `<h2>${t.title}</h2><p style='background:#f9f9f9; padding:10px; border-radius:5px;'>${t.desc}</p><h3>পেমেন্ট: ${t.rate} ৳</h3>`;
+        });
+        function sub(){
+            const p = document.getElementById('pBox').value;
+            if(!p) { alert("প্রুফ লিখুন!"); return; }
+            db.collection("proofs").add({taskId:tid, uid:auth.currentUser.uid, email:auth.currentUser.email, proof:p, status:"pending", date:new Date()}).then(()=>{
+                alert("আপনার প্রুফ জমা হয়েছে! অ্যাডমিন চেক করে পেমেন্ট দিবে।"); location.href="seller-dashboard.html";
+            });
+        }
+    </script>
+</body>
+</html>
