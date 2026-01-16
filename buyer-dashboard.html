@@ -1,24 +1,42 @@
-<div class="card">
-    <h3>আপনার জন্য উপলব্ধ কাজসমূহ (ক্রেতা প্যানেল)</h3>
-    <div id="jobList">চেক করা হচ্ছে...</div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="notice-wrapper">
+            <div class="notice-text" id="adminNotice">নোটিফিকেশন লোড হচ্ছে...</div>
+        </div>
 
-<script>
-db.collection("jobs").where("status", "==", "available").onSnapshot(snap => {
-    const list = document.getElementById('jobList');
-    list.innerHTML = "";
-    if(snap.empty) {
-        list.innerHTML = "<p style='text-align:center'>বর্তমানে এই সাইটে কোন কাজ নেই।</p>";
-        return;
-    }
-    snap.forEach(doc => {
-        const job = doc.data();
-        list.innerHTML += `
-            <div class="job-card" style="border-left: 5px solid #10b981;">
-                <h4>${job.title}</h4>
-                <p>পেমেন্ট পাবেন: ৳${job.price}</p>
-                <button class="btn buyer-btn" onclick="window.open('${job.link}')">কাজটি সম্পন্ন করুন</button>
-            </div>`;
-    });
-});
-</script>
+        <div class="balance-card">
+            <p>বর্তমান ব্যালেন্স</p>
+            <h1 id="userBalance">...</h1>
+        </div>
+
+        <div class="card">
+            <h3>ব্যালেন্স রিচার্জ</h3>
+            <p>বিকাশ বা নগদের মাধ্যমে ব্যালেন্স এড করুন</p>
+            <button class="btn btn-primary" onclick="location.href='deposit.html'">ডিপোজিট করুন</button>
+        </div>
+
+        <div class="card">
+            <h3>কাজ দিন</h3>
+            <button class="btn btn-primary" onclick="location.href='post-job.html'">নতুন জব পোস্ট করুন</button>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="#" class="nav-item">🏠 হোম</a>
+            <a href="deposit.html" class="nav-item">💰 ডিপোজিট</a>
+            <a href="support.html" class="nav-item">📞 সাপোর্ট</a>
+            <a href="#" onclick="auth.signOut(); location.href='index.html'" class="nav-item">🚪 লগআউট</a>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="global-logic.js"></script>
+</body>
+</html>
