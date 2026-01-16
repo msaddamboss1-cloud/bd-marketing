@@ -5,12 +5,13 @@
 <script>
     auth.onAuthStateChanged(user => {
         if(user){
-            if(user.email === "msaddamboss1@gmail.com") { window.location.href="admin-panel.html"; }
+            if(user.email === adminEmail) { window.location.href="admin-panel.html"; }
             else {
                 db.collection("users").doc(user.uid).get().then(doc => {
-                    if(doc.data().role === "buyer") window.location.href="buyer-dashboard.html";
+                    const data = doc.data();
+                    if(data.role === "buyer") window.location.href="buyer-dashboard.html";
                     else window.location.href="seller-dashboard.html";
-                });
+                }).catch(()=> { auth.signOut(); window.location.href="index.html"; });
             }
         } else { window.location.href="index.html"; }
     });
