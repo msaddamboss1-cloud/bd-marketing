@@ -5,26 +5,19 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2 style="text-align:center; background: #333; color:white; padding:10px; margin:0;">Admin Panel</h2>
-        
-        <div class="card">
-            <h4>নোটিশ বোর্ড আপডেট</h4>
-            <input type="text" id="newNotice" placeholder="নোটিশ লিখুন...">
-            <button class="btn btn-primary" onclick="updateNotice()">আপডেট নোটিশ</button>
-        </div>
-
-        <div class="card">
-            <h4>পেন্ডিং ডিপোজিট</h4>
-            <div id="depositList">লোড হচ্ছে...</div>
-        </div>
-        
-        <button class="btn btn-danger" onclick="auth.signOut(); location.href='index.html'">লগআউট</button>
+        <h2 style="text-align:center;">সাদ্দাম ভাই (অ্যাডমিন)</h2>
+        <button class="btn-primary" onclick="location.href='admin-deposits.html'">ডিপোজিট অ্যাপ্রুভ করুন</button>
+        <button class="btn-primary" onclick="location.href='admin-proofs.html'">কাজের প্রুফ চেক করুন</button>
+        <button class="btn-primary" onclick="location.href='admin-withdraws.html'">উত্তোলন অ্যাপ্রুভ করুন</button>
+        <hr>
+        <button style="background:#34495e; color:white;" onclick="auth.signOut().then(()=>location.href='index.html')">লগআউট</button>
     </div>
     <script src="config.js"></script>
-    <script src="admin-engine.js"></script>
+    <script>
+        auth.onAuthStateChanged(user => { if(!user || user.email !== adminEmail) location.href="index.html"; });
+    </script>
 </body>
 </html>
