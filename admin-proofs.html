@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h3>কাজের প্রুফ চেক:</h3>
+        <div id="pList">লোড হচ্ছে...</div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        db.collection("proofs").where("status","==","pending").onSnapshot(snap=>{
+            let h=""; snap.forEach(doc=>{
+                let p=doc.data();
+                h+=`<div class='card'>User: ${p.email}<br>Proof: ${p.proof}<br>
+                <button onclick="pay('${doc.id}','${p.uid}','${p.taskId}')">Approve & Pay</button></div>`;
+            });
+            document.getElementById('pList').innerHTML=h || "কোনো প্রুফ নেই";
+        });
+        function pay(id, uid, tid){
+            db.collection("tasks").doc(tid).get().then(tdoc=>{
+                const rate = tdoc.data().rate;
+                db.collection("users").doc(uid).update({balance: firebase.firestore.FieldValue.increment(rate)});
+                db.collection("proofs").doc(id).update({status:"approved"});
+                db.collection("tasks").doc(tid).update({count: firebase.firestore.FieldValue.increment(-1)});
+                alert("পেমেন্ট সম্পন্ন!");
+            });
+        }
+    </script>
+</body>
+</html>
