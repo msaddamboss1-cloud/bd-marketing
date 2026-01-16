@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রেজিস্ট্রেশন</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container" style="padding-top: 40px;">
-        <h2 style="text-align:center;">নতুন অ্যাকাউন্ট</h2>
-        <div class="card">
-            <input type="text" id="regName" placeholder="আপনার পুরো নাম">
-            <input type="email" id="regEmail" placeholder="ইমেইল">
-            <input type="password" id="regPass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ সংখ্যা)">
-            <label>অ্যাকাউন্টের ধরন:</label>
-            <select id="regRole">
-                <option value="buyer">বায়ার (আমি কাজ দিব)</option>
-                <option value="seller">সেলার (আমি কাজ করব)</option>
-            </select>
-            <button class="btn btn-primary" onclick="register()">রেজিস্ট্রেশন করুন</button>
-            <p style="text-align:center;">লগইন করতে <a href="index.html">এখানে ক্লিক করুন</a></p>
-        </div>
+    <div class="container">
+        <h2>রেজিস্ট্রেশন করুন</h2>
+        <input type="text" id="rName" placeholder="পূর্ণ নাম">
+        <input type="email" id="rEmail" placeholder="ইমেইল">
+        <input type="password" id="rPass" placeholder="পাসওয়ার্ড (৬ সংখ্যা)">
+        <select id="rRole"><option value="seller">Worker (কাজ করব)</option><option value="buyer">Buyer (কাজ দিব)</option></select>
+        <button class="btn-primary" onclick="register()">অ্যাকাউন্ট খুলুন</button>
     </div>
     <script src="config.js"></script>
-    <script src="auth-engine.js"></script>
+    <script>
+        function register(){
+            const n=document.getElementById('rName').value, e=document.getElementById('rEmail').value, p=document.getElementById('rPass').value, r=document.getElementById('rRole').value;
+            auth.createUserWithEmailAndPassword(e,p).then(res=>{
+                db.collection("users").doc(res.user.uid).set({name:n, email:e, role:r, balance:0, uid:res.user.uid})
+                .then(()=>window.location.href="dashboard.html");
+            }).catch(err=>alert(err.message));
+        }
+    </script>
 </body>
 </html>
