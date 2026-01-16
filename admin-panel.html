@@ -1,20 +1,30 @@
 <!DOCTYPE html>
-<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Admin Panel</title></head>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
 <body>
-    <div class="container" style="max-width:600px;"><div class="card" style="border-color: #ef4444;">
-        <h2 style="color:#ef4444; text-align:center;">অ্যাডমিন কন্ট্রোল</h2>
-        <div class="card" style="margin-bottom:20px;">
-            <h3>ব্যালেন্স অ্যাড করুন</h3>
-            <input type="text" id="target-uid" placeholder="ইউজার আইডি (UID)">
-            <input type="number" id="add-amt" placeholder="টাকার পরিমাণ">
-            <button class="btn buyer-btn" onclick="updateUserBalance()">কনফার্ম করুন</button>
+    <div class="container">
+        <h2 style="text-align:center; background: #333; color:white; padding:10px; margin:0;">Admin Panel</h2>
+        
+        <div class="card">
+            <h4>নোটিশ বোর্ড আপডেট</h4>
+            <input type="text" id="newNotice" placeholder="নোটিশ লিখুন...">
+            <button class="btn btn-primary" onclick="updateNotice()">আপডেট নোটিশ</button>
         </div>
-        <h3>ইউজার লিস্ট</h3>
-        <div id="user-list">লোডিং...</div>
-    </div></div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+        <div class="card">
+            <h4>পেন্ডিং ডিপোজিট</h4>
+            <div id="depositList">লোড হচ্ছে...</div>
+        </div>
+        
+        <button class="btn btn-danger" onclick="auth.signOut(); location.href='index.html'">লগআউট</button>
+    </div>
     <script src="config.js"></script>
     <script src="admin-engine.js"></script>
-</body></html>
+</body>
+</html>
