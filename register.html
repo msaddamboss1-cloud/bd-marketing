@@ -12,18 +12,20 @@
         <h2>রেজিস্ট্রেশন করুন</h2>
         <input type="text" id="rName" placeholder="পূর্ণ নাম">
         <input type="email" id="rEmail" placeholder="ইমেইল">
-        <input type="password" id="rPass" placeholder="পাসওয়ার্ড (৬ সংখ্যা)">
-        <select id="rRole"><option value="seller">Worker (কাজ করব)</option><option value="buyer">Buyer (কাজ দিব)</option></select>
-        <button class="btn-primary" onclick="register()">অ্যাকাউন্ট খুলুন</button>
+        <input type="password" id="rPass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ সংখ্যা)">
+        <select id="rRole"><option value="seller">Worker (আমি কাজ করব)</option><option value="buyer">Buyer (আমি কাজ দিব)</option></select>
+        <button class="btn-primary" onclick="reg()">অ্যাকাউন্ট তৈরি করুন</button>
+        <p style="text-align:center;"><a href="index.html">লগইন করুন</a></p>
     </div>
     <script src="config.js"></script>
     <script>
-        function register(){
+        function reg(){
             const n=document.getElementById('rName').value, e=document.getElementById('rEmail').value, p=document.getElementById('rPass').value, r=document.getElementById('rRole').value;
+            if(!n || !e || p.length < 6) { alert("সঠিক তথ্য দিন!"); return; }
             auth.createUserWithEmailAndPassword(e,p).then(res=>{
                 db.collection("users").doc(res.user.uid).set({name:n, email:e, role:r, balance:0, uid:res.user.uid})
                 .then(()=>window.location.href="dashboard.html");
-            }).catch(err=>alert(err.message));
+            }).catch(a=>alert(a.message));
         }
     </script>
 </body>
