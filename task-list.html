@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h3>উপলব্ধ কাজসমূহ</h3>
+        <div id="taskList">অপেক্ষা করুন...</div>
+        <button onclick="history.back()">ফিরে যান</button>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        db.collection("tasks").where("status","==","active").onSnapshot(snap => {
+            let h = "";
+            snap.forEach(doc => {
+                let t = doc.data();
+                if(t.count > 0){
+                   h += `<div class='card'><h4>${t.title}</h4><p style='color:#27ae60; font-weight:bold;'>রেট: ${t.rate} ৳</p><button class='btn-primary' onclick="location.href='task-details.html?id=${doc.id}'">বিস্তারিত</button></div>`;
+                }
+            });
+            document.getElementById('taskList').innerHTML = h || "<p>বর্তমানে কোনো কাজ নেই।</p>";
+        });
+    </script>
+</body>
+</html>
