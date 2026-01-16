@@ -1,37 +1,55 @@
 <!DOCTYPE html>
-<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Withdraw Earnings</title></head>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
 <body>
     <div class="container">
+        <h3 style="text-align:center; padding-top:20px;">টাকা উত্তোলন</h3>
         <div class="card">
-            <h3 style="text-align:center; color:#3b82f6;">টাকা উত্তোলন (Withdraw)</h3>
-            <p style="text-align:center; font-size:13px;">আপনার ইনকাম করা টাকা তুলে নিন।</p>
+            <label>পরিমাণ (মিনিমাম ৫০ টাকা)</label>
+            <input type="number" id="wAmount" placeholder="Example: 500">
             
-            <label>পেমেন্ট মেথড</label>
-            <select id="w-method">
-                <option value="Bkash">বিকাশ (Bkash)</option>
-                <option value="Nagad">নগদ (Nagad)</option>
-            </select>
-
-            <label>পরিমাণ (মিনিমাম ১০০৳)</label>
-            <input type="number" id="w-amt" placeholder="৳১০০">
-
-            <label>পার্সোনাল নম্বর</label>
-            <input type="text" id="w-num" placeholder="017xxxxxxxx">
-
-            <button class="btn seller-btn" onclick="submitWithdraw()">উইথড্র রিকোয়েস্ট দিন</button>
-            <button class="btn" style="background:#475569; margin-top:10px;" onclick="history.back()">ফিরে যান</button>
+            <label>আপনার বিকাশ/নগদ নম্বর</label>
+            <input type="text" id="wNumber" placeholder="017xxxxxxxx">
+            
+            <label>মাধ্যম</label>
+            <select id="wMethod"><option>Bkash</option><option>Nagad</option></select>
+            
+            <button class="btn btn-danger" onclick="reqWithdraw()">উত্তোলন করুন</button>
+        </div>
+        <div class="bottom-nav">
+             <a href="javascript:history.back()" class="nav-item">🔙 ফিরে যান</a>
         </div>
     </div>
     <script src="config.js"></script>
     <script>
-        function submitWithdraw() {
-            const amt = document.getElementById('w-amt').value;
-            const num = document.getElementById('w-num').value;
-            if(amt < 100) return alert("মিনিমাম ১০০৳ হতে হবে!");
-            if(!num) return alert("নম্বর দিন!");
+        function reqWithdraw() {
+            const amount = document.getElementById('wAmount').value;
+            const number = document.getElementById('wNumber').value;
+            const method = document.getElementById('wMethod').value;
             
-            alert("আপনার উইথড্র রিকোয়েস্ট গ্রহণ করা হয়েছে। ২৪ ঘণ্টার মধ্যে পেমেন্ট পাবেন।");
-            window.location.href = 'index.html';
+            if(amount < 50) { alert("মিনিমাম ৫০ টাকা তুলতে পারবেন"); return; }
+            if(number.length < 11) { alert("সঠিক নম্বর দিন"); return; }
+            
+            db.collection("withdraws").add({
+                uid: auth.currentUser.uid,
+                email: auth.currentUser.email,
+                amount: parseInt(amount),
+                number: number,
+                method: method,
+                status: 'pending',
+                date: new Date()
+            }).then(() => {
+                alert("অনুরোধ সফল! ২৪ ঘন্টার মধ্যে পেমেন্ট পাবেন।");
+                window.location.href = "seller-dashboard.html";
+            });
         }
     </script>
-</body></html>
+</body>
+</html>
