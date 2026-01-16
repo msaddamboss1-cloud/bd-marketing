@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h3>উত্তোলন রিকোয়েস্ট:</h3>
+        <div id="wList">লোড হচ্ছে...</div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        db.collection("withdraws").where("status","==","pending").onSnapshot(snap=>{
+            let h=""; snap.forEach(doc=>{
+                let w=doc.data();
+                h+=`<div class='card'>${w.email}<br><b>${w.amount}৳</b><br>${w.method}: ${w.number}<br>
+                <button onclick="done('${doc.id}')">পেমেন্ট করেছি (Done)</button></div>`;
+            });
+            document.getElementById('wList').innerHTML=h || "কোনো রিকোয়েস্ট নেই";
+        });
+        function done(id){ 
+            db.collection("withdraws").doc(id).update({status:"paid"}); 
+            alert("পেমেন্ট স্ট্যাটাস আপডেট হয়েছে!");
+        }
+    </script>
+</body>
+</html>
