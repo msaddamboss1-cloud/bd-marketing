@@ -8,14 +8,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="balance-box">
-            <p>আপনার ব্যালেন্স</p>
-            <h1 id="bal">0.00 ৳</h1>
-        </div>
-        <button class="btn-primary" onclick="location.href='post-job.html'">নতুন কাজ দিন</button>
-        <button class="btn-primary" style="background:#007bff;" onclick="location.href='deposit.html'">টাকা জমা দিন</button>
-        <div id="myJobs"><h3>আপনার পোস্ট করা কাজসমূহ:</h3></div>
+    <div class="container" style="padding-bottom: 80px;">
+        <div class="balance-box"><p>ডিপোজিট ব্যালেন্স</p><h1 id="bal">0.00 ৳</h1></div>
+        <button class="btn-primary" onclick="location.href='post-job.html'">+ নতুন কাজ দিন</button>
+        <button class="btn-primary" style="background:#3498db;" onclick="location.href='deposit.html'">টাকা জমা দিন</button>
+        <div id="jobList"><h3>আপনার পোস্টসমূহ:</h3></div>
         <div class="bottom-nav">
             <a href="buyer-dashboard.html" class="nav-item">🏠 হোম</a>
             <a href="support.html" class="nav-item">📞 সাপোর্ট</a>
@@ -25,10 +22,11 @@
     <script src="config.js"></script>
     <script>
         auth.onAuthStateChanged(user => {
-            db.collection("users").doc(user.uid).onSnapshot(doc => { document.getElementById('bal').innerText = doc.data().balance + " ৳"; });
+            if(!user) return;
+            db.collection("users").doc(user.uid).onSnapshot(doc => { document.getElementById('bal').innerText = doc.data().balance.toFixed(2) + " ৳"; });
             db.collection("tasks").where("owner","==",user.uid).onSnapshot(snap => {
-                let h = ""; snap.forEach(doc => { h += `<div class='card'>${doc.data().title}<br><small>বাকি আছে: ${doc.data().count}</small></div>`; });
-                document.getElementById('myJobs').innerHTML += h;
+                let h=""; snap.forEach(d => { h+=`<div class='card'><b>${d.data().title}</b><br><small>স্ট্যাটাস: ${d.data().status}</small></div>`; });
+                document.getElementById('jobList').innerHTML = "<h3>আপনার পোস্টসমূহ:</h3>" + (h || "<p>কোনো কাজ নেই</p>");
             });
         });
     </script>
