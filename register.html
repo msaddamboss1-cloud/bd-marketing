@@ -1,38 +1,101 @@
 <!DOCTYPE html>
 <html lang="bn">
-<head><link rel="stylesheet" href="style.css"><title>Register</title></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>রেজিস্ট্রেশন করুন - BD Marketing</title>
+    <style>
+        /* লোডিং এনিমেশনের জন্য ছোট স্টাইল */
+        .loading { opacity: 0.5; pointer-events: none; }
+        #msg { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
 <body>
     <div class="container">
         <div class="card">
-            <h2 style="text-align:center">রেজিস্ট্রেশন করুন</h2>
+            <h2 style="text-align:center;">নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+            
             <select id="userRole">
                 <option value="buyer">আমি ক্রেতা (কাজ কিনবো)</option>
                 <option value="seller">আমি বিক্রেতা (কাজ দিবো)</option>
             </select>
-            <input type="text" id="userName" placeholder="পূর্ণ নাম">
-            <input type="email" id="userEmail" placeholder="ইমেইল">
-            <input type="password" id="userPass" placeholder="পাসওয়ার্ড">
-            <button class="btn buyer-btn" onclick="registerUser()">অ্যাকাউন্ট তৈরি করুন</button>
+            
+            <input type="text" id="userName" placeholder="আপনার পূর্ণ নাম">
+            <input type="email" id="userEmail" placeholder="আপনার ইমেইল">
+            <input type="password" id="userPass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ সংখ্যা)">
+            
+            <button class="btn buyer-btn" id="regBtn" onclick="registerUser()">অ্যাকাউন্ট তৈরি করুন</button>
+            
+            <div id="msg"></div>
+            
+            <p style="text-align:center; margin-top:15px;">
+                ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="index.html">লগইন করুন</a>
+            </p>
         </div>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
     <script src="config.js"></script>
+
     <script>
         async function registerUser() {
             const role = document.getElementById('userRole').value;
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
             const pass = document.getElementById('userPass').value;
+            const btn = document.getElementById('regBtn');
+            const msg = document.getElementById('msg');
+
+            // সাধারণ ভ্যালিডেশন
+            if(!name || !email || !pass) {
+                alert("সবগুলো ঘর পূরণ করুন!");
+                return;
+            }
+
             try {
+                btn.innerText = "অপেক্ষা করুন...";
+                btn.classList.add('loading');
+
+                // ১. ফায়ারবেসে ইউজার তৈরি
                 const res = await auth.createUserWithEmailAndPassword(email, pass);
-                await db.collection("users").doc(res.user.uid).set({
-                    name, email, role, balance: 0, status: 'active'
+                const user = res.user;
+
+                // ২. ইমেইল ভেরিফিকেশন লিঙ্ক পাঠানো (মাস্টার ফিচার)
+                await user.sendEmailVerification();
+
+                // ৩. ফায়ারস্টোর ডাটাবেসে তথ্য জমা করা
+                await db.collection("users").doc(user.uid).set({
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    role: role,
+                    balance: 0,
+                    status: 'active',
+                    joinedDate: new Date().toISOString()
                 });
-                alert("রেজিস্ট্রেশন সফল! লগইন করুন।");
+
+                // ৪. সফল হওয়ার পর মেসেজ
+                alert("রেজিস্ট্রেশন সফল! আপনার ইমেইলে (Inbox অথবা Spam) একটি ভেরিফিকেশন লিঙ্ক পাঠানো হয়েছে। লিঙ্কটিতে ক্লিক করে ভেরিফাই করার পর লগইন করুন।");
+                
+                // লগ আউট করে দেওয়া যাতে ভেরিফাই ছাড়া ঢুকতে না পারে
+                await auth.signOut();
                 window.location.href = 'index.html';
-            } catch(e) { alert(e.message); }
+
+            } catch (error) {
+                btn.innerText = "অ্যাকাউন্ট তৈরি করুন";
+                btn.classList.remove('loading');
+                
+                // এরর মেসেজ হ্যান্ডলিং
+                if(error.code === 'auth/email-already-in-use') {
+                    alert("এই ইমেইলটি আগে থেকেই ব্যবহার করা হয়েছে। অন্য ইমেইল ট্রাই করুন।");
+                } else {
+                    alert("ভুল হয়েছে: " + error.message);
+                }
+            }
         }
     </script>
 </body>
