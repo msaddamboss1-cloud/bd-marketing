@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdraw</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -10,44 +9,25 @@
 </head>
 <body>
     <div class="container">
-        <h3 style="text-align:center; padding-top:20px;">টাকা উত্তোলন</h3>
-        <div class="card">
-            <label>পরিমাণ (মিনিমাম ৫০ টাকা)</label>
-            <input type="number" id="wAmount" placeholder="Example: 500">
-            
-            <label>আপনার বিকাশ/নগদ নম্বর</label>
-            <input type="text" id="wNumber" placeholder="017xxxxxxxx">
-            
-            <label>মাধ্যম</label>
-            <select id="wMethod"><option>Bkash</option><option>Nagad</option></select>
-            
-            <button class="btn btn-danger" onclick="reqWithdraw()">উত্তোলন করুন</button>
-        </div>
-        <div class="bottom-nav">
-             <a href="javascript:history.back()" class="nav-item">🔙 ফিরে যান</a>
-        </div>
+        <h3>টাকা উত্তোলন করুন</h3>
+        <input type="number" id="wAmt" placeholder="টাকার পরিমাণ (৳)">
+        <input type="text" id="wNum" placeholder="বিকাশ/নগদ নম্বর">
+        <select id="wMethod"><option>Bkash</option><option>Nagad</option></select>
+        <button class="btn-primary" style="background:#e74c3c;" onclick="out()">উত্তোলন রিকোয়েস্ট পাঠান</button>
     </div>
     <script src="config.js"></script>
     <script>
-        function reqWithdraw() {
-            const amount = document.getElementById('wAmount').value;
-            const number = document.getElementById('wNumber').value;
-            const method = document.getElementById('wMethod').value;
-            
-            if(amount < 50) { alert("মিনিমাম ৫০ টাকা তুলতে পারবেন"); return; }
-            if(number.length < 11) { alert("সঠিক নম্বর দিন"); return; }
-            
-            db.collection("withdraws").add({
-                uid: auth.currentUser.uid,
-                email: auth.currentUser.email,
-                amount: parseInt(amount),
-                number: number,
-                method: method,
-                status: 'pending',
-                date: new Date()
-            }).then(() => {
-                alert("অনুরোধ সফল! ২৪ ঘন্টার মধ্যে পেমেন্ট পাবেন।");
-                window.location.href = "seller-dashboard.html";
+        function out(){
+            const a=document.getElementById('wAmt').value, n=document.getElementById('wNum').value, m=document.getElementById('wMethod').value;
+            if(!a || !n) { alert("সব তথ্য দিন"); return; }
+            db.collection("users").doc(auth.currentUser.uid).get().then(doc=>{
+                if(doc.data().balance < a) alert("আপনার ব্যালেন্স কম!");
+                else {
+                    db.collection("withdraws").add({uid:auth.currentUser.uid, email:auth.currentUser.email, amount:parseFloat(a), number:n, method:m, status:"pending", date:new Date()}).then(()=>{
+                        db.collection("users").doc(auth.currentUser.uid).update({balance: firebase.firestore.FieldValue.increment(-a)});
+                        alert("রিকোয়েস্ট সফল! ১২-২৪ ঘণ্টার মধ্যে পেমেন্ট পাবেন।"); history.back();
+                    });
+                }
             });
         }
     </script>
