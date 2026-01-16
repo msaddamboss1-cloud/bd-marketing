@@ -1,30 +1,32 @@
 <!DOCTYPE html>
-<html lang="bn"><head><link rel="stylesheet" href="style.css"><title>Login | BD Marketing</title></head>
+<html lang="bn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন | BD Marketing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
 <body>
-    <div class="container"><div class="card" style="text-align:center;">
-        <img src="1000148624.png" style="width:80px; border-radius:50%; border:2px solid var(--primary); margin-bottom:15px;">
-        <h2>লগইন প্যানেল</h2>
-        <input type="email" id="l-email" placeholder="আপনার ইমেইল">
-        <input type="password" id="l-pass" placeholder="পাসওয়ার্ড">
-        <button class="btn buyer-btn" onclick="login()">প্রবেশ করুন</button>
-        <p style="margin-top:15px; font-size:14px;">অ্যাকাউন্ট নেই? <a href="register.html" style="color:var(--primary);">রেজিস্ট্রেশন করুন</a></p>
-    </div></div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <div class="container" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <h1 style="color:#0066ff; margin-bottom:0;">BD Marketing</h1>
+        <p style="color:#666; margin-top:5px;">বিশ্বাস ও আস্থার প্রতীক</p>
+        
+        <div class="card" style="width: 85%;">
+            <h3 style="text-align:center;">লগইন করুন</h3>
+            <input type="email" id="logEmail" placeholder="ইমেইল এড্রেস">
+            <input type="password" id="logPass" placeholder="পাসওয়ার্ড">
+            <button class="btn btn-primary" onclick="login()">লগইন</button>
+            <p style="text-align:center; font-size:14px;">নতুন? <a href="register.html" style="color:#0066ff;">অ্যাকাউন্ট খুলুন</a></p>
+        </div>
+        
+        <div style="text-align:center; font-size:13px; color:#888; margin-top:20px;">
+            <p>হেল্পলাইন: 01725780575</p>
+            <p>Email: msaddamboss1@gmail.com</p>
+        </div>
+    </div>
     <script src="config.js"></script>
-    <script>
-        async function login() {
-            const e = document.getElementById('l-email').value;
-            const p = document.getElementById('l-pass').value;
-            try {
-                const res = await auth.signInWithEmailAndPassword(e, p);
-                const doc = await db.collection("users").doc(res.user.uid).get();
-                const role = doc.data().role;
-                if(role === 'admin') window.location.href = 'admin-panel.html';
-                else if(role === 'seller') window.location.href = 'seller-dashboard.html';
-                else window.location.href = 'buyer-dashboard.html';
-            } catch(err) { alert("ইমেইল বা পাসওয়ার্ড ভুল!"); }
-        }
-    </script>
-</body></html>
+    <script src="auth-engine.js"></script>
+</body>
+</html>
