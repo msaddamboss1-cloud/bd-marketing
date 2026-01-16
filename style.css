@@ -1,28 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600&display=swap');
-:root { --primary: #0066ff; --bg: #f2f2f7; --white: #ffffff; --text: #1c1c1e; }
-body { font-family: 'Hind Siliguri', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--text); -webkit-font-smoothing: antialiased; }
-
-.container { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--white); padding-bottom: 70px; position: relative; }
-
-/* নোটিশ বোর্ড */
-.notice-wrapper { background: #fff3cd; border-bottom: 1px solid #ffeeba; padding: 8px 0; overflow: hidden; }
-.notice-text { white-space: nowrap; animation: scroll 20s linear infinite; font-weight: 600; color: #856404; font-size: 14px; }
-@keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-/* কার্ড ডিজাইন */
-.card { background: #fff; margin: 15px; padding: 18px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
-.balance-card { background: linear-gradient(135deg, #0066ff 0%, #00c6ff 100%); color: white; border-radius: 15px; padding: 25px; text-align: center; margin: 15px; box-shadow: 0 8px 20px rgba(0,102,255,0.3); }
-.balance-card h1 { margin: 5px 0; font-size: 2.5rem; font-weight: 700; }
-
-input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #e1e4e8; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #f9f9f9; }
-input:focus { border-color: var(--primary); outline: none; background: #fff; }
-
-.btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; margin-top: 10px; letter-spacing: 0.5px; }
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,102,255,0.2); }
-.btn-danger { background: #ff3b30; color: white; }
-.btn:active { transform: scale(0.98); }
-
-/* নেভিগেশন বার */
-.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 999; border-top: 1px solid #eee; }
-.nav-item { text-decoration: none; color: #8e8e93; font-size: 11px; text-align: center; font-weight: 600; flex: 1; }
-.nav-item:hover, .nav-item.active { color: var(--primary); }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; color: #333; }
+.container { max-width: 450px; margin: auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+input, select, button, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+.btn-primary { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-primary:hover { background: #218838; }
+.card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid #28a745; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.balance-box { background: linear-gradient(45deg, #28a745, #84e19b); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
+.nav-item { text-decoration: none; color: #555; font-size: 12px; text-align: center; }
