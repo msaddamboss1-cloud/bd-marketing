@@ -9,33 +9,23 @@
 </head>
 <body>
     <div class="container">
-        <div class="notice-wrapper">
-            <div class="notice-text" id="adminNotice">নোটিফিকেশন লোড হচ্ছে...</div>
+        <div class="balance-box">
+            <p>আপনার আয়</p>
+            <h1 id="bal">0.00 ৳</h1>
         </div>
-
-        <div class="balance-card">
-            <p>আমার আয়</p>
-            <h1 id="userBalance">...</h1>
-        </div>
-
-        <div class="card">
-            <h3>কাজ করুন</h3>
-            <button class="btn btn-primary" onclick="location.href='task-list.html'">সকল কাজ দেখুন</button>
-        </div>
-
-        <div class="card">
-            <h3>টাকা তুলুন</h3>
-            <button class="btn btn-danger" onclick="location.href='withdraw.html'">উত্তোলন করুন</button>
-        </div>
-
+        <button class="btn-primary" onclick="location.href='task-list.html'">কাজ খুঁজুন</button>
+        <button class="btn-primary" style="background:#dc3545;" onclick="location.href='withdraw.html'">টাকা তুলুন</button>
         <div class="bottom-nav">
-            <a href="#" class="nav-item">🏠 হোম</a>
+            <a href="seller-dashboard.html" class="nav-item">🏠 হোম</a>
             <a href="task-list.html" class="nav-item">📋 কাজ</a>
-            <a href="withdraw.html" class="nav-item">💸 পেমেন্ট</a>
-            <a href="support.html" class="nav-item">📞 হেল্প</a>
+            <a href="support.html" class="nav-item">📞 সাপোর্ট</a>
         </div>
     </div>
     <script src="config.js"></script>
-    <script src="global-logic.js"></script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            db.collection("users").doc(user.uid).onSnapshot(doc => { document.getElementById('bal').innerText = doc.data().balance + " ৳"; });
+        });
+    </script>
 </body>
 </html>
