@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>টাকা জমা দিন</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -10,71 +9,34 @@
 </head>
 <body>
     <div class="container">
-        <h3 style="text-align:center; margin-top: 20px;">ডিপোজিট করুন</h3>
-        
-        <div class="card" style="border: 2px solid #0066ff; background: #f0f8ff;">
-            <p style="text-align:center; font-weight:bold;">নিচের নম্বরে সেন্ড মানি করুন:</p>
-            <div style="background: white; padding: 10px; border-radius: 8px; margin-bottom: 5px;">
-                <img src="https://logos-download.com/wp-content/uploads/2022/01/BKash_Logo_icon.png" width="30" style="vertical-align:middle"> 
-                <b>বিকাশ (Personal):</b> <span style="color:#e2136e; font-size:18px;">01725780575</span>
-            </div>
-            <div style="background: white; padding: 10px; border-radius: 8px;">
-                <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" width="30" style="vertical-align:middle"> 
-                <b>নগদ (Personal):</b> <span style="color:#f7941d; font-size:18px;">01763584939</span>
-            </div>
+        <h3>টাকা জমা দিন</h3>
+        <div class="card" style="background:#fff4e6; border-left: 5px solid #f39c12;">
+            <p>বিকাশ (Personal): <b>01725780575</b></p>
+            <p>নগদ (Personal): <b>01763584939</b></p>
+            <small>* সেন্ড মানি করে নিচের ফর্মটি পূরণ করুন।</small>
         </div>
-
-        <div class="card">
-            <label>টাকার পরিমাণ (৫০ - ৫০০০)</label>
-            <input type="number" id="depAmount" placeholder="Example: 100">
-            
-            <label>যে মাধ্যম থেকে পাঠিয়েছেন</label>
-            <select id="depMethod">
-                <option value="Bkash">বিকাশ (Bkash)</option>
-                <option value="Nagad">নগদ (Nagad)</option>
-            </select>
-            
-            <label>Transaction ID (TrxID)</label>
-            <input type="text" id="depTrx" placeholder="যেমন: 8HG65F...">
-            
-            <button class="btn btn-primary" onclick="submitDeposit()">জমা নিশ্চিত করুন</button>
-        </div>
-        
-        <div class="bottom-nav">
-             <a href="javascript:history.back()" class="nav-item">🔙 ফিরে যান</a>
-        </div>
+        <input type="number" id="dAmount" placeholder="টাকার পরিমাণ">
+        <input type="text" id="dTrx" placeholder="Transaction ID (TrxID)">
+        <select id="dMethod"><option>Bkash</option><option>Nagad</option></select>
+        <button class="btn-primary" onclick="sendDep()">ডিপোজিট রিকোয়েস্ট পাঠান</button>
+        <button onclick="history.back()" style="background:#bdc3c7; color:#333;">ফিরে যান</button>
     </div>
     <script src="config.js"></script>
     <script>
-        function submitDeposit() {
-            const amount = parseInt(document.getElementById('depAmount').value);
-            const method = document.getElementById('depMethod').value;
-            const trx = document.getElementById('depTrx').value;
-            
-            if (!amount || amount < 50 || amount > 5000) {
-                alert("দুঃখিত! সর্বনিম্ন ডিপোজিট ৫০ টাকা এবং সর্বোচ্চ ৫০০০ টাকা।");
-                return;
-            }
-            if (!trx || trx.length < 5) { alert("সঠিক TrxID দিন!"); return; }
-            
-            const btn = document.querySelector('button');
-            btn.disabled = true;
-            btn.innerText = "যাচাই করা হচ্ছে...";
-
+        function sendDep(){
+            const a=document.getElementById('dAmount').value, t=document.getElementById('dTrx').value, m=document.getElementById('dMethod').value;
+            if(!a || !t) { alert("সব তথ্য দিন"); return; }
             db.collection("deposits").add({
-                uid: auth.currentUser.uid,
-                email: auth.currentUser.email,
-                amount: amount,
-                method: method,
-                trx: trx,
-                status: "pending",
-                date: new Date().toISOString()
-            }).then(() => {
-                alert("সফল হয়েছে! ৫-১০ মিনিটের মধ্যে অ্যাডমিন চেক করে ব্যালেন্স যুক্ত করবেন।");
-                window.location.href = "buyer-dashboard.html";
-            }).catch(e => {
-                alert("এরর: " + e.message);
-                btn.disabled = false;
+                uid:auth.currentUser.uid, 
+                email:auth.currentUser.email, 
+                amount:parseFloat(a), 
+                trx:t, 
+                method:m, 
+                status:"pending", 
+                date:new Date().toLocaleString()
+            }).then(()=>{
+                alert("রিকোয়েস্ট পাঠানো হয়েছে! অ্যাডমিন চেক করে ব্যালেন্স এড করবে।");
+                location.href="buyer-dashboard.html";
             });
         }
     </script>
