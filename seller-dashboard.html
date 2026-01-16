@@ -8,13 +8,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="balance-box">
-            <p>আপনার আয়</p>
-            <h1 id="bal">0.00 ৳</h1>
-        </div>
-        <button class="btn-primary" onclick="location.href='task-list.html'">কাজ খুঁজুন</button>
-        <button class="btn-primary" style="background:#dc3545;" onclick="location.href='withdraw.html'">টাকা তুলুন</button>
+    <div class="container" style="padding-bottom: 80px;">
+        <div class="balance-box"><p>আপনার মোট আয়</p><h1 id="bal">0.00 ৳</h1></div>
+        <button class="btn-primary" onclick="location.href='task-list.html'">কাজ খুঁজে আয় করুন</button>
+        <button class="btn-primary" style="background:#e74c3c;" onclick="location.href='withdraw.html'">টাকা উত্তোলন</button>
         <div class="bottom-nav">
             <a href="seller-dashboard.html" class="nav-item">🏠 হোম</a>
             <a href="task-list.html" class="nav-item">📋 কাজ</a>
@@ -24,7 +21,8 @@
     <script src="config.js"></script>
     <script>
         auth.onAuthStateChanged(user => {
-            db.collection("users").doc(user.uid).onSnapshot(doc => { document.getElementById('bal').innerText = doc.data().balance + " ৳"; });
+            if(!user) return;
+            db.collection("users").doc(user.uid).onSnapshot(doc => { document.getElementById('bal').innerText = doc.data().balance.toFixed(2) + " ৳"; });
         });
     </script>
 </body>
