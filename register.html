@@ -1,55 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-    <title>BD Marketing - Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রেজিস্ট্রেশন</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <h2>রেজিস্ট্রেশন করুন</h2>
-    <input type="text" id="name" placeholder="আপনার নাম"><br>
-    <input type="email" id="email" placeholder="ইমেইল"><br>
-    <input type="password" id="pass" placeholder="পাসওয়ার্ড"><br>
-    <button onclick="register()">রেজিস্ট্রেশন</button>
-
-    <script>
-        // তোমার config.js থেকে পাওয়া ডাটা এখানে বসাও
-        const firebaseConfig = {
-            apiKey: "তোমার_এপিআই_কী",
-            authDomain: "তোমার_ডোমেইন",
-            projectId: "তোমার_প্রজেক্ট_আইডি",
-            storageBucket: "তোমার_বালতি",
-            messagingSenderId: "তোমার_আইডি",
-            appId: "তোমার_এপ_আইডি"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        async function register() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-
-            try {
-                const res = await auth.createUserWithEmailAndPassword(email, pass);
-                // এই লাইনটিই ভেরিফিকেশন লিঙ্ক পাঠাবে
-                await res.user.sendEmailVerification();
-                
-                await db.collection("users").doc(res.user.uid).set({
-                    name: name,
-                    email: email,
-                    role: 'buyer', // ডিফল্ট
-                    balance: 0
-                });
-
-                alert("মেইল পাঠানো হয়েছে! চেক করুন।");
-                window.location.href = "index.html";
-            } catch (err) {
-                alert(err.message);
-            }
-        }
-    </script>
+    <div class="container" style="padding-top: 40px;">
+        <h2 style="text-align:center;">নতুন অ্যাকাউন্ট</h2>
+        <div class="card">
+            <input type="text" id="regName" placeholder="আপনার পুরো নাম">
+            <input type="email" id="regEmail" placeholder="ইমেইল">
+            <input type="password" id="regPass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ সংখ্যা)">
+            <label>অ্যাকাউন্টের ধরন:</label>
+            <select id="regRole">
+                <option value="buyer">বায়ার (আমি কাজ দিব)</option>
+                <option value="seller">সেলার (আমি কাজ করব)</option>
+            </select>
+            <button class="btn btn-primary" onclick="register()">রেজিস্ট্রেশন করুন</button>
+            <p style="text-align:center;">লগইন করতে <a href="index.html">এখানে ক্লিক করুন</a></p>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="auth-engine.js"></script>
 </body>
 </html>
