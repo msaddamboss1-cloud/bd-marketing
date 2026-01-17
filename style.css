@@ -1,15 +1,1 @@
-:root { --bg: #0b0f14; --glass: rgba(255,255,255,0.08); --emerald: #2ecc71; --text: #e5e5e5; --muted: #9aa4af; }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
-body { background: radial-gradient(circle at top, #111827, #020617); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
-.auth-body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-.glass-card { background: var(--glass); backdrop-filter: blur(20px); border-radius: 18px; padding: 30px; width: 90%; max-width: 400px; box-shadow: 0 0 40px rgba(0,0,0,.5); margin: 20px auto; text-align: center; }
-input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #020617; border: 1px solid #1f2933; color: var(--text); border-radius: 10px; }
-button { width: 100%; padding: 12px; background: var(--emerald); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; margin-top: 10px; transition: 0.3s; }
-button:hover { opacity: 0.9; transform: scale(1.02); }
-.hud { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid #1f2933; sticky; top:0; z-index: 100;}
-.card { background: var(--glass); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #1f2933; position: relative; }
-.grid { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 20px; }
-.muted { color: var(--muted); font-size: 14px; display: block; margin-top: 10px; }
-a { text-decoration: none; color: var(--emerald); }
-@media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
