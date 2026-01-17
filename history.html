@@ -1,1 +1,21 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script></head>
+<body>
+<div class="hud"><h3>Transactions</h3><a href="javascript:history.back()">Back</a></div>
+<div id="logs" class="grid"></div>
+<script>
+auth.onAuthStateChanged(u=>{
+  let html = "";
+  db.collection("deposits").where("userId","==",u.uid).get().then(s=>{
+    s.forEach(d=> html += `<div class="card" style="border-left:4px solid green;">Deposit: ৳${d.data().amount}<br>Status: ${d.data().status}</div>`);
+    db.collection("withdraws").where("userId","==",u.uid).get().then(x=>{
+      x.forEach(d=> html += `<div class="card" style="border-left:4px solid red;">Withdraw: ৳${d.data().amount}<br>Status: ${d.data().status}</div>`);
+      document.getElementById("logs").innerHTML = html || "<p style='text-align:center;'>No history found</p>";
+    });
+  });
+});
+</script></body></html>
 
