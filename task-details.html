@@ -1,1 +1,37 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+<div class="app-container">
+    <div id="content" class="glass-card">Loading...</div>
+    <div id="proofBox" class="glass-card" style="display:none">
+        <h3>Submit Proof</h3>
+        <input id="proofNote" placeholder="Explain your work result">
+        <button onclick="submitProof()">SUBMIT WORK</button>
+    </div>
+</div>
+<script src="config.js"></script>
+<script>
+const id = new URLSearchParams(location.search).get("id");
+db.collection("tasks").doc(id).get().then(doc => {
+    let t = doc.data();
+    document.getElementById("content").innerHTML = `<h2>${t.title}</h2><p>${t.description}</p><h1>৳${t.reward}</h1><button onclick="document.getElementById('proofBox').style.display='block'">Start This Task</button>`;
+});
+
+function submitProof() {
+    auth.onAuthStateChanged(user => {
+        db.collection("proofs").add({
+            taskId: id, uid: user.uid, note: document.getElementById("proofNote").value, status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => { alert("Proof Submitted!"); location.href="seller-dashboard.html"; });
+    });
+}
+</script>
+</body>
+</html>
