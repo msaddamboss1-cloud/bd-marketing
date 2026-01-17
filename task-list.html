@@ -1,1 +1,13 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script></head>
+<body>
+<div class="hud"><h2>All Tasks</h2><a href="index.html">Login</a></div>
+<div id="list" class="grid"></div>
+<script>
+db.collection("tasks").where("status","==","open").onSnapshot(s=>{
+  document.getElementById("list").innerHTML=s.docs.map(d=>`<div class="card"><h4>${d.data().title}</h4><p>৳${d.data().budget}</p></div>`).join("");
+});
+</script></body></html>
 
