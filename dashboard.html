@@ -1,1 +1,26 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="config.js"></script>
+</head>
+<body style="background:#000; color:#fff; text-align:center; padding-top:100px;">
+  <h1>Redirecting...</h1>
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) return location.href = "index.html";
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if(doc.exists) {
+           const r = doc.data().role;
+           if(r=="buyer") location.href="buyer-dashboard.html";
+           else if(r=="seller") location.href="seller-dashboard.html";
+           else if(r=="admin") location.href="admin-panel.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
