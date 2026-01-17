@@ -1,1 +1,39 @@
 
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="app-container">
+    <h2>Work Proofs</h2>
+    <div id="pList"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script>
+<script>
+db.collection("proofs").where("status","==","pending").onSnapshot(snap => {
+    let html = "";
+    snap.forEach(doc => {
+        let p = doc.data();
+        html += `<div class="glass-card">
+            <p>Task: ${p.taskId}</p>
+            <p>Note: ${p.note}</p>
+            <button onclick="approveP('${doc.id}', '${p.uid}', '${p.taskId}')">Approve Work</button>
+        </div>`;
+    });
+    document.getElementById("pList").innerHTML = html || "No proofs to review.";
+});
+
+async function approveP(pid, uid, tid) {
+    const task = await db.collection("tasks").doc(tid).get();
+    const reward = task.data().reward;
+    const uRef = db.collection("users").doc(uid);
+    const u = await uRef.get();
+    await uRef.update({ balance: (u.data().balance || 0) + reward });
+    await db.collection("proofs").doc(pid).update({status: "approved"});
+    alert("Reward Sent!");
+}
+</script>
+</body>
+</html>
