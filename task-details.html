@@ -1,1 +1,25 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script></head>
+<body class="auth-body">
+<div id="con" class="glass-card">Loading...</div>
+<script>
+const id=new URLSearchParams(location.search).get("id");
+db.collection("tasks").doc(id).get().then(d=>{
+  const t=d.data();
+  document.getElementById("con").innerHTML=`
+    <h3>${t.title}</h3><p>Budget: ৳${t.budget}</p><hr><p>${t.description}</p>
+    <textarea id="pf" placeholder="Submit Proof" style="width:100%;height:100px;background:#000;color:#fff;margin:10px 0;"></textarea>
+    <button onclick="sub()">Submit Work</button><br><a href="javascript:history.back()" class="muted">Back</a>`;
+});
+function sub(){
+  auth.onAuthStateChanged(u=>{
+    db.collection("proofs").add({
+      taskId:id, sellerId:u.uid, text:document.getElementById("pf").value, status:"pending"
+    }).then(()=> {alert("Submitted!"); location.href="seller-dashboard.html";});
+  });
+}
+</script></body></html>
 
