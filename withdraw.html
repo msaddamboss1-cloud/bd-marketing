@@ -1,1 +1,35 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script>
+<script src="global-logic.js"></script></head>
+<body class="auth-body">
+<div class="glass-card">
+  <h3>Withdraw Money</h3>
+  <h2 id="balanceText">...</h2>
+  <input id="w_amt" type="number" placeholder="Amount to Withdraw">
+  <input id="w_num" placeholder="Your Nagad/Bkash Number">
+  <select id="w_mth"><option>Nagad</option><option>Bkash</option></select>
+  <button onclick="withd()">Request Payout</button>
+  <a href="seller-dashboard.html" class="muted">Back</a>
+</div>
+<script>
+auth.onAuthStateChanged(u=>trackBalance(u.uid));
+function withd(){
+  auth.onAuthStateChanged(u=>{
+    const amt = Number(document.getElementById("w_amt").value);
+    db.collection("users").doc(u.uid).get().then(d=>{
+      if(d.data().balance < amt) return alert("Insufficient Balance!");
+      db.collection("withdraws").add({
+        userId:u.uid, amount:amt, number:document.getElementById("w_num").value,
+        method:document.getElementById("w_mth").value, status:"pending", date:new Date()
+      }).then(()=>{
+        deductBalance(u.uid, amt);
+        alert("Withdrawal Requested!"); location.href="seller-dashboard.html";
+      });
+    });
+  });
+}
+</script></body></html>
 
