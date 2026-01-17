@@ -1,1 +1,18 @@
 
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script></head>
+<body><div class="hud"><h3>Withdraw Requests</h3><a href="admin-panel.html">Back</a></div>
+<div id="list" class="grid"></div>
+<script>
+db.collection("withdraws").where("status","==","pending").onSnapshot(s=>{
+  document.getElementById("list").innerHTML = s.docs.map(d=>`
+    <div class="card">
+      <p><b>৳${d.data().amount}</b> to ${d.data().method}</p>
+      <p>Num: ${d.data().number}</p>
+      <button onclick="paid('${d.id}')">Mark Paid</button>
+    </div>`).join("");
+});
+function paid(id){ db.collection("withdraws").doc(id).update({status:"paid"}); }
+</script></body></html>
