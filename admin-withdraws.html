@@ -1,1 +1,38 @@
 
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="app-container">
+    <h2>Pending Withdrawals</h2>
+    <div id="wList"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script>
+<script>
+db.collection("transactions").where("type","==","withdraw").where("status","==","pending").onSnapshot(snap => {
+    let html = "";
+    snap.forEach(doc => {
+        let d = doc.data();
+        html += `<div class="glass-card">
+            <p>User: ${d.uid}</p>
+            <p>Amt: ৳${d.amount}</p>
+            <p>Phone: ${d.phone} (${d.method})</p>
+            <button onclick="approveW('${doc.id}', '${d.uid}', ${d.amount})">Approve</button>
+        </div>`;
+    });
+    document.getElementById("wList").innerHTML = html || "No pending requests.";
+});
+
+async function approveW(tid, uid, amt) {
+    const ref = db.collection("users").doc(uid);
+    const u = await ref.get();
+    await ref.update({ balance: u.data().balance - amt });
+    await db.collection("transactions").doc(tid).update({status: "approved"});
+    alert("Approved!");
+}
+</script>
+</body>
+</html>
