@@ -1,1 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="app-container">
+    <h2>Activity History</h2>
+    <div id="hList"></div>
+</div>
+<div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">🏠 Home</a>
+    <a href="history.html" class="nav-item active">📜 History</a>
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script>
+<script>
+auth.onAuthStateChanged(user => {
+    db.collection("transactions").where("uid","==",user.uid).get().then(snap => {
+        let h = "";
+        snap.forEach(doc => { h += `<div class="glass-card">${doc.data().type.toUpperCase()} - ৳${doc.data().amount}<br><small>${doc.data().status}</small></div>`; });
+        document.getElementById("hList").innerHTML = h || "No transactions found.";
+    });
+});
+</script>
+</body>
+</html>
 
