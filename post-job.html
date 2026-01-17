@@ -1,1 +1,27 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="config.js"></script></head>
+<body class="auth-body">
+<div class="glass-card">
+  <h3>Post a Job</h3>
+  <input id="jt" placeholder="Job Title">
+  <textarea id="jd" placeholder="Description" style="width:100%;background:#020617;color:#fff;border:1px solid #333;border-radius:10px;padding:10px;"></textarea>
+  <input id="jb" type="number" placeholder="Budget (৳)">
+  <button onclick="post()">Publish</button>
+  <a href="buyer-dashboard.html" class="muted">Cancel</a>
+</div>
+<script>
+function post(){
+  auth.onAuthStateChanged(u=>{
+    db.collection("tasks").add({
+      title:document.getElementById("jt").value,
+      description:document.getElementById("jd").value,
+      budget:Number(document.getElementById("jb").value),
+      buyerId:u.uid, status:"open", createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    }).then(()=>location.href="buyer-dashboard.html");
+  });
+}
+</script></body></html>
 
