@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Home - BD Marketing</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-card" style="margin-top: 20px; width: 95%; background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(15, 23, 42, 0.9));">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="text-align: left;">
+                <p style="margin:0; font-size: 0.7em; opacity: 0.8;">মেইন ব্যালেন্স</p>
+                <h2 style="margin:0; color: var(--accent);" id="mainBal">৳ 0.00</h2>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin:0; font-size: 0.7em; opacity: 0.8;">পেন্ডিং ইনকাম</p>
+                <h3 style="margin:0; color: #fbbf24;" id="pendBal">৳ 0.00</h3>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 95%; margin-top: 20px; margin-bottom: 80px;">
+        <h4 style="margin-left: 10px; color: var(--accent);"><i class="fa fa-briefcase"></i> এভেইলেবল জবস (Available)</h4>
+        <div id="jobContainer">
+            <p style="text-align:center; opacity: 0.5; margin-top: 20px;">কাজ খোঁজা হচ্ছে...</p>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="seller-home.html" style="color: var(--accent);"><i class="fa fa-search"></i><br>কাজ খুঁজুন</a>
+        <a href="my-works.html"><i class="fa fa-history"></i><br>হিস্ট্রি</a>
+        <a href="withdraw.html"><i class="fa fa-wallet"></i><br>উইথড্র</a>
+        <a href="support.html"><i class="fa fa-headset"></i><br>সাপোর্ট</a>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // ইউজারের ব্যালেন্স লোড করা
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('mainBal').innerText = "৳ " + (data.balance || 0).toFixed(2);
+                    document.getElementById('pendBal').innerText = "৳ " + (data.pending || 0).toFixed(2);
+                    loadJobs();
+                }
+            } else { window.location.href = 'index.html'; }
+        });
+
+        // ফায়ারবেস থেকে সব অ্যাক্টিভ কাজ নিয়ে আসা
+        async function loadJobs() {
+            const q = query(collection(db, "jobs"), where("status", "==", "active"));
+            const querySnapshot = await getDocs(q);
+            const container = document.getElementById('jobContainer');
+            container.innerHTML = "";
+            
+            if (querySnapshot.empty) {
+                container.innerHTML = "<p style='text-align:center; opacity:0.6;'>বর্তমানে কোনো কাজ নেই।</p>";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const job = doc.data();
+                const div = document.createElement('div');
+                div.className = "glass-card";
+                div.style = "width:100%; padding:15px; margin-bottom:12px; text-align:left; box-sizing:border-box; margin-top:10px;";
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="margin:0; color:#fff;">${job.title}</h4>
+                            <p style="font-size:0.8em; color:var(--accent); margin:5px 0;">পেমেন্ট: ৳${job.pay.toFixed(2)}</p>
+                        </div>
+                        <button class="btn-primary" style="width:auto; padding:8px 15px; font-size:0.8em;" onclick="location.href='job-details.html?id=${doc.id}'">কাজটি দেখুন</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
