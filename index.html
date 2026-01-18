@@ -4,25 +4,46 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - BD Marketing</title><link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="glass-card">
-        <h2 style="color: var(--accent);">BD Marketing Pro</h2>
-        <p>লগইন করে কাজ শুরু করুন</p>
-        <input type="email" id="email" placeholder="ইমেইল" class="input-field">
-        <input type="password" id="pass" placeholder="পাসওয়ার্ড" class="input-field">
-        <button id="loginBtn" class="btn-primary">প্রবেশ করুন</button>
-        <p style="font-size: 0.9em; margin-top: 15px;">অ্যাকাউন্ট নেই? <a href="register.html" style="color:var(--accent)">রেজিস্ট্রেশন করুন</a></p>
+<body style="background: #0f172a; color: white;">
+    <div style="width: 90%; max-width: 400px; margin: 100px auto; padding: 25px; background: rgba(255,255,255,0.05); border-radius: 20px; text-align: center;">
+        <h2 style="color: #38bdf8;">লগইন করুন</h2>
+        <input type="email" id="logEmail" placeholder="ইমেইল" style="width: 100%; margin: 10px 0; padding: 12px; background: #1e293b; color: white; border-radius: 8px;">
+        <input type="password" id="logPass" placeholder="পাসওয়ার্ড" style="width: 100%; margin: 10px 0; padding: 12px; background: #1e293b; color: white; border-radius: 8px;">
+        <button id="logBtn" style="width: 100%; padding: 12px; background: #38bdf8; color: black; font-weight: bold; border-radius: 8px; cursor: pointer;">প্রবেশ করুন</button>
+        <p style="margin-top: 15px;">নতুন? <a href="register.html" style="color: #38bdf8;">অ্যাকাউন্ট খুলুন</a></p>
     </div>
+
     <script type="module">
-        import { auth } from './config.js';
-        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        document.getElementById('loginBtn').onclick = async () => {
-            const btn = document.getElementById('loginBtn');
-            btn.innerText = "অপেক্ষা করুন...";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logBtn').onclick = async () => {
+            const email = document.getElementById('logEmail').value.trim();
+            const pass = document.getElementById('logPass').value;
+            const btn = document.getElementById('logBtn');
+
+            if(!email || !pass) { alert("সব তথ্য দিন!"); return; }
+            btn.innerText = "লোডিং..."; btn.disabled = true;
+
             try {
-                await signInWithEmailAndPassword(auth, email.value, pass.value);
+                await signInWithEmailAndPassword(auth, email, pass);
                 window.location.href = 'dashboard.html';
-            } catch (e) { alert("ভুল ইমেইল বা পাসওয়ার্ড!"); btn.innerText = "প্রবেশ করুন"; }
+            } catch (error) {
+                alert("লগইন ব্যর্থ! সঠিক ইমেইল ও পাসওয়ার্ড দিন।");
+                btn.innerText = "প্রবেশ করুন"; btn.disabled = false;
+            }
         };
     </script>
 </body>
