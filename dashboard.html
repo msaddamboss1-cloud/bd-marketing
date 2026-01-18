@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding-top:100px;">
+    <div class="glass-card" style="margin: auto;">
+        <h3>লোড হচ্ছে...</h3>
+    </div>
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if(snap.exists()){
+                    const data = snap.data();
+                    if(data.status === "blocked") { alert("আপনার অ্যাকাউন্ট ব্লক করা হয়েছে!"); await auth.signOut(); window.location.href='index.html'; }
+                    else { window.location.href = data.role === 'buyer' ? 'buyer-home.html' : 'seller-home.html'; }
+                }
+            } else { window.location.href = 'index.html'; }
+        });
+    </script>
+</body>
+</html>
