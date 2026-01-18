@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BD Marketing</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-card">
+        <h2>নতুন অ্যাকাউন্ট</h2>
+        <input type="text" id="uName" placeholder="পুরো নাম" class="input-field">
+        <input type="email" id="uEmail" placeholder="ইমেইল" class="input-field">
+        <input type="password" id="uPass" placeholder="পাসওয়ার্ড" class="input-field">
+        <select id="uRole" class="input-field">
+            <option value="seller">আমি কাজ করব (Seller)</option>
+            <option value="buyer">আমি কাজ দেব (Buyer)</option>
+        </select>
+        <input type="text" id="uRef" placeholder="রেফার কোড (যদি থাকে)" class="input-field">
+        <button id="regBtn" class="btn-primary">অ্যাকাউন্ট খুলুন</button>
+        <p>আগেই অ্যাকাউন্ট আছে? <a href="index.html" style="color:var(--accent)">লগইন</a></p>
+    </div>
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        document.getElementById('regBtn').onclick = async () => {
+            try {
+                const res = await createUserWithEmailAndPassword(auth, uEmail.value, uPass.value);
+                await setDoc(doc(db, "users", res.user.uid), {
+                    name: uName.value, role: uRole.value, balance: 0, pending: 0, depositBalance: 0, status: "active", referBy: uRef.value || "none"
+                });
+                window.location.href = 'dashboard.html';
+            } catch (e) { alert("রেজিস্ট্রেশন ব্যর্থ: " + e.message); }
+        };
+    </script>
+</body>
+</html>
