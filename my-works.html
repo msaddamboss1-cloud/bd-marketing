@@ -1,0 +1,42 @@
+ <!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Works - BD Marketing</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-card" style="width: 95%;">
+        <h3>আমার কাজের তালিকা</h3>
+        <div id="workList">লোড হচ্ছে...</div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="seller-home.html">হোম</a>
+        <a href="my-works.html" class="active">হিস্ট্রি</a>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const q = query(collection(db, "submissions"), where("sellerUid", "==", user.uid));
+                const snap = await getDocs(q);
+                const container = document.getElementById('workList');
+                container.innerHTML = "";
+
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    container.innerHTML += `
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:10px; text-align:left; border-left: 4px solid ${data.status === 'approved' ? '#22c55e' : '#fbbf24'}">
+                            <p style="margin:0;"><b>${data.jobTitle}</b></p>
+                            <p style="margin:0; font-size:0.8em;">পেমেন্ট: ৳${data.pay} | স্ট্যাটাস: ${data.status}</p>
+                        </div>
+                    `;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
