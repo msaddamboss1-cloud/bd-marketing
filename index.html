@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BD Marketing</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-card">
+        <h2 style="color: var(--accent);">BD Marketing Pro</h2>
+        <p>লগইন করে কাজ শুরু করুন</p>
+        <input type="email" id="email" placeholder="ইমেইল" class="input-field">
+        <input type="password" id="pass" placeholder="পাসওয়ার্ড" class="input-field">
+        <button id="loginBtn" class="btn-primary">প্রবেশ করুন</button>
+        <p style="font-size: 0.9em; margin-top: 15px;">অ্যাকাউন্ট নেই? <a href="register.html" style="color:var(--accent)">রেজিস্ট্রেশন করুন</a></p>
+    </div>
+    <script type="module">
+        import { auth } from './config.js';
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        document.getElementById('loginBtn').onclick = async () => {
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "অপেক্ষা করুন...";
+            try {
+                await signInWithEmailAndPassword(auth, email.value, pass.value);
+                window.location.href = 'dashboard.html';
+            } catch (e) { alert("ভুল ইমেইল বা পাসওয়ার্ড!"); btn.innerText = "প্রবেশ করুন"; }
+        };
+    </script>
+</body>
+</html>
