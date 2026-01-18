@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit - BD Marketing</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-card" style="width: 95%; max-width: 400px; margin-top: 20px;">
+        <h3 style="color: var(--accent);">টাকা জমা দিন</h3>
+        <p style="font-size: 0.8em; opacity: 0.8;">নিচের নম্বরে Send Money করুন</p>
+        
+        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: left;">
+            <p style="margin: 5px 0;">💰 বিকাশ (Personal): <b>01725780575</b></p>
+            <p style="margin: 5px 0;">💰 নগদ (Personal): <b>01763584939</b></p>
+        </div>
+
+        <div id="depositForm">
+            <input type="number" id="amount" placeholder="টাকার পরিমাণ (৳)" class="input-field">
+            <select id="method" class="input-field">
+                <option value="bkash">Bkash</option>
+                <option value="nagad">Nagad</option>
+            </select>
+            <input type="text" id="txid" placeholder="ট্রানজেকশন আইডি (TxID)" class="input-field">
+            
+            <button id="submitDep" class="btn-primary">সাবমিট করুন</button>
+        </div>
+
+        <p style="font-size: 0.75em; color: #fbbf24; margin-top: 15px;">
+            * ভুল TxID দিলে বা টাকা না পাঠিয়ে সাবমিট করলে অ্যাকাউন্ট ব্লক হতে পারে। এডমিন চেক করে ব্যালেন্স যুক্ত করে দিবে।
+        </p>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        document.getElementById('submitDep').onclick = async () => {
+            const amt = document.getElementById('amount').value;
+            const tid = document.getElementById('txid').value;
+            const mtd = document.getElementById('method').value;
+
+            if(!amt || !tid) { alert("সব তথ্য পূরণ করুন!"); return; }
+
+            try {
+                await addDoc(collection(db, "deposit_requests"), {
+                    uid: auth.currentUser.uid,
+                    email: auth.currentUser.email,
+                    amount: Number(amt),
+                    txid: tid,
+                    method: mtd,
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+                alert("আপনার রিকোয়েস্ট পাঠানো হয়েছে। এডমিন চেক করার জন্য অপেক্ষা করুন।");
+                window.location.href = 'buyer-home.html';
+            } catch (e) { alert("ত্রুটি হয়েছে! আবার চেষ্টা করুন।"); }
+        };
+    </script>
+</body>
+</html>
