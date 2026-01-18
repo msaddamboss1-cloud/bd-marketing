@@ -4,66 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting... - BD Marketing</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body style="background:#0f172a; color:white; display:flex; justify-content:center; align-items:center; height:100vh;">
-
-    <div class="glass-card">
-        <div class="loader" style="border: 4px solid #f3f3f3; border-top: 4px solid #38bdf8; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: auto;"></div>
-        <p style="margin-top: 15px;">আপনার অ্যাকাউন্ট চেক করা হচ্ছে...</p>
-    </div>
-
     <style>
+        body { background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #38bdf8; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <div class="loader" style="margin: 0 auto 15px;"></div>
+        <p>অপেক্ষা করুন, আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...</p>
+    </div>
 
     <script type="module">
-        import { auth, db } from './config.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+        // আপনার আসল কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ইউজার লগইন অবস্থায় আছে কি না চেক করা
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // ফায়ারবেস ডাটাবেস থেকে ইউজারের তথ্য আনা হচ্ছে
+                    // ডাটাবেস থেকে ইউজারের রোল (Role) খুঁজে বের করা
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     
                     if (userDoc.exists()) {
-                        const userData = userDoc.data();
-
-                        // ১. ইউজার যদি ব্লক থাকে
-                        if (userData.status === "blocked") {
-                            alert("দুঃখিত, আপনার অ্যাকাউন্টটি বর্তমানে ব্লক করা আছে। সাহায্যের জন্য সাপোর্টে যোগাযোগ করুন।");
-                            await auth.signOut();
-                            window.location.href = 'index.html';
-                            return;
-                        }
-
-                        // ২. ইউজার যদি 'buyer' বা বায়ার হয়
-                        if (userData.role === "buyer") {
+                        const role = userDoc.data().role;
+                        
+                        // রোল অনুযায়ী রিডাইরেক্ট
+                        if (role === 'buyer') {
                             window.location.href = 'buyer-home.html';
-                        } 
-                        // ৩. ইউজার যদি 'seller' বা সেলার হয়
-                        else if (userData.role === "seller") {
+                        } else if (role === 'seller') {
                             window.location.href = 'seller-home.html';
-                        } 
-                        // ৪. যদি কোনো রোল খুঁজে না পাওয়া যায়
-                        else {
-                            alert("অ্যাকাউন্ট টাইপ পাওয়া যায়নি। পুনরায় রেজিস্ট্রেশন করুন।");
-                            window.location.href = 'register.html';
+                        } else {
+                            alert("ইউজার রোল খুঁজে পাওয়া যায়নি!");
+                            window.location.href = 'index.html';
                         }
-
                     } else {
-                        // যদি ডাটাবেসে ইউজারের কোনো ডকুমেন্টই না থাকে
-                        console.log("No such user document!");
-                        window.location.href = 'register.html';
+                        alert("ইউজার প্রোফাইল ডাটাবেসে নেই!");
+                        window.location.href = 'index.html';
                     }
                 } catch (error) {
-                    console.error("Error fetching user role:", error);
-                    alert("সার্ভার সমস্যা! পেজটি রিফ্রেশ দিন।");
+                    console.error("Error:", error);
+                    window.location.href = 'index.html';
                 }
             } else {
-                // যদি ইউজার লগইন করা না থাকে
+                // লগইন করা না থাকলে লগইন পেজে পাঠিয়ে দাও
                 window.location.href = 'index.html';
             }
         });
