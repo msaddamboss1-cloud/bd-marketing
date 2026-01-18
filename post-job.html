@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Job - BD Marketing</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-card" style="width: 95%; max-width: 450px; margin-top: 20px;">
+        <h3>নতুন কাজ পোস্ট করুন</h3>
+        <p style="font-size: 0.8em; color: #fbbf24;">*প্রতিটি কাজের পেমেন্ট আপনার ডিপোজিট ব্যালেন্স থেকে কাটা হবে।</p>
+        
+        <input type="text" id="jTitle" placeholder="কাজের শিরোনাম (যেমন: Facebook Like)" class="input-field">
+        <textarea id="jDesc" placeholder="কাজের বিস্তারিত বিবরণ (কী করতে হবে)" class="input-field" style="height: 100px;"></textarea>
+        <textarea id="jProof" placeholder="প্রমাণ হিসেবে কী জমা দিতে হবে?" class="input-field" style="height: 80px;"></textarea>
+        <input type="number" id="jPay" placeholder="প্রতি কাজের জন্য পেমেন্ট (৳)" class="input-field">
+        <input type="number" id="jLimit" placeholder="কতজন মানুষ কাজটি করতে পারবে?" class="input-field">
+        
+        <button id="postBtn" class="btn-primary">কাজটি লাইভ করুন</button>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { doc, getDoc, collection, addDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        document.getElementById('postBtn').onclick = async () => {
+            const title = document.getElementById('jTitle').value;
+            const desc = document.getElementById('jDesc').value;
+            const proof = document.getElementById('jProof').value;
+            const pay = Number(document.getElementById('jPay').value);
+            const limit = Number(document.getElementById('jLimit').value);
+            const totalCost = pay * limit;
+
+            if(!title || !desc || pay <= 0) { alert("সব ঘর সঠিকভাবে পূরণ করুন!"); return; }
+
+            const userRef = doc(db, "users", auth.currentUser.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if(userSnap.data().depositBalance < totalCost) {
+                alert("আপনার পর্যাপ্ত ডিপোজিট ব্যালেন্স নেই! প্রয়োজন: ৳" + totalCost);
+                return;
+            }
+
+            try {
+                // ডিপোজিট ব্যালেন্স থেকে টাকা কেটে নেওয়া
+                await updateDoc(userRef, { depositBalance: increment(-totalCost) });
+                
+                // কাজ পাবলিশ করা
+                await addDoc(collection(db, "jobs"), {
+                    buyerUid: auth.currentUser.uid,
+                    title: title,
+                    desc: desc,
+                    proofReq: proof,
+                    pay: pay,
+                    limit: limit,
+                    completed: 0,
+                    status: "active",
+                    timestamp: serverTimestamp()
+                });
+
+                alert("কাজটি সফলভাবে পোস্ট করা হয়েছে!");
+                window.location.href = 'buyer-home.html';
+            } catch (e) { alert("ত্রুটি হয়েছে! আবার চেষ্টা করুন।"); }
+        };
+    </script>
+</body>
+</html>
