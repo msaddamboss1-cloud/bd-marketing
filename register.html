@@ -1,35 +1,94 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - BD Marketing</title><link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BD Marketing</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="glass-card">
-        <h2>নতুন অ্যাকাউন্ট</h2>
-        <input type="text" id="uName" placeholder="পুরো নাম" class="input-field">
-        <input type="email" id="uEmail" placeholder="ইমেইল" class="input-field">
-        <input type="password" id="uPass" placeholder="পাসওয়ার্ড" class="input-field">
-        <select id="uRole" class="input-field">
-            <option value="seller">আমি কাজ করব (Seller)</option>
-            <option value="buyer">আমি কাজ দেব (Buyer)</option>
-        </select>
-        <input type="text" id="uRef" placeholder="রেফার কোড (যদি থাকে)" class="input-field">
-        <button id="regBtn" class="btn-primary">অ্যাকাউন্ট খুলুন</button>
-        <p>আগেই অ্যাকাউন্ট আছে? <a href="index.html" style="color:var(--accent)">লগইন</a></p>
+    <div class="glass-card" style="width: 90%; max-width: 400px;">
+        <h2 style="color: var(--accent);">নতুন অ্যাকাউন্ট</h2>
+        <p>সঠিক তথ্য দিয়ে ফর্মটি পূরণ করুন</p>
+        
+        <div id="regForm">
+            <input type="text" id="regName" placeholder="আপনার নাম" class="input-field">
+            <input type="email" id="regEmail" placeholder="আপনার ইমেইল" class="input-field">
+            <input type="password" id="regPass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ ডিজিট)" class="input-field">
+            
+            <select id="regRole" class="input-field">
+                <option value="seller">আমি কাজ করতে চাই (Seller)</option>
+                <option value="buyer">আমি কাজ দিতে চাই (Buyer)</option>
+            </select>
+            
+            <button id="regBtn" class="btn-primary">রেজিস্ট্রেশন করুন</button>
+        </div>
+        
+        <p style="margin-top: 15px; font-size: 0.9em;">
+            অ্যাকাউন্ট আছে? <a href="index.html" style="color: var(--accent);">লগইন করুন</a>
+        </p>
     </div>
+
     <script type="module">
         import { auth, db } from './config.js';
         import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-        document.getElementById('regBtn').onclick = async () => {
+        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const regBtn = document.getElementById('regBtn');
+
+        regBtn.onclick = async () => {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const role = document.getElementById('regRole').value;
+
+            // ভ্যালিডেশন চেক
+            if (!name || !email || !pass) {
+                alert("দয়া করে সব ঘর পূরণ করুন!");
+                return;
+            }
+            if (pass.length < 6) {
+                alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+                return;
+            }
+
+            // বাটন ডিজেবল করে এনিমেশন দেওয়া
+            regBtn.innerText = "প্রসেসিং হচ্ছে...";
+            regBtn.disabled = true;
+            regBtn.style.opacity = "0.7";
+
             try {
-                const res = await createUserWithEmailAndPassword(auth, uEmail.value, uPass.value);
-                await setDoc(doc(db, "users", res.user.uid), {
-                    name: uName.value, role: uRole.value, balance: 0, pending: 0, depositBalance: 0, status: "active", referBy: uRef.value || "none"
+                // ১. ফায়ারবেস অথেন্টিকেশনে ইউজার তৈরি
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                // ২. ফায়ারস্টোর ডাটাবেসে ইউজারের তথ্য জমা রাখা
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    role: role,
+                    balance: 0,
+                    depositBalance: 0,
+                    status: "active",
+                    createdAt: serverTimestamp()
                 });
+
+                alert("রেজিস্ট্রেশন সফল হয়েছে!");
                 window.location.href = 'dashboard.html';
-            } catch (e) { alert("রেজিস্ট্রেশন ব্যর্থ: " + e.message); }
+
+            } catch (error) {
+                regBtn.innerText = "রেজিস্ট্রেশন করুন";
+                regBtn.disabled = false;
+                regBtn.style.opacity = "1";
+
+                if (error.code === 'auth/email-already-in-use') {
+                    alert("এই ইমেইলটি দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা হয়েছে!");
+                } else if (error.code === 'auth/invalid-email') {
+                    alert("ইমেইল অ্যাড্রেসটি সঠিক নয়!");
+                } else {
+                    alert("ভুল হয়েছে: " + error.message);
+                }
+            }
         };
     </script>
 </body>
