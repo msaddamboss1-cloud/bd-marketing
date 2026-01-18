@@ -3,85 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration - BD Marketing</title>
+    <title>Register - BD Marketing</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="glass-card" style="width: 90%; max-width: 400px; margin: auto; margin-top: 50px;">
-        <h2 style="color: var(--accent);">অ্যাকাউন্ট তৈরি করুন</h2>
-        <div id="form-container">
-            <input type="text" id="regName" placeholder="আপনার নাম" class="input-field">
-            <input type="email" id="regEmail" placeholder="আপনার ইমেইল" class="input-field">
-            <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬টি সংখ্যা)" class="input-field">
-            <select id="regRole" class="input-field">
-                <option value="seller">আমি কাজ করব (Seller)</option>
-                <option value="buyer">আমি কাজ দিব (Buyer)</option>
-            </select>
-            <button id="regBtn" class="btn-primary" style="cursor: pointer; position: relative; z-index: 100;">সাবমিট করুন</button>
-        </div>
-        <p style="margin-top: 15px;">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="index.html" style="color: var(--accent);">লগইন</a></p>
+<body style="background: #0f172a; color: white; font-family: sans-serif;">
+    <div class="glass-card" style="width: 90%; max-width: 400px; margin: 50px auto; padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+        <h2 style="color: #38bdf8;">নতুন অ্যাকাউন্ট</h2>
+        <input type="text" id="regName" placeholder="আপনার নাম" class="input-field" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white;">
+        <input type="email" id="regEmail" placeholder="আপনার ইমেইল" class="input-field" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white;">
+        <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬টি সংখ্যা)" class="input-field" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white;">
+        <select id="regRole" class="input-field" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white;">
+            <option value="seller">আমি কাজ করব (Seller)</option>
+            <option value="buyer">আমি কাজ দিব (Buyer)</option>
+        </select>
+        <button id="regBtn" style="width: 100%; padding: 12px; background: #38bdf8; border: none; cursor: pointer; color: black; font-weight: bold; margin-top: 10px; border-radius: 8px; font-size: 16px;">সাবমিট করুন</button>
+        <p style="margin-top: 15px;">অ্যাকাউন্ট আছে? <a href="index.html" style="color: #38bdf8; text-decoration: none;">লগইন করুন</a></p>
     </div>
 
     <script type="module">
-        import { auth, db } from './config.js';
-        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // বাটন ক্লিক ফাংশন
-        const registerUser = async () => {
+        // আপনার আসল কনফিগারেশন সরাসরি এখানে
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs76m-84F4S3A9O4J7_G9R7K6L5M4N3P2", 
+            authDomain: "marketing-bd-01.firebaseapp.com",
+            projectId: "marketing-bd-01",
+            storageBucket: "marketing-bd-01.appspot.com",
+            messagingSenderId: "384756291034",
+            appId: "1:384756291034:web:8c7b6a5d4e3f2g1h"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        document.getElementById('regBtn').onclick = async () => {
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const pass = document.getElementById('regPass').value;
             const role = document.getElementById('regRole').value;
             const btn = document.getElementById('regBtn');
 
-            if (!name || !email || !pass) {
+            if(!name || !email || !pass) {
                 alert("সবগুলো ঘর পূরণ করুন!");
                 return;
             }
-
-            if (pass.length < 6) {
+            if(pass.length < 6) {
                 alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
                 return;
             }
 
+            btn.innerText = "প্রসেসিং...";
+            btn.disabled = true;
+            
             try {
-                btn.innerText = "লোডিং...";
-                btn.disabled = true;
-
-                // ১. ইউজার ক্রিয়েট
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-
-                // ২. ডাটাবেসে সেভ করা
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    email: email,
-                    role: role,
-                    balance: 0,
-                    depositBalance: 0,
-                    status: "active",
-                    createdAt: serverTimestamp()
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                await setDoc(doc(db, "users", cred.user.uid), {
+                    name, email, role, balance: 0, depositBalance: 0, status: "active", createdAt: serverTimestamp()
                 });
-
                 alert("রেজিস্ট্রেশন সফল হয়েছে!");
                 window.location.href = 'dashboard.html';
-
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                console.error(err);
+                alert("সমস্যা: " + err.message);
                 btn.innerText = "সাবমিট করুন";
                 btn.disabled = false;
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    alert("এই ইমেইলটি আগে ব্যবহার করা হয়েছে!");
-                } else {
-                    alert("সমস্যা হয়েছে: " + error.message);
-                }
             }
         };
-
-        // বাটনে ক্লিক লিসেনার যুক্ত করা
-        document.getElementById('regBtn').addEventListener('click', registerUser);
     </script>
 </body>
 </html>
