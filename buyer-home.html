@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - BD Marketing</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-card" style="margin-top: 20px; width: 95%;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="userName">...</h3>
+            <div style="text-align: right;">
+                <p style="margin:0; font-size: 0.7em; color: var(--accent);">ডিপোজিট ব্যালেন্স</p>
+                <h2 style="margin:0;" id="userBalance">৳ 0.00</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="margin-top: 15px; width: 95%;">
+        <h4>কাজ পরিচালনা</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="btn-primary" onclick="location.href='post-job.html'"><i class="fa fa-plus"></i> কাজ দিন</button>
+            <button class="btn-primary" style="background:#1e293b; color:white;" onclick="location.href='deposit.html'"><i class="fa fa-wallet"></i> ডিপোজিট</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="buyer-home.html" class="active"><i class="fa fa-home"></i><br>হোম</a>
+        <a href="my-jobs.html"><i class="fa fa-list"></i><br>আমার কাজ</a>
+        <a href="support.html"><i class="fa fa-headset"></i><br>সাপোর্ট</a>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('userName').innerText = data.name;
+                    document.getElementById('userBalance').innerText = "৳ " + (data.depositBalance || 0).toFixed(2);
+                }
+            } else { window.location.href = 'index.html'; }
+        });
+    </script>
+</body>
+</html>
