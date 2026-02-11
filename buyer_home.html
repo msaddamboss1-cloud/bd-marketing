@@ -3,93 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD Marketing | Premium Dashboard</title>
+    <title>Saddam Premium Dashboard | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #020617; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-        .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .nav-active { color: #3b82f6; position: relative; }
-        .nav-active::after { content: ''; position: absolute; bottom: -5px; width: 5px; height: 5px; background: #3b82f6; border-radius: 50%; }
+        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .bottom-nav { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(59, 130, 246, 0.2); }
+        .active-dot { width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px #3b82f6; margin-top: 2px; }
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
-<body class="pb-28">
+<body class="pb-32">
 
-    <header class="p-6 bg-slate-900/80 rounded-b-[40px] border-b border-blue-500/10 shadow-2xl">
-        <div class="flex justify-between items-center">
+    <header class="p-6 pt-10 bg-gradient-to-b from-slate-900 to-slate-950 rounded-b-[50px] border-b border-blue-500/10 shadow-2xl">
+        <div class="flex justify-between items-start">
             <div>
-                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent italic tracking-tighter">BD-MARKETING.COM</h1>
-                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[3px] mt-1">Trust & Quality Since 2025</p>
+                <h1 class="text-3xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent italic tracking-tighter">BD-MARKETING</h1>
+                <div class="flex items-center gap-2 mt-2 bg-slate-800/50 w-fit px-3 py-1 rounded-full border border-blue-500/20">
+                    <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Admin: Saddam</p>
+                    <i class="fas fa-check-circle text-[9px] text-blue-500"></i>
+                </div>
             </div>
-            <div onclick="location.href='profile.html'" class="h-11 w-11 glass rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 active:scale-90 transition">
+            <div onclick="location.href='profile.html'" class="h-12 w-12 glass rounded-2xl flex items-center justify-center text-blue-400 shadow-lg active:scale-90 transition">
                 <i class="fas fa-user-shield text-xl"></i>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mt-8">
-            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-5 rounded-3xl shadow-xl relative overflow-hidden">
-                <p class="text-[10px] text-blue-100 font-bold opacity-70 italic">মেইন ব্যালেন্স</p>
-                <h2 class="text-2xl font-black mt-1">৳ <span id="mainBalance">0.00</span></h2>
-                <i class="fas fa-coins absolute -right-2 -bottom-2 text-4xl text-white opacity-10"></i>
+        <div class="grid grid-cols-2 gap-4 mt-10">
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-6 rounded-[35px] shadow-xl relative overflow-hidden group">
+                <p class="text-[10px] text-blue-100 font-black opacity-60 uppercase italic">Main Balance</p>
+                <h2 class="text-2xl font-black mt-1 tracking-tight text-white">৳ <span id="mainBalance">0.00</span></h2>
+                <i class="fas fa-wallet absolute -right-3 -bottom-3 text-5xl text-white/10 group-hover:scale-110 transition"></i>
             </div>
-            <div class="glass p-5 rounded-3xl relative overflow-hidden">
-                <p class="text-[10px] text-slate-400 font-bold opacity-70 italic">পেন্ডিং ব্যালেন্স</p>
-                <h2 class="text-2xl font-black mt-1 text-orange-400">৳ <span id="pendingBalance">0.00</span></h2>
-                <i class="fas fa-clock-rotate-left absolute -right-2 -bottom-2 text-4xl text-white opacity-5"></i>
+            <div class="glass p-6 rounded-[35px] relative overflow-hidden group">
+                <p class="text-[10px] text-slate-400 font-black opacity-60 uppercase italic">Pending</p>
+                <h2 class="text-2xl font-black mt-1 text-orange-400 tracking-tight">৳ <span id="pendingBalance">0.00</span></h2>
+                <i class="fas fa-clock-rotate-left absolute -right-3 -bottom-3 text-5xl text-white/5 group-hover:scale-110 transition"></i>
             </div>
         </div>
     </header>
 
-    <div class="px-6 grid grid-cols-4 gap-3 mt-6">
-        <div onclick="location.href='withdraw.html'" class="glass p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-90 transition">
-            <i class="fas fa-wallet text-green-400"></i>
-            <span class="text-[9px] font-bold">উইথড্র</span>
-        </div>
-        <div onclick="location.href='history.html'" class="glass p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-90 transition">
-            <i class="fas fa-list-check text-blue-400"></i>
-            <span class="text-[9px] font-bold">হিস্ট্রি</span>
-        </div>
-        <div onclick="location.href='notice.html'" class="glass p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-90 transition">
-            <i class="fas fa-bullhorn text-orange-400"></i>
-            <span class="text-[9px] font-bold">নোটিশ</span>
-        </div>
-        <div onclick="location.href='help.html'" class="glass p-3 rounded-2xl flex flex-col items-center gap-1 active:scale-90 transition">
-            <i class="fas fa-headset text-red-400"></i>
-            <span class="text-[9px] font-bold">হেল্প</span>
-        </div>
-    </div>
-
-    <main class="px-6 mt-10">
-        <div class="flex items-center justify-between mb-5">
+    <main class="px-6 mt-8">
+        <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold flex items-center gap-2">
-                <i class="fas fa-bolt text-yellow-400 text-sm"></i> এভেলেবেল কাজসমূহ
+                <span class="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                লাইভ মাইক্রোজবস
             </h3>
-            <span class="text-[10px] text-blue-400 font-bold bg-blue-500/10 px-2 py-1 rounded">LIVE FEED</span>
+            <button onclick="location.reload()" class="text-[10px] text-slate-500 hover:text-blue-400 transition font-bold">
+                <i class="fas fa-sync-alt mr-1"></i> REFRESH
+            </button>
         </div>
 
         <div id="taskList" class="space-y-4">
-            <div class="py-10 text-center opacity-50">
-                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-                <p class="text-xs">সার্ভার থেকে কাজ লোড হচ্ছে...</p>
+            <div class="py-20 text-center opacity-50">
+                <i class="fas fa-spinner fa-spin text-3xl text-blue-500 mb-4"></i>
+                <p class="text-sm font-bold">কাজের ডাটাবেস চেক করা হচ্ছে...</p>
             </div>
         </div>
     </main>
 
-    <div class="fixed bottom-0 left-0 right-0 p-4 z-50">
-        <div class="glass max-w-md mx-auto rounded-[30px] px-10 py-4 flex justify-between items-center shadow-2xl border border-white/10">
-            <button onclick="location.href='buyer_home.html'" class="nav-active flex flex-col items-center gap-1">
+    <div class="fixed bottom-0 left-0 right-0 p-5 z-50">
+        <div class="bottom-nav max-w-lg mx-auto rounded-[35px] px-8 py-4 flex justify-around items-center shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+            
+            <button onclick="location.href='buyer_home.html'" class="flex flex-col items-center gap-1 text-blue-500">
                 <i class="fas fa-house-chimney text-xl"></i>
-                <span class="text-[8px] font-black uppercase tracking-tighter">Home</span>
+                <span class="text-[9px] font-black uppercase">Home</span>
+                <div class="active-dot"></div>
             </button>
-            <button onclick="location.href='profile.html'" class="text-slate-500 flex flex-col items-center gap-1">
-                <i class="fas fa-user text-xl"></i>
-                <span class="text-[8px] font-black uppercase tracking-tighter">Profile</span>
+
+            <button onclick="location.href='withdraw.html'" class="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-400 transition">
+                <i class="fas fa-hand-holding-dollar text-xl"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Withdraw</span>
             </button>
-            <button id="logoutBtn" class="text-red-500/70 flex flex-col items-center gap-1">
+
+            <button onclick="location.href='history.html'" class="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-400 transition">
+                <i class="fas fa-history text-xl"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">History</span>
+            </button>
+
+            <button onclick="location.href='notice.html'" class="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-400 transition">
+                <i class="fas fa-bullhorn text-xl"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Notice</span>
+            </button>
+
+            <button id="logoutBtn" class="flex flex-col items-center gap-1 text-red-500/60">
                 <i class="fas fa-power-off text-xl"></i>
-                <span class="text-[8px] font-black uppercase tracking-tighter">Exit</span>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Exit</span>
             </button>
+
         </div>
     </div>
 
@@ -98,7 +101,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Configuration (Saddam's Project)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
@@ -110,52 +113,50 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ১০% পার্মানেন্ট কমিশন লজিক (আপনি চাইলে এখান থেকে ১০ পরিবর্তন করতে পারেন)
-        const ADMIN_COMMISSION = 10; 
+        // ১০% ফিক্সড কমিশন (আপনি কোডে পরিবর্তন করতে চাইলে এখান থেকে করবেন)
+        const COMMISSION = 10; 
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // ১. ইউজারের ব্যালেন্স ট্র্যাক করা
-                onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
+                // ১. ব্যালেন্স রিয়েল-টাইম আপডেট
+                onSnapshot(doc(db, "users", user.uid), (doc) => {
+                    if (doc.exists()) {
+                        const data = doc.data();
                         document.getElementById('mainBalance').innerText = (data.balance || 0).toFixed(2);
                         document.getElementById('pendingBalance').innerText = (data.pending_balance || 0).toFixed(2);
                     }
                 });
 
-                // ২. লাইভ জব লোড করা
-                const jobsQuery = query(collection(db, "jobs"), where("status", "==", "active"));
-                onSnapshot(jobsQuery, (snapshot) => {
+                // ২. লাইভ জব লোডার
+                const q = query(collection(db, "jobs"), where("status", "==", "active"));
+                onSnapshot(q, (snapshot) => {
                     const taskList = document.getElementById('taskList');
                     taskList.innerHTML = "";
-
+                    
                     if (snapshot.empty) {
-                        taskList.innerHTML = `<div class="p-10 text-center glass rounded-3xl opacity-40">
-                            <i class="fas fa-folder-open text-3xl mb-2"></i>
-                            <p class="text-xs font-bold">বর্তমানে কোনো কাজ নেই</p>
-                        </div>`;
+                        taskList.innerHTML = `<div class="p-12 text-center glass rounded-[35px] opacity-50 border-dashed border-white/10"><i class="fas fa-search text-3xl mb-3"></i><p class="text-xs font-bold">বর্তমানে কোনো কাজ নেই!</p></div>`;
                         return;
                     }
 
                     snapshot.forEach((jobDoc) => {
                         const job = jobDoc.data();
-                        
-                        // ১০% কমিশন কাটার পর বায়ার যা দেখবে
-                        const displayPrice = job.original_price - (job.original_price * ADMIN_COMMISSION / 100);
+                        // সেলারের দেওয়া টাকা থেকে ১০% কমিশন বাদ দিয়ে বায়ারকে দেখানো
+                        const buyerPrice = job.original_price - (job.original_price * COMMISSION / 100);
 
                         taskList.innerHTML += `
-                            <div onclick="location.href='task_details.html?id=${jobDoc.id}'" class="glass p-5 rounded-[25px] flex items-center justify-between border-l-4 border-l-blue-500 active:scale-[0.98] transition">
-                                <div class="flex items-center gap-4">
-                                    <div class="h-10 w-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400">
-                                        <i class="fas fa-tasks text-lg"></i>
+                            <div onclick="location.href='task_details.html?id=${jobDoc.id}'" class="glass p-5 rounded-[30px] flex items-center justify-between border-l-4 border-l-blue-500 active:scale-95 transition-all duration-300">
+                                <div class="flex items-center gap-5">
+                                    <div class="h-12 w-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400">
+                                        <i class="fas fa-check-to-slot text-xl"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-slate-200">${job.title}</h4>
-                                        <p class="text-[10px] text-green-500 font-bold">Reward: ৳ ${displayPrice.toFixed(2)}</p>
+                                        <h4 class="text-[14px] font-bold text-slate-100">${job.title}</h4>
+                                        <p class="text-[11px] text-green-500 font-black mt-0.5 tracking-tighter italic">প্রাপ্য: ৳ ${buyerPrice.toFixed(2)}</p>
                                     </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-slate-700 text-xs"></i>
+                                <div class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center">
+                                    <i class="fas fa-chevron-right text-[10px] text-slate-500"></i>
+                                </div>
                             </div>`;
                     });
                 });
@@ -164,13 +165,13 @@
             }
         });
 
-        // Logout Function
+        // Logout
         document.getElementById('logoutBtn').onclick = () => {
-            if(confirm("আপনি কি লগআউট করতে চান?")) {
+            if(confirm("লগআউট করতে চান?")) {
                 signOut(auth).then(() => { window.location.href = "index.html"; });
             }
         };
     </script>
 </body>
-  </html>
+    </html>
     
