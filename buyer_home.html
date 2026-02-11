@@ -3,104 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saddam Premium | BD Marketing</title>
+    <title>Premium Saddam | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #0b0f1a; color: #f8fafc; overflow-x: hidden; }
-        .glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: #0f172a; transition: 0.4s ease; z-index: 1000; border-right: 1px solid rgba(59, 130, 246, 0.2); }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #070a13; color: #f8fafc; overflow-x: hidden; }
+        .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: #0f172a; transition: 0.4s ease; z-index: 1000; border-right: 1px solid rgba(59, 130, 246, 0.1); }
         .sidebar.active { left: 0; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; }
         .overlay.active { display: block; }
-        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; border-radius: 12px; margin: 5px 15px; transition: 0.3s; cursor: pointer; font-size: 14px; }
-        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        /* লোডিং স্ক্রিন */
-        #loading-screen { position: fixed; inset: 0; background: #0b0f1a; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        #loading-screen { position: fixed; inset: 0; background: #070a13; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body class="pb-28">
 
     <div id="loading-screen">
-        <i class="fas fa-circle-notch fa-spin text-3xl text-blue-500 mb-4"></i>
-        <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Checking Login...</p>
+        <div class="h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Connecting to Server...</p>
     </div>
 
     <div id="overlay" class="overlay"></div>
     <div id="sidebar" class="sidebar">
         <div class="p-8 border-b border-white/5">
             <h1 class="text-xl font-black text-blue-500 italic">BD-MARKETING</h1>
-            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase">Control Panel</p>
+            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Admin: Saddam <i class="fas fa-check-circle"></i></p>
         </div>
-        <div class="flex flex-col gap-1 mt-4">
-            <div onclick="location.href='profile.html'" class="nav-item"><i class="fas fa-user"></i> প্রোফাইল</div>
-            <div onclick="location.href='wallet.html'" class="nav-item"><i class="fas fa-wallet"></i> ওয়ালেট</div>
-            <div onclick="location.href='history.html'" class="nav-item"><i class="fas fa-clock-rotate-left"></i> কাজের হিস্ট্রি</div>
-            <div onclick="location.href='notice.html'" class="nav-item"><i class="fas fa-bell"></i> নোটিশ বোর্ড</div>
-            <div onclick="location.href='help.html'" class="nav-item"><i class="fas fa-headset"></i> সাপোর্ট</div>
-            <div class="mt-8 border-t border-white/5 pt-4">
-                <button onclick="handleLogout()" class="nav-item text-red-400 w-full"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
+        <div class="p-4 space-y-2">
+            <div onclick="location.href='profile.html'" class="flex items-center gap-3 p-4 hover:bg-white/5 rounded-2xl cursor-pointer"><i class="fas fa-user-circle text-blue-400"></i> প্রোফাইল</div>
+            <div onclick="location.href='withdraw.html'" class="flex items-center gap-3 p-4 hover:bg-white/5 rounded-2xl cursor-pointer"><i class="fas fa-wallet text-green-400"></i> উইথড্র</div>
+            <div onclick="location.href='history.html'" class="flex items-center gap-3 p-4 hover:bg-white/5 rounded-2xl cursor-pointer"><i class="fas fa-history text-orange-400"></i> হিস্ট্রি</div>
+            <div class="pt-4 border-t border-white/5">
+                <button onclick="logoutAction()" class="flex items-center gap-3 p-4 w-full text-red-500 hover:bg-red-500/5 rounded-2xl"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
             </div>
         </div>
     </div>
 
-    <header class="p-5 pt-10 bg-slate-900/60 rounded-b-[40px] border-b border-blue-500/10">
+    <header class="p-6 pt-10 bg-slate-900/40 rounded-b-[40px] border-b border-white/5 shadow-2xl">
         <div class="flex justify-between items-center">
-            <button id="menuBtn" class="h-10 w-10 glass rounded-xl flex items-center justify-center text-blue-400">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button id="menuBtn" class="h-10 w-10 glass rounded-xl flex items-center justify-center text-blue-400"><i class="fas fa-bars-staggered"></i></button>
             <div class="text-center">
-                <h1 class="text-lg font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent italic">BD-MARKETING</h1>
-                <div class="flex items-center gap-1 justify-center mt-0.5">
-                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Admin: Saddam</span>
-                    <i class="fas fa-check-circle text-[8px] text-blue-500"></i>
-                </div>
+                <h1 class="text-lg font-black italic tracking-tighter">BD-MARKETING</h1>
+                <p class="text-[8px] font-bold text-blue-500 uppercase tracking-widest mt-0.5">Saddam's Project</p>
             </div>
-            <div onclick="location.href='profile.html'" class="h-10 w-10 glass rounded-xl flex items-center justify-center text-blue-400">
-                <i class="fas fa-user-circle"></i>
-            </div>
+            <div onclick="location.href='profile.html'" class="h-10 w-10 glass rounded-xl flex items-center justify-center text-blue-400"><i class="fas fa-user-shield"></i></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mt-8">
-            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-4 rounded-2xl shadow-lg relative overflow-hidden">
-                <p class="text-[9px] text-blue-100 font-bold opacity-60 uppercase">Main Balance</p>
-                <h2 class="text-xl font-black mt-0.5">৳ <span id="mainBalance">0.00</span></h2>
-                <i class="fas fa-money-bill-wave absolute -right-2 -bottom-2 text-3xl text-white/10"></i>
+        <div class="grid grid-cols-2 gap-4 mt-8">
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-5 rounded-[25px] shadow-xl relative overflow-hidden">
+                <p class="text-[9px] text-blue-100 font-bold opacity-60 uppercase italic">Main Balance</p>
+                <h2 class="text-2xl font-black mt-1 uppercase">৳ <span id="mainBalance">0.00</span></h2>
             </div>
-            <div class="glass p-4 rounded-2xl relative overflow-hidden">
-                <p class="text-[9px] text-slate-400 font-bold opacity-60 uppercase">Pending</p>
-                <h2 class="text-xl font-black mt-0.5 text-orange-400">৳ <span id="pendingBalance">0.00</span></h2>
-                <i class="fas fa-hourglass-half absolute -right-2 -bottom-2 text-3xl text-white/5"></i>
+            <div class="glass p-5 rounded-[25px] relative overflow-hidden">
+                <p class="text-[9px] text-slate-400 font-bold opacity-60 uppercase italic">Pending</p>
+                <h2 class="text-2xl font-black mt-1 text-orange-400">৳ <span id="pendingBalance">0.00</span></h2>
             </div>
         </div>
     </header>
 
-    <main class="px-5 mt-8">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-bold flex items-center gap-2">
-                <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span> লাইভ কাজসমূহ
-            </h3>
-        </div>
-        <div id="taskList" class="space-y-3">
-            <p class="text-center py-10 text-[10px] opacity-40">কাজের তালিকা লোড হচ্ছে...</p>
-        </div>
+    <main class="px-6 mt-8">
+        <h3 class="text-sm font-bold flex items-center gap-2 mb-5 uppercase tracking-tighter">
+            <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span> লাইভ মাইক্রোজবস
+        </h3>
+        <div id="taskList" class="space-y-4">
+            </div>
     </main>
 
-    <div class="fixed bottom-0 left-0 right-0 p-4 z-50">
-        <div class="glass max-w-md mx-auto rounded-[25px] px-6 py-3 flex justify-around items-center shadow-2xl bg-slate-900/90 border border-white/5">
-            <button onclick="location.href='buyer_home.html'" class="flex flex-col items-center gap-0.5 text-blue-500">
+    <div class="fixed bottom-0 left-0 right-0 p-5 z-50">
+        <div class="glass max-w-md mx-auto rounded-[30px] px-8 py-3 flex justify-around items-center shadow-2xl bg-slate-900/90">
+            <button onclick="location.href='buyer_home.html'" class="flex flex-col items-center gap-1 text-blue-500">
                 <i class="fas fa-home text-lg"></i>
                 <span class="text-[8px] font-bold">HOME</span>
             </button>
-            <button onclick="location.href='withdraw.html'" class="flex flex-col items-center gap-0.5 text-slate-500">
-                <i class="fas fa-wallet text-lg"></i> <span class="text-[8px] font-bold">WITHDRAW</span>
+            <button onclick="location.href='withdraw.html'" class="flex flex-col items-center gap-1 text-slate-500">
+                <i class="fas fa-wallet text-lg"></i>
+                <span class="text-[8px] font-bold">WITHDRAW</span>
             </button>
-            <button onclick="location.href='history.html'" class="flex flex-col items-center gap-0.5 text-slate-500">
-                <i class="fas fa-list text-lg"></i>
-                <span class="text-[8px] font-bold">HISTORY</span>
-            </button>
-            <button onclick="handleLogout()" class="flex flex-col items-center gap-0.5 text-red-400/70">
+            <button onclick="logoutAction()" class="flex flex-col items-center gap-1 text-red-500/60">
                 <i class="fas fa-power-off text-lg"></i>
                 <span class="text-[8px] font-bold">EXIT</span>
             </button>
@@ -109,7 +89,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -123,46 +103,45 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // লগইন চেক করার লজিক
-        onAuthStateChanged(auth, (user) => {
-            const loadingScreen = document.getElementById('loading-screen');
-            if (user) {
-                // ইউজার লগইন আছে, লোডিং স্ক্রিন সরিয়ে দাও
-                loadingScreen.style.display = 'none';
-                loadUserData(user.uid);
-                loadJobs();
-            } else {
-                // ইউজার লগইন নেই, সরাসরি লগইন পেজে পাঠাও
-                window.location.href = "index.html";
-            }
+        // --- সেশন লক মেকানিজম ---
+        // এটি ব্রাউজারকে বলবে যে ডাটা লোকাল মেমোরিতে আছে, একটু সময় নিয়ে চেক করো
+        setPersistence(auth, browserLocalPersistence).then(() => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // ইউজার পাওয়া গেছে! এখন ড্যাশবোর্ড দেখাও
+                    document.getElementById('loading-screen').style.display = 'none';
+                    initDashboard(user.uid);
+                } else {
+                    // যদি মেমোরিতে ২ সেকেন্ডের মধ্যে কিছু না পায়, তবেই ইনডেক্সে পাঠাবে
+                    setTimeout(() => {
+                        if (!auth.currentUser) {
+                            window.location.replace("index.html");
+                        }
+                    }, 2000);
+                }
+            });
         });
 
-        function loadUserData(uid) {
+        function initDashboard(uid) {
             onSnapshot(doc(db, "users", uid), (snap) => {
                 if (snap.exists()) {
                     document.getElementById('mainBalance').innerText = (snap.data().balance || 0).toFixed(2);
                     document.getElementById('pendingBalance').innerText = (snap.data().pending_balance || 0).toFixed(2);
                 }
             });
-        }
 
-        function loadJobs() {
             const q = query(collection(db, "jobs"), where("status", "==", "active"));
             onSnapshot(q, (sn) => {
                 const list = document.getElementById('taskList');
                 list.innerHTML = "";
-                if (sn.empty) {
-                    list.innerHTML = "<div class='py-10 text-center opacity-40 text-[10px] font-bold'>এখনো কোনো কাজ নেই</div>";
-                    return;
-                }
                 sn.forEach((d) => {
                     const j = d.data();
                     const p = j.original_price - (j.original_price * 10 / 100);
                     list.innerHTML += `
-                        <div onclick="location.href='task_details.html?id=${d.id}'" class="glass p-4 rounded-2xl flex items-center justify-between border-l-2 border-l-blue-500 shadow-lg">
-                            <div class="flex items-center gap-3">
-                                <div class="h-9 w-9 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400"><i class="fas fa-check"></i></div>
-                                <div><h4 class="text-[13px] font-bold text-slate-200">${j.title}</h4><p class="text-[10px] text-green-500 font-bold">Reward: ৳ ${p.toFixed(2)}</p></div>
+                        <div onclick="location.href='task_details.html?id=${d.id}'" class="glass p-4 rounded-[25px] flex items-center justify-between border-l-4 border-l-blue-500 shadow-xl mb-3">
+                            <div class="flex items-center gap-4">
+                                <div class="h-10 w-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400"><i class="fas fa-tasks"></i></div>
+                                <div><h4 class="text-[13px] font-bold text-slate-100">${j.title}</h4><p class="text-[10px] text-green-500 font-bold tracking-tight">৳ ${p.toFixed(2)}</p></div>
                             </div>
                             <i class="fas fa-chevron-right text-[10px] text-slate-700"></i>
                         </div>`;
@@ -170,16 +149,15 @@
             });
         }
 
-        // Sidebar & Logout Functions (Global Scope)
-        window.handleLogout = function() {
-            if(confirm("লগআউট করতে চান?")) signOut(auth).then(() => location.href="index.html");
+        window.logoutAction = function() {
+            if(confirm("লগআউট করতে চান?")) signOut(auth).then(() => window.location.replace("index.html"));
         }
+
         const menuBtn = document.getElementById('menuBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); }
+        menuBtn.onclick = () => { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
         overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
     </script>
 </body>
-    </html>
-
+</html>
