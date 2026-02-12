@@ -3,124 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | BD-MARKETING</title>
+    <title>লগইন | BD-MARKETING</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background: #070a13; color: white; }
-        .glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .input-group:focus-within label { color: #3b82f6; transform: translateY(-2px); }
-        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(7, 10, 19, 0.9); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #05070a; color: #e2e8f0; }
+        .input-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .input-box:focus { border-color: #3b82f6; outline: none; }
+        .role-btn { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .active-role { background: #3b82f6 !important; color: white !important; border-color: #3b82f6; }
+        .dark-btn { background: #111827; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        /* গেস্ট মোড পপআপ স্টাইল */
+        #guestModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-6">
 
-    <div id="loading-overlay">
-        <div class="h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-        <p class="mt-4 text-xs font-bold text-slate-400 tracking-widest uppercase">Checking Session...</p>
-    </div>
+    <div class="w-full max-w-md bg-[#0d1117] p-8 rounded-[40px] border border-white/5 shadow-2xl relative">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-black text-white italic tracking-tighter uppercase">BD-MARKETING</h1>
+            <p class="text-[10px] text-blue-500 font-bold tracking-[3px] mt-1">ADMIN SADDAM</p>
+        </div>
 
-    <div class="w-full max-w-md glass p-8 rounded-[35px] shadow-2xl relative overflow-hidden">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-black italic text-blue-500 tracking-tighter">BD-MARKETING</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Saddam's Premium Access</p>
+        <div class="flex gap-3 mb-8">
+            <div id="sellerBtn" onclick="setRole('seller')" class="role-btn flex-1 py-3 rounded-2xl text-center text-xs font-black uppercase bg-white/5">সেলার</div>
+            <div id="buyerBtn" onclick="setRole('buyer')" class="role-btn flex-1 py-3 rounded-2xl text-center text-xs font-black uppercase active-role">বায়ার</div>
         </div>
 
         <form id="loginForm" class="space-y-5">
-            <div class="space-y-2">
-                <label class="text-[11px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
-                <div class="relative">
-                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
-                    <input type="email" id="email" required placeholder="example@mail.com" 
-                        class="w-full bg-slate-800/50 border border-white/5 p-4 pl-12 rounded-2xl focus:outline-none focus:border-blue-500 transition text-sm">
-                </div>
+            <input type="hidden" id="userRole" value="buyer">
+            
+            <div class="relative">
+                <i class="fas fa-envelope absolute left-4 top-4 text-slate-500 text-sm"></i>
+                <input type="email" id="email" placeholder="আপনার জিমেইল" class="w-full input-box p-4 pl-12 rounded-2xl text-sm font-bold" required>
             </div>
 
-            <div class="space-y-2">
-                <label class="text-[11px] font-bold text-slate-400 uppercase ml-2">Password</label>
-                <div class="relative">
-                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
-                    <input type="password" id="password" required placeholder="••••••••" 
-                        class="w-full bg-slate-800/50 border border-white/5 p-4 pl-12 rounded-2xl focus:outline-none focus:border-blue-500 transition text-sm">
-                    <button type="button" onclick="togglePass('password', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-4 top-4 text-slate-500 text-sm"></i>
+                <input type="password" id="password" placeholder="পাসওয়ার্ড" class="w-full input-box p-4 pl-12 pr-12 rounded-2xl text-sm font-bold" required>
+                <button type="button" onclick="togglePass()" class="absolute right-4 top-4 text-slate-500">
+                    <i id="eyeIcon" class="fas fa-eye"></i>
+                </button>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-2xl font-bold text-sm shadow-lg shadow-blue-900/20 transition active:scale-95">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-2xl text-sm font-black uppercase text-white shadow-xl shadow-blue-500/20 transition-all active:scale-95">
                 লগইন করুন
             </button>
         </form>
 
-        <div class="mt-8 text-center">
-            <p class="text-xs text-slate-500">অ্যাকাউন্ট নেই? <a href="signup.html" class="text-blue-500 font-bold hover:underline">রেজিস্ট্রেশন করুন</a></p>
+        <div class="mt-10 space-y-3">
+            <a href="signup.html" class="block w-full dark-btn p-4 rounded-2xl text-center text-xs font-black uppercase text-slate-300">
+                নতুন অ্যাকাউন্ট খুলুন
+            </a>
+            <button onclick="showGuestModal()" class="block w-full dark-btn p-4 rounded-2xl text-center text-xs font-black uppercase text-blue-400">
+                গেস্ট মোড (ফিচার দেখুন)
+            </button>
+        </div>
+    </div>
+
+    <div id="guestModal" class="flex items-center justify-center p-6">
+        <div class="w-full max-w-sm bg-[#161b22] p-8 rounded-[40px] border border-white/10 text-center">
+            <h2 class="text-xl font-black text-white mb-6 uppercase italic">Select Guest Mode</h2>
+            <div class="space-y-4">
+                <button onclick="enterGuest('seller')" class="w-full p-5 bg-white/5 border border-orange-500/20 rounded-3xl text-orange-400 font-bold uppercase text-xs">সেলার হিসেবে দেখুন</button>
+                <button onclick="enterGuest('buyer')" class="w-full p-5 bg-white/5 border border-blue-500/20 rounded-3xl text-blue-400 font-bold uppercase text-xs">বায়ার হিসেবে দেখুন</button>
+            </div>
+            <button onclick="hideGuestModal()" class="mt-6 text-[10px] text-slate-500 font-bold uppercase underline">ফিরে যান</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
             projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
             appId: "1:678696512628:web:edfc22a62f55dad41df521"
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        const overlay = document.getElementById('loading-overlay');
+        // পাসওয়ার্ড শো/হাইড
+        window.togglePass = function() {
+            const pass = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pass.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
 
-        // ১. পাসওয়ার্ড দেখা/লুকানোর ফিচার (Global Scope)
-        window.togglePass = (id, el) => {
-            const input = document.getElementById(id);
-            const icon = el.querySelector('i');
-            input.type = input.type === "password" ? "text" : "password";
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-        };
+        // রোল সেট করা
+        window.setRole = function(role) {
+            document.getElementById('userRole').value = role;
+            document.getElementById('sellerBtn').classList.toggle('active-role', role === 'seller');
+            document.getElementById('buyerBtn').classList.toggle('active-role', role === 'buyer');
+        }
 
-        // ২. অটো-লগইন ফিচার (এই কোডটিই সমস্যার সমাধান করবে)
-        overlay.style.display = 'flex'; // চেক করার সময় লোডিং দেখাবে
-        setPersistence(auth, browserLocalPersistence).then(() => {
-            return onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    console.log("সেশন পাওয়া গেছে!");
-                    window.location.replace("buyer_home.html");
-                } else {
-                    console.log("সেশন নেই।");
-                    overlay.style.display = 'none'; // সেশন না থাকলে ফর্ম দেখাবে
-                }
-            });
-        }).catch((err) => {
-            overlay.style.display = 'none';
-            console.error(err);
-        });
+        // গেস্ট মোড পপআপ কন্ট্রোল
+        window.showGuestModal = () => document.getElementById('guestModal').style.display = 'flex';
+        window.hideGuestModal = () => document.getElementById('guestModal').style.display = 'none';
 
-        // ৩. লগইন ফর্ম হ্যান্ডলার
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', async (e) => {
+        window.enterGuest = function(role) {
+            sessionStorage.setItem('isGuest', 'true');
+            window.location.href = role + ".home.html";
+        }
+
+        // ফায়ারবেস লগইন লজিক (কড়া সিকিউরিটি)
+        document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> প্রসেসিং...';
+            const pass = document.getElementById('password').value;
+            const selectedRole = document.getElementById('userRole').value;
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // সাকসেস হলে onAuthStateChanged নিজেই রিডাইরেক্ট করবে
-            } catch (error) {
-                alert("ভুল ইমেইল বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
-                btn.disabled = false;
-                btn.innerText = "লগইন করুন";
-            }
-        });
+                const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", pass));
+                const snap = await getDocs(q);
+
+                if (!snap.empty) {
+                    let matched = false;
+                    snap.forEach(doc => {
+                        if (doc.data().role === selectedRole) {
+                            matched = true;
+                            sessionStorage.setItem('isGuest', 'false');
+                            sessionStorage.setItem('userData', JSON.stringify(doc.data()));
+                            window.location.href = selectedRole + ".home.html";
+                        }
+                    });
+                    if (!matched) alert("ভুল ক্যাটাগরি! আপনার আইডিটি " + (selectedRole === 'seller' ? 'বায়ার' : 'সেলার') + " হিসেবে নিবন্ধিত।");
+                } else {
+                    alert("জিমেইল অথবা পাসওয়ার্ড ভুল!");
+                }
+            } catch (err) { alert("সার্ভার ত্রুটি!"); }
+        };
     </script>
 </body>
 </html>
