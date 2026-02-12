@@ -1,39 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - BD Marketing</title>
+    <title>Login | BD-MARKETING</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background: #070a13; color: white; }
+        .glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .input-group:focus-within label { color: #3b82f6; transform: translateY(-2px); }
+        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(7, 10, 19, 0.9); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
+    </style>
 </head>
-<body class="bg-slate-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-6">
 
-    <div class="bg-slate-800 p-8 rounded-3xl shadow-2xl w-full max-w-sm border border-slate-700">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-extrabold text-blue-500">BD Marketing</h1>
-            <p class="text-[10px] text-slate-500 font-mono">Admin: Saddam</p>
+    <div id="loading-overlay">
+        <div class="h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        <p class="mt-4 text-xs font-bold text-slate-400 tracking-widest uppercase">Checking Session...</p>
+    </div>
+
+    <div class="w-full max-w-md glass p-8 rounded-[35px] shadow-2xl relative overflow-hidden">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-black italic text-blue-500 tracking-tighter">BD-MARKETING</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Saddam's Premium Access</p>
         </div>
-        
-        <form id="loginForm" class="space-y-4">
-            <input type="email" id="loginEmail" required class="w-full bg-slate-700 border border-slate-600 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-blue-500" placeholder="জিমেইল">
-            <div class="relative">
-                <input type="password" id="loginPass" required class="w-full bg-slate-700 border border-slate-600 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-blue-500" placeholder="পাসওয়ার্ড">
-                <span class="absolute inset-y-0 right-0 flex items-center pr-4 cursor-pointer text-slate-400" onclick="togglePass('loginPass', this)">
-                    <i class="fas fa-eye"></i>
-                </span>
+
+        <form id="loginForm" class="space-y-5">
+            <div class="space-y-2">
+                <label class="text-[11px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                    <input type="email" id="email" required placeholder="example@mail.com" 
+                        class="w-full bg-slate-800/50 border border-white/5 p-4 pl-12 rounded-2xl focus:outline-none focus:border-blue-500 transition text-sm">
+                </div>
             </div>
-            <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-xl transition-all active:scale-95">
+
+            <div class="space-y-2">
+                <label class="text-[11px] font-bold text-slate-400 uppercase ml-2">Password</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                    <input type="password" id="password" required placeholder="••••••••" 
+                        class="w-full bg-slate-800/50 border border-white/5 p-4 pl-12 rounded-2xl focus:outline-none focus:border-blue-500 transition text-sm">
+                    <button type="button" onclick="togglePass('password', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-2xl font-bold text-sm shadow-lg shadow-blue-900/20 transition active:scale-95">
                 লগইন করুন
             </button>
         </form>
-        <p class="text-center text-sm text-slate-500 mt-8">একাউন্ট নেই? <a href="signup.html" class="text-blue-500 font-extrabold hover:underline">নতুন খুলুন</a></p>
+
+        <div class="mt-8 text-center">
+            <p class="text-xs text-slate-500">অ্যাকাউন্ট নেই? <a href="signup.html" class="text-blue-500 font-bold hover:underline">রেজিস্ট্রেশন করুন</a></p>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
@@ -44,34 +72,52 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
 
+        const overlay = document.getElementById('loading-overlay');
+
+        // ১. পাসওয়ার্ড দেখা/লুকানোর ফিচার (Global Scope)
         window.togglePass = (id, el) => {
             const input = document.getElementById(id);
             const icon = el.querySelector('i');
             input.type = input.type === "password" ? "text" : "password";
-            icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
         };
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> যাচাই হচ্ছে...`;
-            
-            try {
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPass').value;
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // রোল চেক করে রিডাইরেক্ট
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const role = userDoc.data().role;
-                    window.location.href = role === "seller" ? "seller_home.html" : "buyer_home.html";
+        // ২. অটো-লগইন ফিচার (এই কোডটিই সমস্যার সমাধান করবে)
+        overlay.style.display = 'flex'; // চেক করার সময় লোডিং দেখাবে
+        setPersistence(auth, browserLocalPersistence).then(() => {
+            return onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("সেশন পাওয়া গেছে!");
+                    window.location.replace("buyer_home.html");
+                } else {
+                    console.log("সেশন নেই।");
+                    overlay.style.display = 'none'; // সেশন না থাকলে ফর্ম দেখাবে
                 }
+            });
+        }).catch((err) => {
+            overlay.style.display = 'none';
+            console.error(err);
+        });
+
+        // ৩. লগইন ফর্ম হ্যান্ডলার
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> প্রসেসিং...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // সাকসেস হলে onAuthStateChanged নিজেই রিডাইরেক্ট করবে
             } catch (error) {
-                alert("লগইন ব্যর্থ! সঠিক তথ্য দিন।");
+                alert("ভুল ইমেইল বা পাসওয়ার্ড! আবার চেষ্টা করুন।");
+                btn.disabled = false;
                 btn.innerText = "লগইন করুন";
             }
         });
