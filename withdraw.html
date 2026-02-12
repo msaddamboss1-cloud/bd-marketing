@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Withdraw | BD-MARKETING</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #0d1117; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .method-card { border: 2px solid transparent; transition: 0.3s; background: #161b22; }
+        .bkash-active { border-color: #e2136e; background: rgba(226, 19, 110, 0.1); }
+        .nagad-active { border-color: #f7941d; background: rgba(247, 148, 29, 0.1); }
+        select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; appearance: none; }
+    </style>
+</head>
+<body class="pb-10">
+
+    <header class="p-5 pt-8 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <button onclick="history.back()" class="h-9 w-9 glass rounded-xl flex items-center justify-center text-blue-500 shadow-lg">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div>
+                <h1 class="text-lg font-black italic uppercase leading-none text-white">BD-MARKETING</h1>
+                <p class="text-[8px] text-blue-400 font-bold uppercase tracking-widest mt-1 italic">Admin: Saddam Boss</p>
+            </div>
+        </div>
+        <div class="glass px-3 py-1 rounded-xl border-blue-500/20 text-center min-w-[75px]">
+            <p class="text-[7px] text-slate-400 font-bold uppercase">ব্যালেন্স</p>
+            <p id="userBalance" class="text-xs font-black text-green-500 italic">৳ 0.00</p>
+        </div>
+    </header>
+
+    <main class="px-6 mt-2">
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div id="bkashBtn" onclick="selectMethod('Bkash')" class="method-card p-4 rounded-3xl text-center cursor-pointer shadow-xl">
+                <img src="https://www.logo.wine/a/logo/BKash/BKash-Logo.wine.svg" class="h-8 mx-auto mb-1">
+                <p class="text-[9px] font-bold">BKASH</p>
+            </div>
+            <div id="nagadBtn" onclick="selectMethod('Nagad')" class="method-card p-4 rounded-3xl text-center cursor-pointer shadow-xl">
+                <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" class="h-8 mx-auto mb-1">
+                <p class="text-[9px] font-bold">NAGAD</p>
+            </div>
+        </div>
+
+        <div class="glass p-6 rounded-[35px] space-y-4 shadow-2xl border-b-2 border-white/5">
+            <p class="text-[10px] font-bold text-slate-400 uppercase text-center italic tracking-widest">টাকা তোলার তথ্য দিন</p>
+            
+            <div>
+                <input id="accNumber" type="number" class="w-full bg-[#0d1117] rounded-xl p-3.5 text-sm focus:outline-none border border-white/5 font-bold" placeholder="পার্সোনাল মোবাইল নাম্বার">
+            </div>
+
+            <div>
+                <select id="methodSelector" onchange="syncMethod(this.value)" class="w-full bg-[#0d1117] rounded-xl p-3.5 text-sm focus:outline-none border border-white/5 font-bold text-slate-300">
+                    <option value="">মেথড সিলেক্ট করুন</option>
+                    <option value="Bkash">বিকাশ (Bkash)</option>
+                    <option value="Nagad">নগদ (Nagad)</option>
+                </select>
+            </div>
+
+            <div>
+                <input id="withdrawAmount" type="number" class="w-full bg-[#0d1117] rounded-xl p-3.5 text-sm focus:outline-none border border-white/5 font-bold" placeholder="টাকার পরিমাণ (মিনিমাম ৳৫০)">
+            </div>
+
+            <button id="withdrawBtn" class="w-full py-4 bg-blue-600 rounded-xl text-xs font-black uppercase tracking-[2px] shadow-lg active:scale-95 transition-all">
+                সাবমিট রিকোয়েস্ট
+            </button>
+        </div>
+
+        <div class="mt-8 p-5 glass rounded-3xl border-l-4 border-red-500 bg-red-500/5 shadow-md">
+            <h4 class="text-[10px] font-black uppercase text-red-500 mb-2 flex items-center gap-2 italic">
+                <i class="fas fa-exclamation-triangle"></i> গুরুত্বপূর্ণ নির্দেশাবলী:
+            </h4>
+            <ul class="text-[10px] text-slate-300 space-y-2 font-medium">
+                <li>• উইথড্র দেওয়ার <b>২৪-৪৮ ঘণ্টার</b> মধ্যে পেমেন্ট কমপ্লিট করা হবে।</li>
+                <li>• টাকা না পেলে তথ্য চেক করে <b>পুনরায় রিকোয়েস্ট</b> দিন।</li>
+                <li>• সঠিক মেথড (বিকাশ/নগদ) সিলেক্ট না করলে পেমেন্ট বাতিল হতে পারে।</li>
+                <li>• যেকোনো সমস্যায় এডমিন <b>Saddam Boss</b> এর সাথে যোগাযোগ করুন।</li>
+            </ul>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, addDoc, collection, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            projectId: "bd-marketing-55a81",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let selectedMethod = "";
+        let currentBalance = 0;
+
+        // লোগো ক্লিক করলে ড্রপডাউন পরিবর্তন হবে
+        window.selectMethod = (method) => {
+            selectedMethod = method;
+            document.getElementById('methodSelector').value = method;
+            updateUI(method);
+        };
+
+        // ড্রপডাউন পরিবর্তন করলে লোগো হাইলাইট হবে
+        window.syncMethod = (val) => {
+            selectedMethod = val;
+            updateUI(val);
+        };
+
+        function updateUI(method) {
+            document.getElementById('bkashBtn').className = "method-card p-4 rounded-3xl text-center cursor-pointer shadow-xl " + (method === 'Bkash' ? 'bkash-active' : '');
+            document.getElementById('nagadBtn').className = "method-card p-4 rounded-3xl text-center cursor-pointer shadow-xl " + (method === 'Nagad' ? 'nagad-active' : '');
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                onSnapshot(doc(db, "users", user.uid), (snap) => {
+                    if (snap.exists()) {
+                        currentBalance = snap.data().balance || 0;
+                        document.getElementById('userBalance').innerText = `৳ ${currentBalance.toFixed(2)}`;
+                    }
+                });
+            }
+        });
+
+        document.getElementById('withdrawBtn').onclick = async () => {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const number = document.getElementById('accNumber').value.trim();
+            
+            if (!selectedMethod) return alert("দয়া করে বিকাশ না নগদ সিলেক্ট করুন!");
+            if (!number || number.length < 11) return alert("সঠিক মোবাইল নাম্বার দিন!");
+            if (isNaN(amount) || amount < 50) return alert("সর্বনিম্ন ৫০ টাকা উত্তোলন করুন!");
+            if (amount > currentBalance) return alert("আপনার ব্যালেন্সে পর্যাপ্ত টাকা নেই!");
+
+            const btn = document.getElementById('withdrawBtn');
+            btn.disabled = true; btn.innerText = "পাঠানো হচ্ছে...";
+
+            try {
+                await addDoc(collection(db, "withdrawals"), {
+                    uid: auth.currentUser.uid,
+                    email: auth.currentUser.email,
+                    method: selectedMethod,
+                    number: number,
+                    amount: amount,
+                    status: "pending",
+                    time: serverTimestamp()
+                });
+
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                await runTransaction(db, async (t) => {
+                    const snap = await t.get(userRef);
+                    t.update(userRef, { balance: snap.data().balance - amount });
+                });
+
+                alert("উইথড্র রিকোয়েস্ট সফল হয়েছে! Saddam Boss শীঘ্রই পেমেন্ট করবেন।");
+                location.reload();
+            } catch (e) {
+                alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+                btn.disabled = false; btn.innerText = "সাবমিট রিকোয়েস্ট";
+            }
+        };
+    </script>
+</body>
+</html>
