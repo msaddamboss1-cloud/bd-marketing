@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+         <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,8 @@
         .input-box:focus { border-color: #3b82f6; outline: none; background: rgba(59, 130, 246, 0.05); }
         .role-btn { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
         .active-role { background: #3b82f6 !important; color: white !important; border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        .dark-btn { background: #111827; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .dark-btn { background: #111827; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .dark-btn:hover { background: #1f2937; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-6">
@@ -62,13 +63,17 @@
         <div class="mt-8 space-y-3">
             <div class="flex items-center gap-2 mb-2">
                 <div class="h-[1px] bg-white/5 flex-1"></div>
-                <span class="text-[9px] text-slate-600 font-bold uppercase">ইতিমধ্যে একাউন্ট আছে?</span>
+                <span class="text-[9px] text-slate-600 font-bold uppercase">অন্যান্য</span>
                 <div class="h-[1px] bg-white/5 flex-1"></div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <a href="login.html" class="dark-btn p-3 rounded-xl text-center text-[11px] font-bold text-slate-300 uppercase">লগইন করুন</a>
-                <button onclick="guestLogin()" class="dark-btn p-3 rounded-xl text-center text-[11px] font-bold text-blue-400 uppercase">গেস্ট মোড</button>
+                <a href="login.html" class="dark-btn p-4 rounded-xl text-[11px] font-bold text-slate-300 uppercase">
+                    লগইন করুন
+                </a>
+                <div id="guestBtn" class="dark-btn p-4 rounded-xl text-[11px] font-bold text-blue-400 uppercase">
+                    게স্ট মোড
+                </div>
             </div>
         </div>
     </div>
@@ -90,14 +95,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ১. রোল সেট করা
+        // রোল সেট করা
         window.setRole = function(role) {
             document.getElementById('userRole').value = role;
             document.getElementById('sellerBtn').classList.toggle('active-role', role === 'seller');
             document.getElementById('buyerBtn').classList.toggle('active-role', role === 'buyer');
         }
 
-        // ২. পাসওয়ার্ড শো/হাইড
+        // পাসওয়ার্ড শো/হাইড
         window.togglePass = function() {
             const p = document.getElementById('password');
             const i = document.getElementById('eyeIcon');
@@ -110,18 +115,19 @@
             }
         }
 
-        // ৩. গেস্ট মোড লজিক
-        window.guestLogin = function() {
+        // গেস্ট মোড ক্লিক লজিক
+        document.getElementById('guestBtn').addEventListener('click', () => {
             const role = document.getElementById('userRole').value;
             sessionStorage.setItem('isGuest', 'true');
+            sessionStorage.setItem('userRole', role);
             window.location.href = role + ".home.html";
-        }
+        });
 
-        // ৪. রেজিস্ট্রেশন লজিক
-        document.getElementById('signupForm').onsubmit = async (e) => {
+        // রেজিস্ট্রেশন ফর্ম সাবমিট
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "অপেক্ষা করুন...";
+            btn.innerText = "প্রসেসিং...";
             btn.disabled = true;
 
             const name = document.getElementById('userName').value;
@@ -134,19 +140,17 @@
                 await setDoc(doc(db, "users", email), {
                     name, age, role, email, password: pass, balance: 0, joinedAt: new Date().toISOString()
                 });
-                
-                // সফল হলে সেশন সেভ করা
                 sessionStorage.setItem('isGuest', 'false');
                 sessionStorage.setItem('userEmail', email);
-                
-                // সরাসরি ড্যাশবোর্ডে প্রবেশ
+                sessionStorage.setItem('userRole', role);
                 window.location.href = role + ".home.html";
             } catch (err) {
                 alert("ত্রুটি: " + err.message);
                 btn.innerText = "অ্যাকাউন্ট তৈরি করুন";
                 btn.disabled = false;
             }
-        };
+        });
     </script>
 </body>
 </html>
+   
