@@ -3,185 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BD-MARKETING | Admin Saddam</title>
+    <title>BD-MARKETING | Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #050810; color: #f8fafc; overflow-x: hidden; }
         .glass { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: #0b0f1a; transition: 0.4s ease; z-index: 1000; border-right: 1px solid rgba(59, 130, 246, 0.1); }
-        .sidebar.active { left: 0; }
+        .sidebar { position: fixed; right: -280px; top: 0; width: 280px; height: 100%; background: #0b0f1a; transition: 0.4s ease; z-index: 1000; border-left: 1px solid rgba(59, 130, 246, 0.1); }
+        .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; }
         .overlay.active { display: block; }
-        #loading-screen { position: fixed; inset: 0; background: #050810; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body class="pb-32">
 
-    <div id="loading-screen">
-        <div class="h-10 w-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-        <p class="text-[10px] mt-4 text-slate-500 tracking-widest font-bold uppercase italic">BD-MARKETING</p>
-    </div>
-
     <div id="overlay" class="overlay"></div>
+    
     <div id="sidebar" class="sidebar shadow-2xl">
-        <div class="p-8 border-b border-white/5 bg-slate-900/30">
-            <h1 class="text-xl font-black text-blue-500 italic uppercase">BD-MARKETING</h1>
-            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-widest italic text-blue-400">Owner: Saddam</p>
+        <div class="p-8 border-b border-white/5 bg-slate-900/30 text-right">
+            <h1 class="text-xl font-black text-blue-500 italic">MENU PANEL</h1>
+            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-widest italic text-blue-400">Admin: Saddam</p>
         </div>
         <div class="py-6 flex flex-col gap-1">
-            <div onclick="location.href='profile.html'" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 cursor-pointer transition">
-                <i class="fas fa-user-circle text-lg"></i> <span class="font-bold text-sm">প্রোফাইল</span>
+            <div onclick="location.href='profile.html'" class="flex items-center justify-end gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 transition cursor-pointer">
+                <span class="font-bold text-sm">প্রোফাইল</span> <i class="fas fa-user-circle text-lg"></i>
             </div>
-            <div onclick="location.href='history.html'" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 cursor-pointer transition">
-                <i class="fas fa-history text-lg"></i> <span class="font-bold text-sm">কাজের হিস্ট্রি</span>
+            <div onclick="location.href='history.html'" class="flex items-center justify-end gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 transition cursor-pointer">
+                <span class="font-bold text-sm">কাজের হিস্ট্রি</span> <i class="fas fa-history text-lg"></i>
             </div>
-            <div onclick="location.href='help.html'" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 cursor-pointer transition">
-                <i class="fas fa-headset text-lg"></i> <span class="font-bold text-sm">সাপোর্ট সেন্টার</span>
+            <div onclick="location.href='notice.html'" class="flex items-center justify-end gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 transition cursor-pointer">
+                <span class="font-bold text-sm">নোটিশ বোর্ড</span> <i class="fas fa-bullhorn text-lg"></i>
             </div>
-            <div onclick="location.href='notice.html'" class="flex items-center gap-4 px-6 py-4 text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 cursor-pointer transition">
-                <i class="fas fa-bullhorn text-lg"></i> <span class="font-bold text-sm">নোটিশ বোর্ড</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-white/5">
-                <div onclick="logoutAction()" class="flex items-center gap-4 px-6 py-4 text-red-500 hover:bg-red-500/5 cursor-pointer transition">
-                    <i class="fas fa-power-off text-lg"></i> <span class="font-bold text-sm">লগআউট</span>
-                </div>
+            <div onclick="logoutAction()" class="flex items-center justify-end gap-4 px-6 py-4 text-red-500 transition cursor-pointer">
+                <span class="font-bold text-sm">লগআউট</span> <i class="fas fa-power-off text-lg"></i>
             </div>
         </div>
     </div>
 
     <header class="p-6 pt-10">
         <div class="flex justify-between items-center mb-6">
-            <button id="menuBtn" class="h-12 w-12 glass rounded-2xl flex items-center justify-center text-blue-500 shadow-lg active:scale-90 transition">
-                <i class="fas fa-bars-staggered text-xl"></i>
+            <div class="text-left">
+                <h1 class="text-xl font-black italic text-blue-500 tracking-tighter">BD-MARKETING</h1>
+                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 italic">Admin: Saddam</p>
+            </div>
+            <button id="menuBtn" class="h-10 w-10 glass rounded-xl flex items-center justify-center text-blue-500 shadow-lg active:scale-90 transition">
+                <i class="fas fa-bars-staggered text-lg"></i>
             </button>
-            <div class="text-right">
-                <h1 class="text-xl font-black italic text-white leading-none tracking-tighter text-blue-500">BD-MARKETING</h1>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 italic">Admin: Saddam <i class="fas fa-check-circle text-blue-500"></i></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="glass p-4 rounded-3xl border-l-4 border-blue-500 shadow-xl">
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">Main Balance</p>
+                <h2 class="text-xl font-black text-white italic">৳ <span id="mainBalance">0.00</span></h2>
+            </div>
+            <div class="glass p-4 rounded-3xl border-l-4 border-orange-500 shadow-xl">
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">Pending</p>
+                <h2 class="text-xl font-black text-white italic">৳ <span id="pendingBalance">0.00</span></h2>
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-blue-600 to-indigo-900 p-7 rounded-[35px] shadow-2xl relative overflow-hidden mb-4 border border-white/10">
-            <div class="relative z-10">
-                <p class="text-[10px] text-blue-100 font-bold opacity-70 uppercase tracking-widest">Main Balance</p>
-                <h2 class="text-4xl font-black mt-1 uppercase">৳ <span id="mainBalance">0.00</span></h2>
-                <div class="mt-5 flex items-center gap-3">
-                    <div class="bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-md flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse"></span>
-                        <span class="text-[10px] font-bold text-blue-50">Pending: ৳ <span id="pendingBalance">0.00</span></span>
-                    </div>
-                </div>
-            </div>
-            <i class="fas fa-shield-halved absolute -right-6 -bottom-6 text-9xl text-white/5 rotate-12"></i>
-        </div>
-
-        <div class="glass py-2.5 px-4 rounded-2xl flex items-center gap-3 bg-red-500/5 border-red-500/10 shadow-lg">
-            <div class="flex items-center gap-1.5 text-red-500 shrink-0">
-                <i class="fas fa-bolt text-xs animate-pulse"></i>
-                <span class="text-[10px] font-black uppercase tracking-tighter">Emergency:</span>
-            </div>
-            <marquee id="scrollingNotice" class="text-[11px] font-bold text-slate-300" scrollamount="4">
-                নতুন আপডেট পেতে নোটিশ বোর্ড চেক করুন...
-            </marquee>
+        <div class="glass py-2 px-4 rounded-xl flex items-center gap-3 bg-red-500/5 border-red-500/10">
+            <i class="fas fa-bolt text-[10px] text-red-500 animate-pulse"></i>
+            <marquee id="scrollingNotice" class="text-[10px] font-bold text-slate-400" scrollamount="3">লোড হচ্ছে...</marquee>
         </div>
     </header>
 
     <main class="px-6">
-        <h3 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
             <i class="fas fa-rocket text-blue-500"></i> Available Micro Jobs
         </h3>
-        <div id="taskList" class="space-y-4">
+        <div id="taskList" class="space-y-3">
             </div>
     </main>
 
     <div class="fixed bottom-0 left-0 right-0 p-6 z-50">
-        <div class="glass max-w-[280px] mx-auto rounded-full px-2 py-2 flex justify-between items-center bg-slate-900/95 border border-white/10 shadow-2xl">
-            <button onclick="location.href='buyer_home.html'" class="flex-1 flex flex-col items-center gap-1 text-blue-500 transition">
-                <i class="fas fa-house text-lg"></i>
+        <div class="glass max-w-[260px] mx-auto rounded-full px-2 py-2 flex justify-between items-center bg-slate-900/95 border border-white/10 shadow-2xl">
+            <button onclick="location.href='buyer_home.html'" class="flex-1 flex flex-col items-center gap-1 text-blue-500">
+                <i class="fas fa-house text-base"></i>
                 <span class="text-[8px] font-black uppercase">Home</span>
             </button>
-            <div class="h-6 w-[1px] bg-white/10"></div>
-            <button onclick="location.href='withdraw.html'" class="flex-1 flex flex-col items-center gap-1 text-slate-500 hover:text-blue-400 transition">
-                <i class="fas fa-wallet text-lg"></i>
-                <span class="text-[8px] font-black uppercase tracking-tighter text-slate-400">Withdraw</span>
+            <div class="h-5 w-[1px] bg-white/10"></div>
+            <button onclick="location.href='withdraw.html'" class="flex-1 flex flex-col items-center gap-1 text-slate-500">
+                <i class="fas fa-wallet text-base"></i>
+                <span class="text-[8px] font-black uppercase">Withdraw</span>
             </button>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
-            authDomain: "bd-marketing-55a81.firebaseapp.com",
-            projectId: "bd-marketing-55a81",
-            appId: "1:678696512628:web:edfc22a62f55dad41df521"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Sidebar logic
+        // ... (আপনার আগের Firebase Logic এখানে থাকবে) ...
+        // শুধু মেনু কন্ট্রোলের জন্য নিচের অংশটুকু আপডেট করে নিন:
         const menuBtn = document.getElementById('menuBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        const loader = document.getElementById('loading-screen');
 
         menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); }
         overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
-
-        setPersistence(auth, browserLocalPersistence).then(() => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    loader.style.display = 'none';
-                    initDashboard(user);
-                } else {
-                    window.location.replace("index.html");
-                }
-            });
-        });
-
-        function initDashboard(user) {
-            // নোটিশ
-            onSnapshot(doc(db, "settings", "emergency_notice"), (snap) => {
-                if (snap.exists()) document.getElementById('scrollingNotice').innerText = snap.data().text || "নোটিশ লোড হচ্ছে...";
-            });
-
-            // ব্যালেন্স
-            onSnapshot(doc(db, "users", user.uid), (snap) => {
-                if (snap.exists()) {
-                    document.getElementById('mainBalance').innerText = (snap.data().balance || 0).toFixed(2);
-                    document.getElementById('pendingBalance').innerText = (snap.data().pending_balance || 0).toFixed(2);
-                }
-            });
-
-            // জব লিস্ট (১০% কমিশন কেটে)
-            const q = query(collection(db, "jobs"), where("status", "==", "active"));
-            onSnapshot(q, (sn) => {
-                const list = document.getElementById('taskList');
-                list.innerHTML = "";
-                sn.forEach((d) => {
-                    const job = d.data();
-                    const reward = job.original_price - (job.original_price * 0.10);
-                    list.innerHTML += `
-                        <div onclick="location.href='task_details.html?id=${d.id}'" class="glass p-5 rounded-[30px] flex items-center justify-between border-l-4 border-l-blue-500 shadow-xl active:scale-95 transition">
-                            <div class="flex items-center gap-4">
-                                <div class="h-12 w-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-inner"><i class="fas fa-briefcase text-lg"></i></div>
-                                <div><h4 class="text-sm font-bold text-slate-100">${job.title}</h4><p class="text-[10px] text-green-500 font-black mt-0.5">Reward: ৳ ${reward.toFixed(2)}</p></div>
-                            </div>
-                            <div class="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center"><i class="fas fa-chevron-right text-[10px] text-slate-600"></i></div>
-                        </div>`;
-                });
-            });
-        }
-
-        window.logoutAction = function() {
-            if(confirm("লগআউট করতে চান?")) signOut(auth).then(() => window.location.replace("index.html"));
-        }
     </script>
 </body>
 </html>
