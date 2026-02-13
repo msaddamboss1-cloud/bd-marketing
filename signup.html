@@ -1,70 +1,53 @@
-                  <!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রেজিস্ট্রেশন | BD-MARKETING</title>
+    <title>Register | BD-MARKETING</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #05070a; color: #e2e8f0; }
-        .input-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .input-box:focus { border-color: #3b82f6; outline: none; }
-        .role-btn { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
-        .active-role { background: #3b82f6 !important; color: white !important; border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
-        .dark-btn { background: #161b22; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #030508; color: #e2e8f0; }
+        .owner-tag { background: linear-gradient(90deg, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: 0.3s; }
+        .glass-input:focus { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); outline: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body class="flex items-center justify-center min-h-screen p-4 py-10">
 
-    <div class="w-full max-w-md bg-[#0d1117] p-8 rounded-[40px] border border-white/5 shadow-2xl">
+    <div class="w-full max-w-md bg-[#0a0c10] p-7 rounded-[40px] border border-white/5 shadow-2xl relative">
         <div class="text-center mb-6">
             <h1 class="text-3xl font-black text-white italic tracking-tighter uppercase">BD-MARKETING</h1>
-            <p class="text-[10px] text-blue-500 font-bold tracking-[3px] mt-1 uppercase text-center">ADMIN SADDAM</p>
+            <p class="text-[10px] font-black tracking-[3px] mt-1 uppercase owner-tag">Owner: Saddam</p>
         </div>
 
         <form id="signupForm" class="space-y-4">
-            <input type="text" id="userName" placeholder="আপনার পুরো নাম" class="w-full input-box p-4 rounded-2xl text-sm font-bold" required>
-            <input type="number" id="userAge" placeholder="আপনার বয়স" class="w-full input-box p-4 rounded-2xl text-sm font-bold" required>
-
-            <div class="flex gap-3 my-2">
-                <div id="sellerBtn" onclick="setRole('seller')" class="role-btn flex-1 py-3 rounded-2xl text-center text-xs font-black uppercase bg-white/5">সেলার</div>
-                <div id="buyerBtn" onclick="setRole('buyer')" class="role-btn flex-1 py-3 rounded-2xl text-center text-xs font-black uppercase active-role">বায়ার</div>
+            <input type="text" id="userName" placeholder="আপনার পূর্ণ নাম" class="w-full glass-input p-3.5 rounded-xl text-sm font-bold" required>
+            <div class="flex gap-3">
+                <input type="number" id="userAge" placeholder="বয়স" class="w-20 glass-input p-3.5 rounded-xl text-sm font-bold" required>
+                <select id="userRole" class="flex-1 bg-[#11141a] border border-white/10 p-3.5 rounded-xl text-sm font-bold text-white outline-none focus:border-blue-500">
+                    <option value="seller">Seller (কাজ দিতে চাই)</option>
+                    <option value="buyer">Buyer (কাজ করতে চাই)</option>
+                </select>
             </div>
-            <input type="hidden" id="userRole" value="buyer">
-
-            <input type="email" id="email" autocomplete="username" placeholder="আপনার জিমেইল" class="w-full input-box p-4 rounded-2xl text-sm font-bold" required>
-            
+            <input type="email" id="email" placeholder="ইমেইল (Email)" class="w-full glass-input p-3.5 rounded-xl text-sm font-bold" required>
             <div class="relative">
-                <input type="password" id="password" name="password" autocomplete="new-password" placeholder="পাসওয়ার্ড তৈরি করুন" class="w-full input-box p-4 rounded-2xl text-sm font-bold pr-12" required>
-                <button type="button" onclick="togglePass()" class="absolute right-4 top-4 text-slate-500">
-                    <i id="eyeIcon" class="fas fa-eye"></i>
-                </button>
+                <input type="password" id="password" placeholder="পাসওয়ার্ড (৪-৬ সংখ্যা)" maxlength="6" class="w-full glass-input p-3.5 rounded-xl text-sm font-bold pr-12" required>
+                <button type="button" onclick="togglePass()" class="absolute right-4 top-3.5 text-slate-600"><i id="eyeIcon" class="fas fa-eye"></i></button>
             </div>
-
-            <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-2xl text-sm font-black uppercase text-white shadow-xl shadow-blue-500/20 transition-all active:scale-95">
-                অ্যাকাউন্ট তৈরি করুন
-            </button>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 p-3.5 rounded-xl text-sm font-black uppercase text-white shadow-xl">Create Account</button>
         </form>
 
-        <div class="mt-8 space-y-3">
-            <div class="flex items-center gap-2">
-                <div class="h-[1px] bg-white/5 flex-1"></div>
-                <span class="text-[9px] text-slate-600 font-bold uppercase">অন্যান্য</span>
-                <div class="h-[1px] bg-white/5 flex-1"></div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="goToLogin()" class="dark-btn p-4 rounded-xl text-center text-[11px] font-bold text-slate-300 uppercase">লগইন করুন</button>
-                <button onclick="enterGuest()" class="dark-btn p-4 rounded-xl text-center text-[11px] font-bold text-blue-400 uppercase">গেস্ট মোড</button>
-            </div>
+        <div class="mt-6 flex gap-3">
+            <a href="login.html" class="flex-1 bg-white/5 border border-white/10 p-3 rounded-xl text-center text-[10px] font-black text-slate-300 uppercase">Login Page</a>
+            <a href="legal-notice.html" class="flex-1 bg-amber-600/20 border border-amber-600/20 p-3 rounded-xl text-center text-[10px] font-black text-amber-500 uppercase">Policy</a>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
@@ -77,13 +60,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.setRole = (role) => {
-            document.getElementById('userRole').value = role;
-            document.getElementById('sellerBtn').classList.toggle('active-role', role === 'seller');
-            document.getElementById('buyerBtn').classList.toggle('active-role', role === 'buyer');
-        };
+        const db = getDatabase(app);
 
         window.togglePass = () => {
             const p = document.getElementById('password');
@@ -92,37 +69,26 @@
             i.classList.toggle('fa-eye-slash');
         };
 
-        window.goToLogin = () => { window.location.href = "login.html"; };
-
-        window.enterGuest = () => {
-            const role = document.getElementById('userRole').value;
-            alert("আপনি " + (role === 'seller' ? 'সেলার' : 'বায়ার') + " ফিচারগুলো গেস্ট হিসেবে দেখছেন।");
-            window.location.href = role + ".home.html";
-        };
-
-        document.getElementById('signupForm').onsubmit = async (e) => {
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = "অপেক্ষা করুন...";
-            btn.disabled = true;
-
-            const name = document.getElementById('userName').value;
-            const age = document.getElementById('userAge').value;
-            const role = document.getElementById('userRole').value;
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
+            const userId = email.replace(/\./g, '_');
 
-            try {
-                await setDoc(doc(db, "users", email), {
-                    name, age, role, email, password: pass, balance: 0, joinedAt: new Date().toISOString()
-                });
-                window.location.href = role + ".home.html";
-            } catch (err) {
-                alert("ভুল হয়েছে!");
-                btn.innerText = "অ্যাকাউন্ট তৈরি করুন";
-                btn.disabled = false;
-            }
-        };
+            if(pass.length < 4 || pass.length > 6) { alert("পাসওয়ার্ড অবশ্যই ৪-৬ সংখ্যার হতে হবে!"); return; }
+
+            set(ref(db, 'users/' + userId), {
+                name: document.getElementById('userName').value,
+                age: document.getElementById('userAge').value,
+                role: document.getElementById('userRole').value,
+                email: email,
+                password: pass
+            }).then(() => {
+                alert("রেজিস্ট্রেশন সফল!");
+                window.location.href = "login.html";
+            }).catch(err => alert("Error: " + err.message));
+        });
     </script>
 </body>
 </html>
+                         
