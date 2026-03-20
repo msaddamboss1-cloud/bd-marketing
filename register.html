@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Join BD Marketing</title>
+    <style>
+        :root { --primary-blue: #1e3c72; --accent-green: #2ecc71; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--primary-blue); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .reg-card { background: #fff; width: 100%; max-width: 400px; padding: 40px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+        .logo { font-size: 26px; font-weight: bold; color: var(--primary-blue); margin-bottom: 5px; }
+        h2 { color: var(--accent-green); margin-bottom: 25px; font-size: 22px; }
+        input, select { width: 100%; padding: 13px; margin-bottom: 12px; border: 2px solid #eee; border-radius: 12px; outline: none; background: #f9f9f9; }
+        input:focus { border-color: var(--accent-green); }
+        .btn-reg { width: 100%; padding: 15px; background: var(--accent-green); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .footer-link { margin-top: 20px; display: block; font-size: 14px; text-decoration: none; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="reg-card">
+        <div class="logo">BD MARKETING</div>
+        <h2>রেজিস্ট্রেশন</h2>
+        <form id="regForm">
+            <input type="text" id="name" placeholder="পুরো নাম" required>
+            <input type="email" id="email" placeholder="ইমেইল" required>
+            <input type="number" id="phone" placeholder="ফোন নম্বর" required>
+            <select id="role" required>
+                <option value="worker">ওয়ার্কার (আমি কাজ করবো)</option>
+                <option value="buyer">বায়ার (আমি কাজ করাবো)</option>
+            </select>
+            <input type="password" id="pass" placeholder="পাসওয়ার্ড" required>
+            <button type="submit" class="btn-reg">একাউন্ট তৈরি করুন</button>
+        </form>
+        <a href="index.html" class="footer-link">ইতিমধ্যেই একাউন্ট আছে? <b>লগইন</b></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        document.getElementById('regForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            createUserWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
+                .then((userCredential) => {
+                    set(ref(db, 'users/' + userCredential.user.uid), {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        role: document.getElementById('role').value,
+                        balance: 0
+                    }).then(() => { window.location.href = "index.html"; });
+                }).catch((err) => { alert("ত্রুটি: " + err.message); });
+        });
+    </script>
+</body>
+  </html>
+  
