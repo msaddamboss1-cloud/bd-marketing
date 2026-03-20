@@ -3,86 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | BD Marketing</title>
+    <title>Login | BD Marketing Admin</title>
     <style>
-        :root {
-            --primary-blue: #1e3c72;
-            --brand-gradient: #2a5298;
-            --accent-green: #2ecc71;
-            --text-color: #333333;
-        }
+        :root { --primary: #1e3c72; --accent: #2ecc71; --dark-blue: #152951; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg, var(--primary-blue), var(--brand-gradient)); height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .auth-container { background: #fff; width: 90%; max-width: 380px; padding: 40px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); text-align: center; display: none; }
-        .logo { font-size: 28px; font-weight: bold; color: var(--primary-blue); margin-bottom: 25px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 12px; outline: none; font-size: 16px; background: #f9f9f9; }
-        input:focus { border-color: var(--primary-blue); background: #fff; }
-        .btn-main { width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-main:hover { background: #152951; }
-        .footer-link { margin-top: 20px; font-size: 14px; }
-        .footer-link a { color: var(--primary-blue); text-decoration: none; font-weight: bold; }
-        /* পপ-আপ */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .popup { background: white; width: 85%; max-width: 350px; padding: 30px; border-radius: 20px; text-align: center; }
-        .overlay.active { display: flex; }
-        .btn-agree { background: var(--accent-green); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        
+        body { 
+            background-color: var(--primary); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+        }
+        
+        .login-card { 
+            background: white; 
+            width: 90%; 
+            max-width: 380px; 
+            padding: 40px 25px; 
+            border-radius: 30px; 
+            text-align: center; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .brand-name { 
+            color: var(--dark-blue); 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 30px; 
+            letter-spacing: 1px;
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 15px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            background-color: #f9f9f9;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+        }
+
+        .btn-login { 
+            width: 100%; 
+            background: var(--dark-blue); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .footer-links { 
+            margin-top: 25px; 
+            font-size: 14px; 
+            color: #555; 
+        }
+
+        .footer-links a { 
+            color: var(--primary); 
+            font-weight: bold; 
+            text-decoration: none; 
+        }
     </style>
 </head>
 <body>
-    <div id="rulesPopup" class="overlay">
-        <div class="popup">
-            <h3 style="color: #e67e22;">⚠️ নিয়মাবলী</h3>
-            <p style="font-size: 14px; margin: 15px 0; color: #444;">এক ডিভাইসে একাধিক আইডি চালানো যাবে না। সঠিক নিয়মে কাজ করুন।</p>
-            <button class="btn-agree" onclick="closePopup()">আমি রাজি</button>
-        </div>
-    </div>
 
-    <div class="auth-container" id="loginWrapper">
-        <div class="logo">BD MARKETING</div>
+    <div class="login-card">
+        <div class="brand-name">BD MARKETING</div>
+
         <form id="loginForm">
             <input type="email" id="email" placeholder="ইমেইল এড্রেস" required>
             <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
-            <select id="loginRole" required>
+            
+            <select id="role" required>
+                <option value="" disabled selected>আপনার রোল সিলেক্ট করুন</option>
                 <option value="worker">ওয়ার্কার (আমি কাজ করবো)</option>
-                <option value="buyer">বায়ার (আমি কাজ করাবো)</option>
+                <option value="buyer">বায়ার (আমি কাজ দেবো)</option>
             </select>
-            <button type="submit" class="btn-main">লগইন করুন</button>
+
+            <button type="submit" class="btn-login">লগইন করুন</button>
         </form>
-        <p class="footer-link">নতুন ইউজার? <a href="register.html">রেজিস্ট্রেশন করুন</a></p>
+
+        <div class="footer-links">
+            নতুন ইউজার? <a href="register.html">রেজিস্ট্রেশন করুন</a>
+        </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
-            authDomain: "bd-marketing-55a81.firebaseapp.com",
-            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
-            projectId: "bd-marketing-55a81",
-            storageBucket: "bd-marketing-55a81.firebasestorage.app",
-            messagingSenderId: "678696512628",
-            appId: "1:678696512628:web:edfc22a62f55dad41df521"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) { window.location.href = "dashboard.html"; } 
-            else { 
-                document.getElementById('loginWrapper').style.display = 'block'; 
-                setTimeout(() => { document.getElementById('rulesPopup').classList.add('active'); }, 1500);
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedRole = document.getElementById('role').value;
+            
+            // রোল অনুযায়ী পেজ রিডাইরেক্ট
+            if (selectedRole === 'worker') {
+                window.location.href = 'worker.html'; 
+            } else if (selectedRole === 'buyer') {
+                window.location.href = 'buyer.html';
             }
         });
-        window.closePopup = () => { document.getElementById('rulesPopup').classList.remove('active'); };
-
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
-                .then(() => { window.location.href = "dashboard.html"; })
-                .catch(() => { alert("লগইন ব্যর্থ!"); });
-        });
     </script>
+
 </body>
 </html>
-
