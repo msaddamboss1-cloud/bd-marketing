@@ -1,123 +1,167 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | BD Marketing Admin</title>
+    <title>Login - BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
-        :root { --primary: #1e3c72; --accent: #2ecc71; --dark-blue: #152951; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body { 
-            background-color: var(--primary); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
+        body {
+            background: radial-gradient(circle at top right, #0f172a, #020617);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
             margin: 0;
         }
-        
-        .login-card { 
-            background: white; 
-            width: 90%; 
-            max-width: 380px; 
-            padding: 40px 25px; 
-            border-radius: 30px; 
-            text-align: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
         }
-
-        .brand-name { 
-            color: var(--dark-blue); 
-            font-size: 24px; 
-            font-weight: bold; 
-            margin-bottom: 30px; 
-            letter-spacing: 1px;
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
         }
-
-        input, select { 
-            width: 100%; 
-            padding: 14px; 
-            margin-bottom: 15px; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            background-color: #f9f9f9;
-            outline: none;
+        .login-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
         }
-
-        input:focus, select:focus {
-            border-color: var(--primary);
-            background-color: #fff;
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.3);
         }
-
-        .btn-login { 
-            width: 100%; 
-            background: var(--dark-blue); 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 12px; 
-            font-weight: bold; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin-top: 10px;
-            transition: 0.3s;
+        .register-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            transition: all 0.3s ease;
         }
-
-        .btn-login:active {
-            transform: scale(0.98);
+        .register-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
         }
-
-        .footer-links { 
-            margin-top: 25px; 
-            font-size: 14px; 
-            color: #555; 
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
         }
-
-        .footer-links a { 
-            color: var(--primary); 
-            font-weight: bold; 
-            text-decoration: none; 
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="brand-name">BD MARKETING</div>
+    <div class="w-full max-w-md p-6">
+        <div class="glass-card rounded-[40px] p-10">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-black tracking-tighter italic text-white uppercase">BD Marketing</h1>
+                <p class="text-blue-500 font-bold text-xs tracking-[0.2em] mt-2 uppercase">Owner: Saddam</p>
+            </div>
 
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="ইমেইল এড্রেস" required>
-            <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
-            
-            <select id="role" required>
-                <option value="" disabled selected>আপনার রোল সিলেক্ট করুন</option>
-                <option value="worker">ওয়ার্কার (আমি কাজ করবো)</option>
-                <option value="buyer">বায়ার (আমি কাজ দেবো)</option>
-            </select>
+            <div class="space-y-5">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input type="email" id="email" placeholder="Gmail Address" 
+                        class="w-full bg-black/40 border border-slate-800 py-4 pl-12 pr-4 rounded-2xl outline-none input-glow transition-all text-white text-sm">
+                </div>
 
-            <button type="submit" class="btn-login">লগইন করুন</button>
-        </form>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" id="password" placeholder="Password" 
+                        class="w-full bg-black/40 border border-slate-800 py-4 pl-12 pr-4 rounded-2xl outline-none input-glow transition-all text-white text-sm">
+                </div>
 
-        <div class="footer-links">
-            নতুন ইউজার? <a href="register.html">রেজিস্ট্রেশন করুন</a>
+                <div id="msg-box" class="hidden">
+                    <p id="error-msg" class="text-red-500 text-[11px] font-bold text-center"></p>
+                </div>
+
+                <button id="login-btn" onclick="handleLogin()" 
+                    class="login-btn w-full py-4 rounded-2xl font-black text-white text-sm uppercase tracking-widest mt-4 flex justify-center items-center gap-2">
+                    <span>Sign In</span>
+                    <div id="loader" class="loading-spinner hidden"></div>
+                </button>
+
+                <div class="flex items-center my-6">
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="px-3 text-[10px] text-slate-600 uppercase font-bold">OR</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+
+                <button onclick="window.location.href='register.html'" 
+                    class="register-btn w-full py-3 rounded-2xl font-bold text-[11px] uppercase tracking-[0.15em] active:scale-95 transition-all">
+                    Create New Account
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const selectedRole = document.getElementById('role').value;
-            
-            // রোল অনুযায়ী পেজ রিডাইরেক্ট
-            if (selectedRole === 'worker') {
-                window.location.href = 'worker.html'; 
-            } else if (selectedRole === 'buyer') {
-                window.location.href = 'buyer.html';
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521",
+            measurementId: "G-3CP5DC4H44"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                window.location.href = "index.html"; 
             }
         });
+
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const loader = document.getElementById('loader');
+            const btnText = document.querySelector('#login-btn span');
+
+            if (!email || !pass) {
+                showError("সঠিকভাবে ইমেইল এবং পাসওয়ার্ড দিন!");
+                return;
+            }
+
+            loader.classList.remove('hidden');
+            btnText.innerText = "Checking...";
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    loader.classList.add('hidden');
+                    btnText.innerText = "Sign In";
+                    showError("ইমেইল বা পাসওয়ার্ড ভুল!");
+                });
+        }
+
+        function showError(text) {
+            const errorMsg = document.getElementById('error-msg');
+            const msgBox = document.getElementById('msg-box');
+            errorMsg.innerText = text;
+            msgBox.classList.remove('hidden');
+        }
     </script>
 
 </body>
