@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #080c14; font-family: 'Inter', sans-serif; color: white; margin: 0; overflow-x: hidden; }
+        
+        /* ✅ ব্যালেন্স বক্স আরও ছোট ও কম্প্যাক্ট করা হয়েছে */
+        .balance-container {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .balance-box {
+            padding: 4px 8px; /* প্যাডিং আরও কমানো হয়েছে */
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            min-width: 65px; 
+        }
+
+        .main-balance { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .pending-balance { background: rgba(255, 255, 255, 0.03); }
+
+        /* নোটিফিকেশন বাটন */
+        .notif-btn {
+            background: rgba(255, 255, 255, 0.05);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        /* হেল্প সেন্টার বাটন */
+        .help-center-fixed {
+            position: fixed;
+            right: 15px;
+            bottom: 105px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        @keyframes pulse-small {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 120, 255, 0.6); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 120, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 120, 255, 0); }
+        }
+
+        .chat-circle-small {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #0078FF 0%, #00C6FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-small 2s infinite;
+            border: 2px solid #080c14;
+        }
+
+        /* বটম মেনু */
+        .bottom-nav { background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-item { color: #64748b; font-size: 18px; }
+        .nav-item.active { color: #3b82f6; }
+    </style>
+</head>
+<body class="pb-28">
+
+    <script src="header.js"></script>
+
+    <main class="p-4 max-w-lg mx-auto space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div class="balance-container">
+                <div class="balance-box main-balance">
+                    <span class="text-[6px] font-black uppercase opacity-80 tracking-widest">Main</span>
+                    <span class="text-[10px] font-black">৳ <span id="userBalance">0.00</span></span>
+                </div>
+                <div class="balance-box pending-balance">
+                    <span class="text-[6px] font-black uppercase opacity-50 tracking-widest">Pending</span>
+                    <span class="text-[10px] font-black text-orange-400">৳ <span id="pendingBalance">0.00</span></span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <p id="userName" class="text-[8px] font-black italic tracking-widest uppercase text-gray-400"></p>
+                </div>
+                <button onclick="location.href='notification.html'" class="notif-btn">
+                    <i class="fas fa-bell text-blue-500 text-[10px]"></i>
+                    <div class="absolute top-1 right-1 w-1.5 h-1.5 bg-red-500 rounded-full"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <h3 class="text-[10px] font-black uppercase text-gray-500 tracking-[0.3em] px-2 mb-4">Task Dashboard</h3>
+            <div id="jobContainer">
+                <div class="p-10 border border-dashed border-white/10 bg-white/5 rounded-[1.8rem] flex flex-col items-center text-center">
+                    <i class="fas fa-tasks text-gray-700 text-xl mb-4"></i>
+                    <h4 class="text-[10px] font-black uppercase text-gray-500 italic">No Available Tasks</h4>
+                    <p class="text-[8px] text-gray-600 mt-2 uppercase">Please wait for admin updates</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="help-center-fixed" onclick="location.href='support_chat.html'">
+        <div class="chat-circle-small">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.477 2 2 6.145 2 11.258C2 14.167 3.425 16.745 5.65 18.455V22L9.04 20.142C9.986 20.404 10.978 20.547 12 20.547C17.523 20.547 22 16.402 22 11.289C22 6.176 17.523 2 12 2ZM13.1 13.922L10.744 11.411L6.15 13.922L11.122 8.643L13.534 11.154L18.04 8.643L13.1 13.922Z"/>
+            </svg>
+        </div>
+        <span style="font-size: 6px; font-weight: 800; color: #00C6FF; text-transform: uppercase;">Help Center</span>
+    </div>
+
+    <nav class="bottom-nav fixed bottom-0 left-0 w-full px-8 py-5 z-[999] rounded-t-[2.5rem]">
+        <div class="flex justify-between items-center max-w-md mx-auto">
+            <a href="worker_dashboard.html" class="nav-item active flex flex-col items-center gap-1">
+                <i class="fas fa-house-user"></i>
+                <span class="text-[7px] font-black uppercase tracking-tighter">Home</span>
+            </a>
+            <a href="withdraw.html" class="nav-item flex flex-col items-center gap-1">
+                <i class="fas fa-wallet"></i>
+                <span class="text-[7px] font-black uppercase tracking-tighter">Withdraw</span>
+            </a>
+            <a href="history.html" class="nav-item flex flex-col items-center gap-1">
+                <i class="fas fa-clock-rotate-left"></i>
+                <span class="text-[7px] font-black uppercase tracking-tighter">History</span>
+            </a>
+            <a href="profile.html" class="nav-item flex flex-col items-center gap-1">
+                <i class="fas fa-user-circle"></i>
+                <span class="text-[7px] font-black uppercase tracking-tighter">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521",
+            measurementId: "G-3CP5DC4H44"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const analytics = getAnalytics(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                onValue(ref(db, 'users/' + user.uid), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        document.getElementById('userName').innerText = data.username;
+                        document.getElementById('userBalance').innerText = parseFloat(data.balance || 0).toFixed(2);
+                        document.getElementById('pendingBalance').innerText = parseFloat(data.pending_balance || 0).toFixed(2);
+                    }
+                });
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+    </script>
+</body>
+</html>
