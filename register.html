@@ -3,113 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - BD Marketing</title>
+    <title>Register | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
-        body {
-            background: radial-gradient(circle at top right, #0f172a, #020617);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            color: white;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-        }
-        .role-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .role-card.active {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-        }
-        .input-glow:focus {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            border-color: #3b82f6;
-        }
-        .register-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            transition: all 0.3s ease;
-        }
+        body { background-color: #080c14; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-box { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); }
+        input::placeholder { color: #64748b; font-weight: 500; }
+        .role-btn { background: rgba(15, 23, 42, 0.5); border: 2px solid rgba(59, 130, 246, 0.1); transition: 0.3s; }
+        .role-btn.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.2); transform: scale(1.05); }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col pb-10">
 
-    <div class="w-full max-w-md p-6">
-        <div class="glass-card rounded-[40px] p-8">
-            <div class="text-center mb-6">
-                <h1 class="text-3xl font-black tracking-tighter italic uppercase">Join BD Marketing</h1>
-                <p class="text-blue-500 font-bold text-[10px] tracking-widest mt-1 uppercase">Create Your Account</p>
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="glass-card w-full max-w-md p-10 rounded-[3rem] shadow-2xl">
+            
+            <div class="text-center mb-8">
+                <h2 class="text-5xl font-black text-white uppercase italic tracking-tighter">JOIN US</h2>
+                <p class="text-blue-500 text-[10px] uppercase font-black tracking-[0.3em] mt-3">CREATE YOUR BD MARKETING ACCOUNT</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div id="role-worker" onclick="selectRole('Worker')" class="role-card active p-4 rounded-2xl text-center">
-                    <i class="fas fa-tools mb-2 text-blue-500"></i>
-                    <p class="text-[10px] font-black uppercase">Worker</p>
-                </div>
-                <div id="role-buyer" onclick="selectRole('Buyer')" class="role-card p-4 rounded-2xl text-center">
-                    <i class="fas fa-shopping-cart mb-2 text-slate-500"></i>
-                    <p class="text-[10px] font-black uppercase tracking-widest">Buyer</p>
-                </div>
+            <div class="flex gap-4 mb-8">
+                <button onclick="setRole('worker')" id="workerBtn" class="role-btn active flex-1 p-4 rounded-2xl flex flex-col items-center gap-2">
+                    <i class="fas fa-user-gear text-blue-500 text-xl"></i>
+                    <span class="text-[10px] text-white font-black uppercase">Worker</span>
+                </button>
+                <button onclick="setRole('buyer')" id="sellerBtn" class="role-btn flex-1 p-4 rounded-2xl flex flex-col items-center gap-2">
+                    <i class="fas fa-user-tie text-blue-500 text-xl"></i>
+                    <span class="text-[10px] text-white font-black uppercase">Buyer</span>
+                </button>
             </div>
 
-            <div class="space-y-4">
+            <form id="regForm" class="space-y-4">
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-user text-xs"></i>
-                    </span>
-                    <input type="text" id="username" placeholder="Full Name" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                    <i class="fas fa-user absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="text" id="regName" required class="input-box w-full text-white pl-12 pr-4 py-4 rounded-2xl outline-none text-sm" placeholder="Full Name">
                 </div>
 
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-envelope text-xs"></i>
-                    </span>
-                    <input type="email" id="email" placeholder="Gmail Address" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                    <i class="fas fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="number" id="regPhone" required class="input-box w-full text-white pl-12 pr-4 py-4 rounded-2xl outline-none text-sm" placeholder="Mobile Number">
                 </div>
 
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-lock text-xs"></i>
-                    </span>
-                    <input type="password" id="password" placeholder="Create Password" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                    <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="email" id="regEmail" required class="input-box w-full text-white pl-12 pr-4 py-4 rounded-2xl outline-none text-sm" placeholder="Email Address">
                 </div>
 
-                <p id="error-msg" class="text-red-500 text-[10px] font-bold text-center hidden"></p>
+                <div class="relative">
+                    <i class="fas fa-key absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="password" id="regPass" required class="input-box w-full text-white pl-12 pr-14 py-4 rounded-2xl outline-none text-sm" placeholder="Password">
+                    <button type="button" onclick="togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500">
+                        <i id="eyeIcon" class="fas fa-eye text-lg"></i>
+                    </button>
+                </div>
 
-                <button id="reg-btn" onclick="handleRegister()" 
-                    class="register-btn w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest mt-2 shadow-lg shadow-blue-900/20">
-                    Confirm & Register
-                </button>
+                <div class="pt-4">
+                    <button type="submit" id="regBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-[1.5rem] shadow-lg text-[12px] uppercase tracking-[0.2em] transition-all active:scale-95">
+                        <span id="btnText">CREATE ACCOUNT</span>
+                    </button>
+                </div>
+            </form>
 
-                <button onclick="window.location.href='login.html'" class="w-full text-slate-500 text-[10px] font-bold uppercase mt-2 hover:text-white transition-all">
-                    Already have an account? Login
-                </button>
+            <div class="mt-8 text-center">
+                <a href="index.html" class="text-gray-500 font-black uppercase text-[10px] hover:text-blue-500 tracking-widest">
+                    ALREADY HAVE AN ACCOUNT? LOGIN
+                </a>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        // এডমিন, আপনার কনফিগ এখানেও সেইম থাকবে
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // আপনার দেওয়া সঠিক ফায়ারবেস কনফিগ এখানে বসানো হয়েছে
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
@@ -120,64 +92,75 @@
             appId: "1:678696512628:web:edfc22a62f55dad41df521",
             measurementId: "G-3CP5DC4H44"
         };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
 
-        let selectedRole = 'Worker';
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-        function selectRole(role) {
-            selectedRole = role;
-            document.getElementById('role-worker').classList.toggle('active', role === 'Worker');
-            document.getElementById('role-buyer').classList.toggle('active', role === 'Buyer');
-            
-            // আইকন কালার চেঞ্জ লজিক
-            document.querySelector('#role-worker i').className = role === 'Worker' ? 'fas fa-tools mb-2 text-blue-500' : 'fas fa-tools mb-2 text-slate-500';
-            document.querySelector('#role-buyer i').className = role === 'Buyer' ? 'fas fa-shopping-cart mb-2 text-blue-500' : 'fas fa-shopping-cart mb-2 text-slate-500';
-        }
+        let currentRole = "worker";
+        window.setRole = (role) => {
+            currentRole = role;
+            document.getElementById('workerBtn').classList.toggle('active', role === 'worker');
+            document.getElementById('sellerBtn').classList.toggle('active', role === 'buyer');
+        };
 
-        function handleRegister() {
-            const name = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            const btn = document.getElementById('reg-btn');
+        document.getElementById('regForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const phone = document.getElementById('regPhone').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            const btn = document.getElementById('regBtn');
+            const txt = document.getElementById('btnText');
 
-            if(!name || !email || !pass) {
-                showError("সবগুলো ঘর পূরণ করুন!");
-                return;
-            }
-
-            btn.innerText = "Creating Account...";
+            txt.innerText = "CREATING...";
             btn.disabled = true;
 
-            auth.createUserWithEmailAndPassword(email, pass)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    // ডাটাবেসে ইউজার ডাটা সেভ করা (ব্যালেন্স সহ)
-                    db.ref('users/' + user.uid).set({
-                        username: name,
-                        email: email,
-                        role: selectedRole,
-                        balance: 0.00,
-                        createdAt: new Date().toISOString()
-                    }).then(() => {
-                        window.location.href = "index.html";
-                    });
-                })
-                .catch((error) => {
-                    btn.innerText = "Confirm & Register";
-                    btn.disabled = false;
-                    showError(error.message);
+            createUserWithEmailAndPassword(auth, email, pass)
+            .then((userCredential) => {
+                const uid = userCredential.user.uid;
+                
+                // ইউজার ডাটা ডাটাবেসে সেভ করা
+                set(ref(db, 'users/' + uid), {
+                    username: name,
+                    phone: phone,
+                    email: email,
+                    role: currentRole,
+                    balance: 0,
+                    joinDate: new Date().toLocaleDateString()
                 });
-        }
 
-        function showError(text) {
-            const err = document.getElementById('error-msg');
-            err.innerText = text;
-            err.classList.remove('hidden');
+                // ফোন নম্বর ম্যাপ তৈরি (যাতে পরে শুধু ফোন দিয়ে লগইন করা যায়)
+                set(ref(db, 'usersByPhone/' + phone), {
+                    email: email,
+                    uid: uid
+                }).then(() => {
+                    alert("Account Created Successfully!");
+                    window.location.href = "index.html";
+                });
+            })
+            .catch((error) => {
+                alert(error.message);
+                txt.innerText = "CREATE ACCOUNT";
+                btn.disabled = false;
+            });
+        });
+    </script>
+
+    <script>
+        function togglePassword() {
+            const passInput = document.getElementById('regPass');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
         }
     </script>
+    <script src="header.js"></script>
 </body>
 </html>
-
