@@ -3,113 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - BD Marketing</title>
+    <title>Login | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
-        body {
-            background: radial-gradient(circle at top right, #0f172a, #020617);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            color: white;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-        }
-        .role-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .role-card.active {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-        }
-        .input-glow:focus {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            border-color: #3b82f6;
-        }
-        .register-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            transition: all 0.3s ease;
-        }
+        body { background-color: #080c14; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-box { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); }
+        input::placeholder { color: #64748b; font-weight: 500; }
+        /* লোডিং এনিমেশন */
+        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-    <div class="w-full max-w-md p-6">
-        <div class="glass-card rounded-[40px] p-8">
-            <div class="text-center mb-6">
-                <h1 class="text-3xl font-black tracking-tighter italic uppercase">Join BD Marketing</h1>
-                <p class="text-blue-500 font-bold text-[10px] tracking-widest mt-1 uppercase">Create Your Account</p>
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="glass-card w-full max-w-md p-10 rounded-[3rem] shadow-2xl">
+            
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-black text-white uppercase italic tracking-tighter">LOGIN</h2>
+                <p class="text-blue-500 text-[10px] uppercase font-black tracking-[0.3em] mt-3">WELCOME TO BD MARKETING</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div id="role-worker" onclick="selectRole('Worker')" class="role-card active p-4 rounded-2xl text-center">
-                    <i class="fas fa-tools mb-2 text-blue-500"></i>
-                    <p class="text-[10px] font-black uppercase">Worker</p>
-                </div>
-                <div id="role-buyer" onclick="selectRole('Buyer')" class="role-card p-4 rounded-2xl text-center">
-                    <i class="fas fa-shopping-cart mb-2 text-slate-500"></i>
-                    <p class="text-[10px] font-black uppercase tracking-widest">Buyer</p>
-                </div>
-            </div>
-
-            <div class="space-y-4">
+            <form id="loginForm" class="space-y-5">
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-user text-xs"></i>
-                    </span>
-                    <input type="text" id="username" placeholder="Full Name" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                    <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="text" id="userIdentifier" required 
+                        class="input-box w-full text-white pl-12 pr-4 py-5 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
+                        placeholder="Email or Mobile Number">
                 </div>
 
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-envelope text-xs"></i>
-                    </span>
-                    <input type="email" id="email" placeholder="Gmail Address" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                    <i class="fas fa-key absolute left-5 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="password" id="loginPass" required 
+                        class="input-box w-full text-white pl-12 pr-14 py-5 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
+                        placeholder="Password">
+                    
+                    <button type="button" onclick="togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500 transition-colors text-lg">
+                        <i id="eyeIcon" class="fas fa-eye"></i>
+                    </button>
                 </div>
 
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                        <i class="fas fa-lock text-xs"></i>
-                    </span>
-                    <input type="password" id="password" placeholder="Create Password" 
-                        class="w-full bg-black/40 border border-slate-800 py-3.5 pl-11 pr-4 rounded-2xl outline-none input-glow transition-all text-sm">
+                <div class="pt-4">
+                    <button type="submit" id="loginBtn"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-[1.5rem] shadow-lg shadow-blue-900/30 transition-all active:scale-95 text-[12px] uppercase tracking-[0.2em] flex items-center justify-center">
+                        <span id="btnText">SIGN IN ACCOUNT</span>
+                    </button>
                 </div>
+            </form>
 
-                <p id="error-msg" class="text-red-500 text-[10px] font-bold text-center hidden"></p>
-
-                <button id="reg-btn" onclick="handleRegister()" 
-                    class="register-btn w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest mt-2 shadow-lg shadow-blue-900/20">
-                    Confirm & Register
-                </button>
-
-                <button onclick="window.location.href='login.html'" class="w-full text-slate-500 text-[10px] font-bold uppercase mt-2 hover:text-white transition-all">
-                    Already have an account? Login
-                </button>
+            <div class="mt-12 text-center">
+                <p class="text-gray-500 text-[10px] font-black uppercase mb-3 tracking-widest">NEW USER? START EARNING NOW</p>
+                <a href="registration.html" class="text-blue-500 font-black uppercase text-sm hover:underline tracking-widest flex items-center justify-center gap-2">
+                    CREATE NEW ACCOUNT <i class="fas fa-arrow-right text-xs"></i>
+                </a>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        // এডমিন, আপনার কনফিগ এখানেও সেইম থাকবে
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // আপনার দেওয়া কনফিগ
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
@@ -120,63 +79,89 @@
             appId: "1:678696512628:web:edfc22a62f55dad41df521",
             measurementId: "G-3CP5DC4H44"
         };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
 
-        let selectedRole = 'Worker';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-        function selectRole(role) {
-            selectedRole = role;
-            document.getElementById('role-worker').classList.toggle('active', role === 'Worker');
-            document.getElementById('role-buyer').classList.toggle('active', role === 'Buyer');
-            
-            // আইকন কালার চেঞ্জ লজিক
-            document.querySelector('#role-worker i').className = role === 'Worker' ? 'fas fa-tools mb-2 text-blue-500' : 'fas fa-tools mb-2 text-slate-500';
-            document.querySelector('#role-buyer i').className = role === 'Buyer' ? 'fas fa-shopping-cart mb-2 text-blue-500' : 'fas fa-shopping-cart mb-2 text-slate-500';
-        }
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
 
-        function handleRegister() {
-            const name = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            const btn = document.getElementById('reg-btn');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const identifier = document.getElementById('userIdentifier').value;
+            const pass = document.getElementById('loginPass').value;
 
-            if(!name || !email || !pass) {
-                showError("সবগুলো ঘর পূরণ করুন!");
-                return;
-            }
+            btnText.innerText = "Processing...";
+            loginBtn.disabled = true;
 
-            btn.innerText = "Creating Account...";
-            btn.disabled = true;
-
-            auth.createUserWithEmailAndPassword(email, pass)
+            // যদি ইউজার ইমেইল দেয়
+            if (identifier.includes('@')) {
+                signInWithEmailAndPassword(auth, identifier, pass)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    // ডাটাবেসে ইউজার ডাটা সেভ করা (ব্যালেন্স সহ)
-                    db.ref('users/' + user.uid).set({
-                        username: name,
-                        email: email,
-                        role: selectedRole,
-                        balance: 0.00,
-                        createdAt: new Date().toISOString()
-                    }).then(() => {
-                        window.location.href = "index.html";
-                    });
+                    checkUserRole(userCredential.user.uid);
                 })
                 .catch((error) => {
-                    btn.innerText = "Confirm & Register";
-                    btn.disabled = false;
-                    showError(error.message);
+                    alert("Error: " + error.message);
+                    resetBtn();
                 });
+            } else {
+                // ফোন নম্বর দিয়ে লগইন করার লজিক (ডাটাবেস চেক)
+                const dbRef = ref(db);
+                get(child(dbRef, `usersByPhone/${identifier}`)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const email = snapshot.val().email;
+                        signInWithEmailAndPassword(auth, email, pass)
+                        .then((userCredential) => {
+                            checkUserRole(userCredential.user.uid);
+                        })
+                        .catch((error) => {
+                            alert("Wrong Password!");
+                            resetBtn();
+                        });
+                    } else {
+                        alert("User not found with this mobile number!");
+                        resetBtn();
+                    }
+                });
+            }
+        });
+
+        function checkUserRole(uid) {
+            const dbRef = ref(db);
+            get(child(dbRef, `users/${uid}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const role = snapshot.val().role;
+                    if (role === 'worker') {
+                        window.location.href = "worker_dashboard.html";
+                    } else {
+                        window.location.href = "buyer_dashboard.html";
+                    }
+                }
+            });
         }
 
-        function showError(text) {
-            const err = document.getElementById('error-msg');
-            err.innerText = text;
-            err.classList.remove('hidden');
+        function resetBtn() {
+            btnText.innerText = "SIGN IN ACCOUNT";
+            loginBtn.disabled = false;
         }
     </script>
+
+    <script>
+        function togglePassword() {
+            const passInput = document.getElementById('loginPass');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
+    
+    <script src="header.js"></script>
 </body>
 </html>
