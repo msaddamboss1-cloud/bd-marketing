@@ -1,73 +1,35 @@
-// header.js - BD Marketing Top Header
+// header.js - BD Marketing Top Header (Accurate Design)
 const headerHTML = `
-<header class="top-header fixed top-0 left-0 w-full z-[1000]">
-    <div class="header-content flex justify-between items-center px-6 py-4">
-        <div class="logo-area flex items-center gap-2">
-            <div class="logo-icon"></div>
-            <h1 class="brand-name">BD MARKETING</h1>
+<header class="top-header fixed top-0 left-0 w-full z-[1000] flex justify-between items-center px-4 py-3">
+    <div class="flex items-center gap-2">
+        <div class="rocket-icon">
+            <i class="fas fa-rocket text-[#fbdf07] text-lg"></i>
         </div>
-        <div class="status-indicator">
-            <span class="online-dot"></span>
-            <span class="status-text">LIVE</span>
-        </div>
+        <h1 class="text-white text-xl font-black italic tracking-tighter uppercase">BD MARKETING</h1>
+    </div>
+    
+    <div class="owner-badge px-4 py-1.5 rounded-full border border-white/20">
+        <span class="text-[10px] font-bold text-white/70 uppercase">Owner:</span>
+        <span class="text-[10px] font-black text-white ml-1">Saddam</span>
     </div>
 </header>
 
 <style>
     .top-header {
-        background: rgba(8, 12, 20, 0.8);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: linear-gradient(to right, #1e40af, #3b82f6);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
-    .brand-name {
-        font-size: 14px;
-        font-weight: 900;
-        letter-spacing: 3px;
-        background: linear-gradient(to right, #3b82f6, #60a5fa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-transform: uppercase;
+    .owner-badge {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
     }
 
-    .logo-icon {
-        width: 8px;
-        height: 8px;
-        background: #3b82f6;
-        border-radius: 2px;
-        transform: rotate(45deg);
-    }
-
-    .status-indicator {
+    .rocket-icon {
+        transform: rotate(-45deg);
         display: flex;
         align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 4px 10px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .online-dot {
-        width: 5px;
-        height: 5px;
-        background: #10b981;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #10b981;
-        animation: blink 1.5s infinite;
-    }
-
-    .status-text {
-        font-size: 8px;
-        font-weight: 800;
-        color: #10b981;
-        letter-spacing: 1px;
-    }
-
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.3; }
-        100% { opacity: 1; }
+        justify-content: center;
     }
 </style>
 `;
