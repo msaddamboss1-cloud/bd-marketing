@@ -81,7 +81,6 @@
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // আপনার দেওয়া সঠিক ফায়ারবেস কনফিগ এখানে বসানো হয়েছে
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
@@ -93,7 +92,6 @@
             measurementId: "G-3CP5DC4H44"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
@@ -121,23 +119,30 @@
             .then((userCredential) => {
                 const uid = userCredential.user.uid;
                 
-                // ইউজার ডাটা ডাটাবেসে সেভ করা
+                // ১. পাসওয়ার্ড সহ ইউজার ডাটা ডাটাবেসে সেভ করা
                 set(ref(db, 'users/' + uid), {
                     username: name,
                     phone: phone,
                     email: email,
                     role: currentRole,
+                    password: pass, // ✅ এখন পাসওয়ার্ড ডাটাবেসে সেভ হবে
                     balance: 0,
                     joinDate: new Date().toLocaleDateString()
                 });
 
-                // ফোন নম্বর ম্যাপ তৈরি (যাতে পরে শুধু ফোন দিয়ে লগইন করা যায়)
+                // ২. ফোন নম্বর ম্যাপ তৈরি
                 set(ref(db, 'usersByPhone/' + phone), {
                     email: email,
                     uid: uid
                 }).then(() => {
                     alert("Account Created Successfully!");
-                    window.location.href = "index.html";
+                    
+                    // ✅ ৩. সরাসরি ড্যাশবোর্ডে পাঠানোর লজিক (index.html এর বদলে)
+                    if (currentRole === 'worker') {
+                        window.location.href = "worker_dashboard.html";
+                    } else {
+                        window.location.href = "buyer_dashboard.html";
+                    }
                 });
             })
             .catch((error) => {
@@ -164,3 +169,4 @@
     <script src="header.js"></script>
 </body>
 </html>
+
