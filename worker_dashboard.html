@@ -6,38 +6,54 @@
     <title>Worker Dashboard | BD Marketing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; margin: 0; padding: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
         
-        /* হেডার ডিজাইন */
-        .header-bg { 
-            background: linear-gradient(to right, #1d4ed8, #2563eb, #3b82f6); 
-            padding: 12px 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        body { 
+            background-color: #0b1222; 
+            font-family: 'Poppins', sans-serif; 
+            color: white;
+            margin: 0;
+            padding-bottom: 90px;
         }
 
-        /* ওনার ডিটেইলস বাটন স্টাইল */
-        .owner-badge {
+        /* হেডার: ৯০ ডিগ্রি শার্প */
+        .header-bg {
+            background: linear-gradient(to right, #1d4ed8, #3b82f6);
+            border-radius: 0px; 
+            padding: 18px 20px;
+        }
+
+        /* ওনার বাটন: সাদা বর্ডার এবং গোলাকার (Rounded) */
+        .owner-btn {
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 4px 12px;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: bold;
+            border: 1.5px solid white; /* সাদা বর্ডার */
+            padding: 6px 18px;
+            border-radius: 50px; /* গোলাকার শেপ */
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
-        .owner-badge:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.2); }
+        .owner-btn:hover { background: white; color: #1d4ed8; }
 
-        .balance-card { 
-            background: rgba(30, 41, 59, 0.6); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            border-radius: 1.2rem; 
-            padding: 12px;
+        /* ব্যালেন্স কার্ড: গোলাকার ও সামঞ্জস্যপূর্ণ */
+        .balance-card-small {
+            background-color: #161e31;
+            border-radius: 15px; 
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex: 1;
+            height: 55px; /* বেল আইকনের সমান উচ্চতা */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
+        .border-blue { border-left: 4px solid #2563eb; }
+        .border-yellow { border-left: 4px solid #fbbf24; }
 
-        /* বেল অ্যানিমেশন */
+        /* নোটিফিকেশন বেল এনিমেশন (Ringing Effect) */
         @keyframes ring {
             0% { transform: rotate(0); }
             10% { transform: rotate(15deg); }
@@ -47,140 +63,117 @@
             50% { transform: rotate(0); }
             100% { transform: rotate(0); }
         }
-        .bell-animation {
-            animation: ring 2s infinite;
-            display: inline-block;
+
+        .bell-box-large {
+            background-color: #1e293b;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            color: #fbbf24;
+        }
+        .bell-box-large i {
+            animation: ring 2s infinite ease-in-out;
+            transform-origin: top center;
         }
 
-        .help-center-float {
+        /* হেল্প সেন্টার ব্লিনকিং */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        .help-center {
             position: fixed;
             bottom: 100px;
             right: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 100;
+            z-index: 1000;
+            text-align: center;
+            animation: pulse 2s infinite;
         }
-        .messenger-icon {
-            background: #0084ff;
-            width: 50px;
-            height: 50px;
+        .msg-circle {
+            background-color: #0084ff;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 132, 255, 0.4);
             border: 2px solid white;
+            box-shadow: 0 5px 15px rgba(0, 132, 255, 0.4);
         }
 
         .bottom-nav {
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: #0f172a;
+            background-color: #0b1222;
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
+            padding: 15px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 100;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; text-decoration: none; }
-        .nav-item.active { color: #3b82f6; }
-        .nav-item i { font-size: 20px; }
-        .nav-item span { font-size: 9px; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
-
-        .task-item {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1rem;
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
+        .nav-item { color: #64748b; font-size: 9px; font-weight: bold; text-align: center; text-decoration: none; }
+        .nav-active { color: #3b82f6; }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <header class="header-bg flex justify-between items-center sticky top-0 z-50">
+    <header class="header-bg flex justify-between items-center">
         <div class="flex items-center gap-2">
-            <i class="fas fa-rocket text-yellow-400 text-xl"></i>
-            <h1 class="text-lg font-black uppercase tracking-tighter text-white">BD Marketing</h1>
+            <i class="fas fa-rocket text-yellow-400 text-2xl"></i>
+            <h1 class="text-xl font-black uppercase tracking-tight">BD Marketing</h1>
         </div>
-        <div class="owner-badge text-white" onclick="window.location.href='owner_details.html'">
+        <button onclick="window.location.href='owner_details.html'" class="owner-btn">
             Owner: Saddam
-        </div>
+        </button>
     </header>
 
-    <main class="p-4 space-y-6">
-        <div class="flex items-center gap-3">
-            <div class="grid grid-cols-2 gap-3 flex-1">
-                <div class="balance-card">
-                    <p class="text-[8px] text-blue-400 font-black uppercase mb-1">Main Balance</p>
-                    <h3 class="text-lg font-black italic text-white">৳ <span id="mainBalance">0.00</span></h3>
-                </div>
-                <div class="balance-card">
-                    <p class="text-[8px] text-yellow-500 font-black uppercase mb-1">Pending</p>
-                    <h3 class="text-lg font-black italic text-gray-400">৳ <span id="pendingBalance">0.00</span></h3>
-                </div>
+    <main class="p-5 space-y-6">
+        <div class="flex gap-3 items-center">
+            <div class="balance-card-small border-blue">
+                <p class="text-[7px] font-black uppercase text-blue-500">Main Balance</p>
+                <h2 class="text-lg font-black italic">৳ <span id="m_bal">0.00</span></h2>
             </div>
-            <div class="bg-slate-800 p-3 rounded-full flex items-center justify-center border border-white/5" onclick="window.location.href='notifications.html'">
-                <i class="fas fa-bell text-xl bell-animation"></i>
+            <div class="balance-card-small border-yellow">
+                <p class="text-[7px] font-black uppercase text-yellow-500">Pending</p>
+                <h2 class="text-lg font-black italic text-gray-500">৳ <span id="p_bal">0.00</span></h2>
+            </div>
+            <div onclick="window.location.href='notification.html'" class="bell-box-large">
+                <i class="fas fa-bell text-yellow-500 text-2xl"></i>
             </div>
         </div>
 
         <div class="mt-4">
-            <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 ml-1">Available Tasks</p>
-            
-            <div id="taskList">
-                <div class="task-item flex justify-between items-center" onclick="window.location.href='task_details.html'">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-red-600/20 rounded-full flex items-center justify-center text-red-500">
-                            <i class="fab fa-youtube"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold">YouTube Sub & Watch</h4>
-                            <p class="text-[8px] text-gray-500">Reward: ৳ 5.00</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-700 text-xs"></i>
-                </div>
+            <div class="flex flex-col items-center justify-center py-20 rounded-[25px] border-2 border-dashed border-white/5 bg-[#161e31]/40">
+                <i class="fas fa-bullhorn text-slate-700 text-3xl mb-4"></i>
+                <h4 class="text-xs font-black text-gray-400 uppercase">System Update</h4>
+                <p class="text-[9px] text-gray-600 uppercase mt-1">New tasks coming soon...</p>
             </div>
         </div>
     </main>
 
-    <a href="help_chat.html" class="help-center-float">
-        <div class="messenger-icon">
-            <i class="fab fa-facebook-messenger text-2xl text-white"></i>
+    <a href="help_center.html" class="help-center">
+        <div class="msg-circle">
+            <i class="fab fa-facebook-messenger text-white text-2xl"></i>
         </div>
-        <span class="text-[8px] font-black text-blue-400 uppercase mt-1">Help Center</span>
+        <span class="text-[8px] font-black text-blue-400 uppercase mt-1 block">Live Help</span>
     </a>
 
     <nav class="bottom-nav">
-        <a href="worker_dashboard.html" class="nav-item active">
-            <i class="fas fa-house"></i>
-            <span>Home</span>
-        </a>
-        <a href="withdraw.html" class="nav-item">
-            <i class="fas fa-wallet"></i>
-            <span>Withdraw</span>
-        </a>
-        <a href="history.html" class="nav-item">
-            <i class="fas fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
+        <a href="worker_dashboard.html" class="nav-item nav-active"><i class="fas fa-house text-xl block mb-1"></i> HOME</a>
+        <a href="withdraw.html" class="nav-item"><i class="fas fa-wallet text-xl block mb-1"></i> WITHDRAW</a>
+        <a href="history.html" class="nav-item"><i class="fas fa-clock-rotate-left text-xl block mb-1"></i> HISTORY</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user text-xl block mb-1"></i> PROFILE</a>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // আপনার প্রাইভেট Firebase কনফিগারেশন
         const firebaseConfig = {
             apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
             authDomain: "bd-marketing-55a81.firebaseapp.com",
@@ -188,8 +181,7 @@
             projectId: "bd-marketing-55a81",
             storageBucket: "bd-marketing-55a81.firebasestorage.app",
             messagingSenderId: "678696512628",
-            appId: "1:678696512628:web:edfc22a62f55dad41df521",
-            measurementId: "G-3CP5DC4H44"
+            appId: "1:678696512628:web:edfc22a62f55dad41df521"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -198,16 +190,13 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const userRef = ref(db, 'users/' + user.uid);
-                onValue(userRef, (snapshot) => {
+                onValue(ref(db, 'users/' + user.uid), (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
-                        document.getElementById('mainBalance').innerText = (data.balance || 0).toFixed(2);
-                        document.getElementById('pendingBalance').innerText = (data.pendingBalance || 0).toFixed(2);
+                        document.getElementById('m_bal').innerText = (data.balance || 0).toFixed(2);
+                        document.getElementById('p_bal').innerText = (data.pendingBalance || 0).toFixed(2);
                     }
                 });
-            } else {
-                window.location.href = "index.html";
             }
         });
     </script>
