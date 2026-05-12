@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw - BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
+        body { background: #0b1222; font-family: 'Inter', sans-serif; color: white; margin: 0; padding: 0; }
+        
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+        }
+
+        .input-style {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px;
+            width: 100%;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-style:focus { border-color: #3b82f6; }
+
+        .balance-badge {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <header class="flex items-center justify-between mb-10">
+        <a href="worker_dashboard.html" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10">
+            <i class="fas fa-chevron-left text-gray-400"></i>
+        </a>
+        <h1 class="text-xs font-black uppercase tracking-widest text-gray-400">Withdraw Funds</h1>
+        <div class="w-10"></div>
+    </header>
+
+    <div class="text-center mb-10">
+        <div class="balance-badge">
+            <p class="text-[9px] uppercase font-bold opacity-70 tracking-tighter">Current Balance</p>
+            <h2 id="balance-display" class="text-xl font-black">৳ 0.00</h2>
+        </div>
+    </div>
+
+    <div class="glass-card p-6 shadow-2xl max-w-md mx-auto">
+        <div class="space-y-6">
+            <div>
+                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 mb-2 block">Method</label>
+                <select id="withdraw-method" class="input-style font-semibold">
+                    <option value="Bkash">Bkash (Personal)</option>
+                    <option value="Nagad">Nagad (Personal)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 mb-2 block">Amount (Min ৳50)</label>
+                <input type="number" id="withdraw-amount" placeholder="0.00" class="input-style">
+            </div>
+
+            <div>
+                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 mb-2 block">Phone Number</label>
+                <input type="text" id="withdraw-phone" placeholder="017XXXXXXXX" class="input-style">
+            </div>
+
+            <button onclick="processWithdraw()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-900/40">
+                Confirm Withdraw
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // আপনার দেওয়া কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521",
+            measurementId: "G-3CP5DC4H44"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        let currentBalance = 0;
+        let userId = null;
+
+        // ইউজারের ব্যালেন্স লোড করা
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                onValue(ref(db, `users/${userId}/balance`), (snapshot) => {
+                    currentBalance = snapshot.val() || 0;
+                    document.getElementById('balance-display').innerText = `৳ ${currentBalance.toFixed(2)}`;
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // উইথড্র প্রসেস ফাংশন
+        window.processWithdraw = function() {
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+            const method = document.getElementById('withdraw-method').value;
+            const phone = document.getElementById('withdraw-phone').value.trim();
+
+            if (!amount || amount < 50) return alert("মিনিমাম ৫০ টাকা উত্তোলন করতে হবে।");
+            if (amount > currentBalance) return alert("আপনার পর্যাপ্ত ব্যালেন্স নেই।");
+            if (phone.length < 11) return alert("সঠিক মোবাইল নম্বর দিন।");
+
+            const withdrawRef = push(ref(db, 'withdraw_requests'));
+            const userHistoryRef = push(ref(db, `users/${userId}/withdraw_history`));
+
+            // ব্যালেন্স আপডেট এবং রিকোয়েস্ট সেভ (অ্যাটোমিক ট্রানজেকশন)
+            runTransaction(ref(db, `users/${userId}/balance`), (balance) => {
+                if (balance >= amount) return balance - amount;
+            }).then(() => {
+                const requestData = {
+                    uid: userId,
+                    amount: amount,
+                    method: method,
+                    phone: phone,
+                    status: "Pending",
+                    timestamp: Date.now()
+                };
+
+                set(withdrawRef, requestData);
+                set(userHistoryRef, requestData);
+
+                alert("উইথড্র রিকোয়েস্ট সফল হয়েছে!");
+                location.reload();
+            }).catch((err) => {
+                alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন।");
+            });
+        };
+    </script>
+</body>
+</html>
