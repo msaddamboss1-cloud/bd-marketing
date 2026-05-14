@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - BD Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { background: #0b1222; font-family: 'Inter', sans-serif; color: white; margin: 0; padding-bottom: 110px; }
+
+        .top-banner { background: linear-gradient(to right, #1e4ed8, #2563eb); padding: 0 15px; display: flex; justify-content: space-between; align-items: center; height: 50px; }
+        .brand-name { font-weight: 900; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .owner-pill { border: 1px solid rgba(255, 255, 255, 0.4); padding: 4px 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.1); font-size: 10px; font-weight: 700; }
+
+        .glass-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; }
+        .nav-bar { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        /* বেল রিং অ্যানিমেশন (শুধু নোটিফিকেশন থাকলে কাজ করবে) */
+        @keyframes bell-ring {
+            0%, 100% { transform: rotate(0); }
+            10%, 30%, 50% { transform: rotate(15deg); }
+            20%, 40%, 60% { transform: rotate(-15deg); }
+        }
+        .active-bell { animation: bell-ring 2s infinite ease-in-out; transform-origin: top center; color: #fbbf24 !important; }
+
+        /* সাপোর্ট লোগো ব্লিঙ্কিং */
+        @keyframes blink-glow-subtle {
+            0%, 100% { box-shadow: 0 0 5px rgba(37, 99, 235, 0.4); opacity: 1; }
+            50% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.7); opacity: 0.9; }
+        }
+
+        .support-btn {
+            position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: #2563eb;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 999;
+            animation: blink-glow-subtle 2.5s infinite ease-in-out; cursor: pointer; border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-banner shadow-lg mb-6">
+        <div class="brand-name"><i class="fas fa-rocket text-yellow-400"></i> BD MARKETING</div>
+        <div onclick="location.href='owner_details.html'" class="owner-pill cursor-pointer">Owner: Saddam</div>
+    </div>
+
+    <div class="px-4">
+        <!-- ব্যালেন্স সেকশন -->
+        <div class="flex gap-2 items-center mb-6">
+            <div class="glass-card flex-1 h-[60px] flex flex-col justify-center items-center">
+                <p class="text-[8px] font-bold text-gray-500 uppercase">Balance</p>
+                <p class="text-[14px] font-black">৳<span id="main-balance">0.00</span></p>
+            </div>
+            <div class="glass-card flex-1 h-[60px] flex flex-col justify-center items-center">
+                <p class="text-[8px] font-bold text-yellow-500 uppercase">Pending</p>
+                <p class="text-[14px] font-black">৳<span id="pending-balance">0.00</span></p>
+            </div>
+            <button onclick="location.href='notifications.html'" class="glass-card w-[60px] h-[60px] flex justify-center items-center relative">
+                <i id="bell-icon" class="fas fa-bell text-gray-300 text-xl"></i>
+                <span id="notif-dot" class="absolute top-4 right-4 w-2 h-2 bg-red-500 rounded-full hidden"></span>
+            </button>
+        </div>
+
+        <button onclick="location.href='post_job.html'" class="w-full py-4 bg-blue-600 rounded-2xl text-[11px] font-black uppercase tracking-widest mb-8 shadow-lg active:scale-95 transition-all">
+            POST NEW JOB
+        </button>
+
+        <h3 class="text-[10px] font-black uppercase text-gray-500 mb-4 tracking-widest text-center">Active Campaigns & Review</h3>
+        <div id="job-list-container" class="space-y-3">
+            <p class="text-center py-10 text-[10px] text-gray-700 font-bold uppercase italic tracking-widest">Syncing Records...</p>
+        </div>
+    </div>
+
+    <!-- হেল্প সেন্টার লোগো -->
+    <div onclick="location.href='help_center.html'" class="support-btn shadow-2xl">
+        <i class="fas fa-headset text-white text-xl"></i>
+    </div>
+
+    <!-- নেভিগেশন -->
+    <nav class="nav-bar fixed bottom-0 left-0 right-0 px-6 py-4 flex justify-between items-center z-50">
+        <button onclick="location.href='buyer_dashboard.html'" class="flex flex-col items-center text-blue-500">
+            <i class="fas fa-home text-xl"></i><span class="text-[9px] font-black mt-1 uppercase">Home</span>
+        </button>
+        <button onclick="location.href='deposit.html'" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-wallet text-xl"></i><span class="text-[9px] font-black mt-1 uppercase">Deposit</span>
+        </button>
+        <button onclick="location.href='history.html'" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-history text-xl"></i><span class="text-[9px] font-black mt-1 uppercase">History</span>
+        </button>
+        <button onclick="location.href='profile.html'" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-xl"></i><span class="text-[9px] font-black mt-1 uppercase">Profile</span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ফায়ারবেস কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRwrekZBZ31ACszDk2EJM_IqxRRwaGfCg",
+            authDomain: "bd-marketing-55a81.firebaseapp.com",
+            databaseURL: "https://bd-marketing-55a81-default-rtdb.firebaseio.com",
+            projectId: "bd-marketing-55a81",
+            storageBucket: "bd-marketing-55a81.firebasestorage.app",
+            messagingSenderId: "678696512628",
+            appId: "1:678696512628:web:edfc22a62f55dad41df521",
+            measurementId: "G-3CP5DC4H44"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // ব্যালেন্স ডাটা
+                onValue(ref(db, `users/${user.uid}`), (snap) => {
+                    const data = snap.val();
+                    if (data) {
+                        document.getElementById('main-balance').innerText = data.deposit_balance?.toFixed(2) || "0.00";
+                        document.getElementById('pending-balance').innerText = data.pending_payment?.toFixed(2) || "0.00";
+                    }
+                });
+
+                // জব এবং রিভিউ বাটন লজিক
+                const jobsQuery = query(ref(db, 'jobs'), orderByChild('buyer_id'), equalTo(user.uid));
+                onValue(jobsQuery, (snapshot) => {
+                    const container = document.getElementById('job-list-container');
+                    container.innerHTML = snapshot.exists() ? '' : '<p class="text-center py-10 text-[10px] text-gray-700 font-bold uppercase italic">No Active Campaigns</p>';
+                    
+                    snapshot.forEach((child) => {
+                        const job = child.val();
+                        container.innerHTML += `
+                            <div class="glass-card p-4 flex justify-between items-center border-l-4 border-blue-600 shadow-xl mb-3">
+                                <div>
+                                    <h4 class="text-[11px] font-black uppercase tracking-tight">${job.title}</h4>
+                                    <span class="text-[8px] font-bold text-blue-400 uppercase">STATUS: ${job.status || 'Active'}</span>
+                                </div>
+                                <button onclick="location.href='verify_proofs.html?jobId=${child.key}'" 
+                                    class="bg-blue-600 text-[9px] font-black px-4 py-2 rounded-xl text-white shadow-md active:scale-90 transition-transform">
+                                    REVIEW
+                                </button>
+                            </div>`;
+                    });
+                });
+
+                // নোটিফিকেশন এবং বেল রিং অ্যানিমেশন লজিক
+                onValue(ref(db, `notifications/${user.uid}`), (snap) => {
+                    const bellIcon = document.getElementById('bell-icon');
+                    const notifDot = document.getElementById('notif-dot');
+                    
+                    if (snap.exists()) {
+                        bellIcon.classList.add('active-bell'); // বেল নড়াচড়া শুরু করবে
+                        notifDot.style.display = 'block';     // লাল ডট জ্বলবে
+                    } else {
+                        bellIcon.classList.remove('active-bell');
+                        notifDot.style.display = 'none';
+                    }
+                });
+
+            } else { window.location.href = "login.html"; }
+        });
+    </script>
+</body>
+                  </html>
+                  
